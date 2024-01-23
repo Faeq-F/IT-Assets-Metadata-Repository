@@ -1,0 +1,35 @@
+image: node:latest
+
+stages:
+  - build
+  - test
+  - lint
+
+build-job:
+  stage: build
+  script:
+    - cd project
+    - npm install
+    - npm run check
+    - npm run build
+  artifacts:
+    paths:
+      - node_modules
+
+test-job:
+  stage: test
+  script:
+    - cd project
+    - npm run test
+  artifacts:
+    paths:
+      - node_modules/
+
+lint-job:
+  stage: lint
+  script:
+    - cd project
+    - npm run lint
+  artifacts:
+    paths:
+      - node_modules/
