@@ -14,7 +14,7 @@ build-job:
     - npm run build
   artifacts:
     paths:
-      - node_modules
+      - ./project/node_modules
 
 test-job:
   stage: test
@@ -23,7 +23,7 @@ test-job:
     - npm run test
   artifacts:
     paths:
-      - node_modules/
+      - ./project/node_modules/
 
 lint-job:
   stage: lint
@@ -32,4 +32,4 @@ lint-job:
     - npm run lint
   artifacts:
     paths:
-      - node_modules/
+      - ./project/node_modules/

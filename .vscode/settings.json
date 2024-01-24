@@ -1,0 +1,20 @@
+{
+  "files.exclude": {
+    "project/.svelte-kit": true,
+    "project/coverage": true,
+    "project/out": true,
+    "project/test-results": true,
+    "project/.eslintignore": true,
+    "project/.eslintrc.cjs": true,
+    "project/.npmrc": true,
+    "project/.prettierignore": true,
+    "project/.prettierrc": true,
+    "project/jsconfig.json": true,
+    "project/jsdoc-config.json": true,
+    "project/package-lock.json": true,
+    "project/playwright.config.js": true,
+    "project/svelte.config.js": true,
+    "project/vite.config.js": true,
+    "project/node_modules": true
+  }
+}

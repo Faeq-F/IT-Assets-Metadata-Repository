@@ -38,4 +38,5 @@ You may edit it as you like, but please do not remove the default topics or the 
 ### Suggestions
 
 - install the 'Document This' extension for VS Code - Automatically generates detailed JSDoc comments
+- install the 'Simple Hide Files' extension for VS Code - Hides files that you do not need to look at from the explorer pane
 - have the local server running while writing code - it can provide further insights into errors
