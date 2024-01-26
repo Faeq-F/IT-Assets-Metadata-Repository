@@ -1,8 +1,8 @@
 <svelte:head>
-	<title>Home</title>
+	<title>Assets</title>
 </svelte:head>
 
-<h1>Home</h1>
+<h1>Assets page</h1>
 <p id="bottom">Something at the bottom to see navbar animation work</p>
 
 <style>
