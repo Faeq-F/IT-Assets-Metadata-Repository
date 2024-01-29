@@ -11,6 +11,10 @@
 <h1>Assets page</h1>
 <div class="makeAssets">
 	<header> Make Assets</header>
+	<form>
+		<label for="assetName" class="formlabel">Name: </label>
+		<input type="text" id="assetName" name="assetName" placeholder="Enter Asset Name" /><br /><br />		
+	</form>
 	<button id="assetMaker" on:click={makeAsset}> Make Asset</button>
 </div>
 <div class="viewAssets">
