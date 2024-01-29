@@ -14,6 +14,17 @@
 	<form>
 		<label for="assetName" class="formlabel">Name: </label>
 		<input type="text" id="assetName" name="assetName" placeholder="Enter Asset Name" /><br /><br />		
+
+		<label for="assetType" class="formlabel">Asset Type: </label><br />
+
+		<input type="radio" name="assetType" value="Type 1">
+		<label for="type1" class="formlabel"> Type 1</label><br />
+
+		<input type="radio" name="assetType" value="Type 2">
+		<label for="type2" class="formlabel"> Type 2</label><br />
+
+		<input type="radio" name="assetType" value="Type 3">
+		<label for="type3" class="formlabel"> Type 3</label><br />
 	</form>
 	<button id="assetMaker" on:click={makeAsset}> Make Asset</button>
 </div>
