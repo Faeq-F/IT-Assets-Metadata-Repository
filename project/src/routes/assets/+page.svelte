@@ -3,8 +3,21 @@
 </svelte:head>
 
 <script>
+	// the ts-ignore messages are there as it doesnt like the .value and .checked but they do work.	
 	function makeAsset(){
-		alert('unfinished');
+		// @ts-ignore		
+		var name = document.getElementById('assetName')?.value;
+		
+		var typeList = document.getElementsByName('assetType');
+		var type = "noType";
+		for(var index = 0; index<typeList.length; index++){
+			// @ts-ignore
+			if(typeList[index].checked){
+				// @ts-ignore
+				type = typeList[index].value;
+			}
+		}
+		alert("Asset made with name " + name + " and with type "+ type)
 	}
 </script>
 
