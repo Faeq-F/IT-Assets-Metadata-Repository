@@ -13,6 +13,10 @@
 	<header> Make Assets</header>
 	<button id="assetMaker" on:click={makeAsset}> Make Asset</button>
 </div>
+<div class="viewAssets">
+	<header> View Assets</header>
+	<input type="text" id="keyword" name="keyword" /><br /><br />
+</div>
 
 <p id="bottom">Something at the bottom to see navbar animation work</p>
 
@@ -32,5 +36,13 @@
 		text-align:center;
 		width: 50%;	
 		margin-left: 25%;
+	}	
+	.viewAssets{
+		border: 5px outset red;
+		background-color: lightblue;
+		text-align:center;
+		width: 50%;	
+		margin-left: 25%;
+		margin-top: 10vh;
 	}	
 </style>
