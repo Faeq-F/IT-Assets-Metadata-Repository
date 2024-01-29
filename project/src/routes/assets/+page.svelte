@@ -19,6 +19,12 @@
 		}
 		alert("Asset made with name " + name + " and with type "+ type)
 	}
+
+	function searchKeyword(){
+		// this ignores an error message saying you cant use .value
+		// @ts-ignore
+		alert(document.getElementById('keyword')?.value);		
+	}
 </script>
 
 <h1>Assets page</h1>
@@ -43,7 +49,11 @@
 </div>
 <div class="viewAssets">
 	<header> View Assets</header>
-	<input type="text" id="keyword" name="keyword" /><br /><br />
+	<form>
+		<label for="keyword" class="formlabel"> Keyword: </label>
+		<input type="text" id="keyword" name="keyword" placeholder="Enter keyword"/><br /><br />
+		<button id="search" type="button" on:click={searchKeyword}>Search</button>
+	</form>
 </div>
 
 <p id="bottom">Something at the bottom to see navbar animation work</p>
