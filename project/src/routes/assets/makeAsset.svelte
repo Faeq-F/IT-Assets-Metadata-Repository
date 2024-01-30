@@ -1,13 +1,14 @@
-<script>
-	// the ts-ignore messages are there as it doesn't like the .value and .checked but they do work.
+<script lang="ts">
 	function makeAsset() {
-		var name = document.getElementById('assetName')?.value;
+		var name = (document.getElementById('assetName') as HTMLInputElement).value;
 
 		var typeList = document.getElementsByName('assetType');
 		var type = 'noType';
 		for (var index = 0; index < typeList.length; index++) {
-			if (typeList[index].checked) {
-				type = typeList[index].value;
+			//Cast makes the code type safe - no need for ts ignore
+			let typeRadio = typeList[index] as HTMLInputElement;
+			if (typeRadio.checked) {
+				type = typeRadio.value;
 			}
 		}
 		alert('Asset made with name ' + name + ' and with type ' + type);

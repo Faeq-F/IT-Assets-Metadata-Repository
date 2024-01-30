@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
 	//Run 'npm install' to make sure you have all the dependencies
 	import { Modal, Content, Trigger } from 'sv-popup';
 	import MakeAsset from './makeAsset.svelte';
 
+	//Cast makes the code type safe - no need for ts ignore
 	function searchKeyword() {
-		alert(document.getElementById('keyword').value);
+		alert((document.getElementById('keyword') as HTMLInputElement).value);
 	}
 </script>
 
