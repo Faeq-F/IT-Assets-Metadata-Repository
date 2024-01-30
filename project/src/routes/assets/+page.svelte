@@ -1,4 +1,5 @@
 <script>
+	//Run 'npm install' to make sure you have all the dependencies
 	import { Modal, Content, Trigger } from 'sv-popup';
 	import MakeAsset from './makeAsset.svelte';
 
@@ -29,12 +30,12 @@
 <div class="assetsContainer">
 	<div class="card assetCard">Example Asset Card 1</div>
 	<div class="card assetCard">Example Asset Card 2</div>
-	<div class="card assetCard">Example Asset Card 4</div>
 	<div class="card assetCard">Example Asset Card 3</div>
+	<div class="card assetCard">Example Asset Card 4</div>
 	<div class="card assetCard">Example Asset Card 5</div>
 	<div class="card assetCard">Example Asset Card 6</div>
+	<!--There is an odd number of assets that are currently loaded in this div, so the last card should fill the remaining area-->
 	<div class="card assetCard">Example Asset Card 7</div>
-	<div class="card assetCard">Example Asset Card 8</div>
 </div>
 
 <style>
@@ -69,15 +70,11 @@
 	}
 
 	.assetsContainer {
-		display: grid;
-		grid-template-columns: 20% 20% 20%;
-		grid-auto-rows: 1.6em;
-		row-gap: 40vw;
-		column-gap: 7vh;
-
-		margin-bottom: 10px;
-		overflow-x: hidden;
-		height: inherit;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		width: 90%;
+		margin: 10px auto;
 	}
 
 	#search,

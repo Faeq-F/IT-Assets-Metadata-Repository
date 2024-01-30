@@ -1,7 +1,6 @@
 <script>
 	// the ts-ignore messages are there as it doesn't like the .value and .checked but they do work.
 	function makeAsset() {
-		// @ts-ignore
 		var name = document.getElementById('assetName')?.value;
 
 		var typeList = document.getElementsByName('assetType');
@@ -15,7 +14,7 @@
 	}
 </script>
 
-<div class="makeAssets">
+<div class="makeAssets card">
 	<header>Make Assets</header>
 	<form>
 		<label for="assetName" class="formlabel">Name: </label>
