@@ -1,48 +1,80 @@
-<svelte:head>
-	<title>Assets</title>
-</svelte:head>
-
 <script>
-	function makeAsset(){
+	function makeAsset() {
 		alert('unfinished');
 	}
 </script>
 
-<h1>Assets page</h1>
-<div class="makeAssets">
-	<header> Make Assets</header>
-	<button id="assetMaker" on:click={makeAsset}> Make Asset</button>
-</div>
-<div class="viewAssets">
-	<header> View Assets</header>
-	<input type="text" id="keyword" name="keyword" /><br /><br />
+<svelte:head>
+	<title>Assets</title>
+</svelte:head>
+
+<h1>Assets</h1>
+<div class="card" id="assetHeader">
+	<button id="assetMaker" class="card cardButton" on:click={makeAsset}>➕</button>
+	<p id="nothingHere">
+		It doesn't look like you have any assets yet, click the ➕ in the top right corner to get
+		started
+	</p>
+	<input type="text" id="keyword" name="keyword" />
 </div>
 
-<p id="bottom">Something at the bottom to see navbar animation work</p>
+<div class="assetsContainer">
+	<div class="card assetCard">Example Asset Card 1</div>
+	<div class="card assetCard">Example Asset Card 2</div>
+	<div class="card assetCard">Example Asset Card 4</div>
+	<div class="card assetCard">Example Asset Card 3</div>
+	<div class="card assetCard">Example Asset Card 5</div>
+	<div class="card assetCard">Example Asset Card 6</div>
+	<div class="card assetCard">Example Asset Card 7</div>
+	<div class="card assetCard">Example Asset Card 8</div>
+</div>
 
 <style>
 	@import url('$lib/styles/root.css');
+	@import url('$lib/styles/card.css');
 
 	h1 {
 		text-align: center;
-		margin-top: 15vh;
+		margin-top: 15%;
 	}
-	#bottom {
-		margin-top: 150vh;
+
+	#assetMaker {
+		width: 2vw;
+		height: 2vw;
+		padding: 0;
+		float: right;
 	}
-	.makeAssets{
-		border: 5px outset red;
-		background-color: lightblue;
-		text-align:center;
-		width: 50%;	
-		margin-left: 25%;
-	}	
-	.viewAssets{
-		border: 5px outset red;
-		background-color: lightblue;
-		text-align:center;
-		width: 50%;	
-		margin-left: 25%;
-		margin-top: 10vh;
-	}	
+
+	#nothingHere {
+		display: inline;
+		float: left;
+	}
+
+	#assetHeader {
+		height: 4vh;
+	}
+
+	#assetHeader::after {
+		content: '';
+		clear: both;
+		display: table;
+	}
+
+	.assetsContainer {
+		display: grid;
+		grid-template-columns: 20% 20% 20%;
+		grid-auto-rows: 1.6em;
+		row-gap: 40vw;
+		column-gap: 7vh;
+
+		margin-bottom: 10px;
+		overflow-x: hidden;
+		height: inherit;
+	}
+
+	#keyword {
+		display: inline;
+		float: right;
+		margin-right: 20px;
+	}
 </style>
