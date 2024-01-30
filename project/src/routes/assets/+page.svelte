@@ -1,6 +1,9 @@
 <script>
-	function makeAsset() {
-		alert('unfinished');
+	import { Modal, Content, Trigger } from 'sv-popup';
+	import MakeAsset from './makeAsset.svelte';
+
+	function searchKeyword() {
+		alert(document.getElementById('keyword').value);
 	}
 </script>
 
@@ -10,12 +13,17 @@
 
 <h1>Assets</h1>
 <div class="card" id="assetHeader">
-	<button id="assetMaker" class="card cardButton" on:click={makeAsset}>➕</button>
-	<p id="nothingHere">
-		It doesn't look like you have any assets yet, click the ➕ in the top right corner to get
-		started
-	</p>
-	<input type="text" id="keyword" name="keyword" />
+	<Modal>
+		<Content>
+			<MakeAsset />
+		</Content>
+		<Trigger>
+			<button id="assetMaker" class="card cardButton">➕</button>
+		</Trigger>
+	</Modal>
+	<p id="nothingHere">It doesn't look like you have any assets yet, click the ➕ to get started</p>
+	<button id="search" type="button" on:click={searchKeyword}>Search</button>
+	<input type="text" id="keyword" name="keyword" placeholder="Enter keyword" />
 </div>
 
 <div class="assetsContainer">
@@ -72,6 +80,7 @@
 		height: inherit;
 	}
 
+	#search,
 	#keyword {
 		display: inline;
 		float: right;
