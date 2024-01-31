@@ -1,12 +1,12 @@
 :root {
-  --hue: 288;
-  --primary: oklch(0.8 0.2 var(--hue));
-  --secondaryPrimaryHue: calc(var(--hue) - 20);
-  --secondaryPrimaryColor: oklch(90% 0.2 var(--otherColorHue));
-  --primary-highlight: oklch(97% 0.2 var(--hue));
-  --header-bg: oklch(35% 0.01 200);
+	--hue: 288;
+	--primary: oklch(0.8 0.2 var(--hue));
+	--secondaryPrimaryHue: calc(var(--hue) - 20);
+	--secondaryPrimaryColor: oklch(90% 0.2 var(--otherColorHue));
+	--primary-highlight: oklch(97% 0.2 var(--hue));
+	--header-bg: oklch(35% 0.01 200);
 }
 
 body {
-  background-color: #f4f7ff;
+	background-color: #f4f7ff;
 }

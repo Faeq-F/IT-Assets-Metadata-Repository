@@ -1,86 +1,87 @@
+<script lang="ts">
+	//Run 'npm install' to make sure you have all the dependencies
+	import { Modal, Content, Trigger } from 'sv-popup';
+	import MakeAsset from './makeAsset.svelte';
+
+	//Cast makes the code type safe - no need for ts ignore
+	function searchKeyword() {
+		alert((document.getElementById('keyword') as HTMLInputElement).value);
+	}
+</script>
+
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
 
-<script>
-	// the ts-ignore messages are there as it doesnt like the .value and .checked but they do work.	
-	function makeAsset(){
-		// @ts-ignore		
-		var name = document.getElementById('assetName')?.value;
-		
-		var typeList = document.getElementsByName('assetType');
-		var type = "noType";
-		for(var index = 0; index<typeList.length; index++){
-			// @ts-ignore
-			if(typeList[index].checked){
-				// @ts-ignore
-				type = typeList[index].value;
-			}
-		}
-		alert("Asset made with name " + name + " and with type "+ type)
-	}
-
-	function searchKeyword(){
-		// this ignores an error message saying you cant use .value
-		// @ts-ignore
-		alert(document.getElementById('keyword')?.value);		
-	}
-</script>
-
-<h1>Assets page</h1>
-<div class="makeAssets">
-	<header> Make Assets</header>
-	<form>
-		<label for="assetName" class="formlabel">Name: </label>
-		<input type="text" id="assetName" name="assetName" placeholder="Enter Asset Name" /><br /><br />		
-
-		<label for="assetType" class="formlabel">Asset Type: </label><br />
-
-		<input type="radio" name="assetType" value="Type 1">
-		<label for="type1" class="formlabel"> Type 1</label><br />
-
-		<input type="radio" name="assetType" value="Type 2">
-		<label for="type2" class="formlabel"> Type 2</label><br />
-
-		<input type="radio" name="assetType" value="Type 3">
-		<label for="type3" class="formlabel"> Type 3</label><br />
-	</form>
-	<button id="assetMaker" on:click={makeAsset}> Make Asset</button>
-</div>
-<div class="viewAssets">
-	<header> View Assets</header>
-	<form>
-		<label for="keyword" class="formlabel"> Keyword: </label>
-		<input type="text" id="keyword" name="keyword" placeholder="Enter keyword"/><br /><br />
-		<button id="search" type="button" on:click={searchKeyword}>Search</button>
-	</form>
+<h1>Assets</h1>
+<div class="card" id="assetHeader">
+	<Modal>
+		<Content>
+			<MakeAsset />
+		</Content>
+		<Trigger>
+			<button id="assetMaker" class="card cardButton">➕</button>
+		</Trigger>
+	</Modal>
+	<p id="nothingHere">It doesn't look like you have any assets yet, click the ➕ to get started</p>
+	<button id="search" type="button" on:click={searchKeyword}>Search</button>
+	<input type="text" id="keyword" name="keyword" placeholder="Enter keyword" />
 </div>
 
-<p id="bottom">Something at the bottom to see navbar animation work</p>
+<div class="assetsContainer">
+	<div class="card assetCard">Example Asset Card 1</div>
+	<div class="card assetCard">Example Asset Card 2</div>
+	<div class="card assetCard">Example Asset Card 3</div>
+	<div class="card assetCard">Example Asset Card 4</div>
+	<div class="card assetCard">Example Asset Card 5</div>
+	<div class="card assetCard">Example Asset Card 6</div>
+	<!--There is an odd number of assets that are currently loaded in this div, so the last card should fill the remaining area-->
+	<div class="card assetCard">Example Asset Card 7</div>
+</div>
 
 <style>
 	@import url('$lib/styles/root.css');
+	@import url('$lib/styles/card.css');
 
 	h1 {
 		text-align: center;
-		margin-top: 15vh;
+		margin-top: 15%;
 	}
-	#bottom {
-		margin-top: 150vh;
+
+	#assetMaker {
+		width: 2vw;
+		height: 2vw;
+		padding: 0;
+		float: right;
 	}
-	.makeAssets{
-		border: 5px outset red;
-		background-color: lightblue;
-		text-align:center;
-		width: 50%;	
-		margin-left: 25%;
-	}	
-	.viewAssets{
-		border: 5px outset red;
-		background-color: lightblue;
-		text-align:center;
-		width: 50%;	
-		margin-left: 25%;
-		margin-top: 10vh;
-	}	
+
+	#nothingHere {
+		display: inline;
+		float: left;
+	}
+
+	#assetHeader {
+		height: 4vh;
+	}
+
+	#assetHeader::after {
+		content: '';
+		clear: both;
+		display: table;
+	}
+
+	.assetsContainer {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		width: 90%;
+		margin: 10px auto;
+	}
+
+	#search,
+	#keyword {
+		display: inline;
+		float: right;
+		margin-right: 20px;
+	}
 </style>
