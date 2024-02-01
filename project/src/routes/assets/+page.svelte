@@ -3,7 +3,6 @@
 	import { Modal, Content, Trigger } from 'sv-popup';
 	import MakeAsset from './makeAsset.svelte';
 
-	//Cast makes the code type safe - no need for ts ignore
 	function searchKeyword() {
 		alert((document.getElementById('keyword') as HTMLInputElement).value);
 	}
