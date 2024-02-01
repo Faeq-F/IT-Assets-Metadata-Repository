@@ -36,6 +36,7 @@
 	width: initial;
 }
 
+.typeCard,
 .assetCard {
 	height: 50vh;
 	min-width: 30vw;

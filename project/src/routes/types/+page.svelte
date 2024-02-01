@@ -1,6 +1,9 @@
 <script>
 	import { Content, Modal, Trigger } from 'sv-popup';
 	import MakeType from './MakeType.svelte';
+	import { injectTypeDivs } from './typeDivInjection';
+
+	injectTypeDivs();
 </script>
 
 <svelte:head>
@@ -20,9 +23,7 @@
 	<p id="nothingHere">It doesn't look like you have any types yet, click the ➕ to get started</p>
 </div>
 
-<div class="assetsContainer">
-	<div class="card assetCard">Example Type Card 1</div>
-</div>
+<div class="typesContainer"></div>
 
 <p id="bottom">Something at the bottom to see navbar animation work</p>
 
@@ -60,7 +61,7 @@
 		display: table;
 	}
 
-	.assetsContainer {
+	.typesContainer {
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
