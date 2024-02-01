@@ -1,10 +1,11 @@
 import { browser } from '$app/environment';
 import { onMount } from 'svelte';
+import { addTypeOptions } from './makeAsset';
 
-export function injectTypeDivs() {
+export function injectAssetDivs() {
 	onMount(() => {
 		if (browser) {
-			const typesContainer = document.getElementsByClassName('typesContainer')[0];
+			const typesContainer = document.getElementsByClassName('assetsContainer')[0];
 			let storage = { ...localStorage };
 
 			for (const [key, value] of Object.entries(window.localStorage)) {
@@ -12,9 +13,9 @@ export function injectTypeDivs() {
 					var child = document.createElement('someuniquetag');
 
 					child.innerHTML =
-						'<div class="card typeCard">' +
+						'<div class="card assetCard">' +
 						key.replace('Type_', '') +
-						'<br /><br />Fields required: ' +
+						'<br /><br />Metadata: ' +
 						JSON.parse(value).fields +
 						'</div>';
 
@@ -23,6 +24,8 @@ export function injectTypeDivs() {
 					child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
 				}
 			}
+
+			addTypeOptions();
 		}
 	});
 }

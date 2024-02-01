@@ -14,7 +14,7 @@
     "project/package-lock.json": true,
     "project/playwright.config.js": true,
     "project/svelte.config.js": true,
-    "project/vite.config.js": false,
+    "project/vite.config.js": true,
     "project/node_modules": true
   }
 }

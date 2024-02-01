@@ -6,6 +6,10 @@
 	function searchKeyword() {
 		alert((document.getElementById('keyword') as HTMLInputElement).value);
 	}
+
+	import { injectAssetDivs } from './assetDivInjection';
+
+	injectAssetDivs();
 </script>
 
 <svelte:head>
@@ -27,16 +31,7 @@
 	<input type="text" id="keyword" name="keyword" placeholder="Enter keyword" />
 </div>
 
-<div class="assetsContainer">
-	<div class="card assetCard">Example Asset Card 1</div>
-	<div class="card assetCard">Example Asset Card 2</div>
-	<div class="card assetCard">Example Asset Card 3</div>
-	<div class="card assetCard">Example Asset Card 4</div>
-	<div class="card assetCard">Example Asset Card 5</div>
-	<div class="card assetCard">Example Asset Card 6</div>
-	<!--There is an odd number of assets that are currently loaded in this div, so the last card should fill the remaining area-->
-	<div class="card assetCard">Example Asset Card 7</div>
-</div>
+<div class="assetsContainer"></div>
 
 <style>
 	@import url('$lib/styles/root.css');
