@@ -5,6 +5,9 @@ export function addTypeOptions() {
 	onMount(() => {
 		if (browser) {
 			var typeList = document.getElementById('assetType');
+			var metadataForm = document.getElementById('metadataForm');
+
+			// @ts-ignore
 			for (const [key, value] of Object.entries(window.localStorage)) {
 				if (key.startsWith('Type_')) {
 					var child = document.createElement('someuniquetag');
@@ -14,17 +17,44 @@ export function addTypeOptions() {
 					if (typeList) typeList.appendChild(child);
 
 					child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
-
-					console.log(key.replace('Type_', ''));
 				}
+			}
+
+			if (typeList) {
+				// @ts-ignore
+				typeList.addEventListener('change', (event) => {
+					if (metadataForm) metadataForm.innerHTML = '';
+					// @ts-ignore
+					var selectedOption = typeList.options[typeList.selectedIndex].text;
+					let metadataKeys = JSON.parse(
+						window.localStorage.getItem('Type_' + selectedOption) || ''
+					).fields;
+
+					for (let i in metadataKeys) {
+						var child = document.createElement('someuniquetag');
+
+						child.innerHTML =
+							'<label for="' +
+							metadataKeys[i] +
+							'" class="formlabel">' +
+							metadataKeys[i] +
+							': </label>';
+
+						if (metadataForm) metadataForm.appendChild(child);
+
+						child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
+
+						child = document.createElement('someuniquetag');
+
+						child.innerHTML =
+							'<input type="text" id="' + metadataKeys[i] + '" name="' + metadataKeys[i] + '" />';
+
+						if (metadataForm) metadataForm.appendChild(child);
+
+						child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
+					}
+				});
 			}
 		}
 	});
 }
-
-// function myFunction() {
-// 	var x = document.getElementById('mySelect');
-// 	var option = document.createElement('option');
-// 	option.text = 'Kiwi';
-// 	x.add(option, x[0]);
-// }

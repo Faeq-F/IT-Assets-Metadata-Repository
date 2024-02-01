@@ -4,11 +4,13 @@
 	function makeAsset() {
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;
 		var link = (document.getElementById('assetLink') as HTMLInputElement).value;
-		var typeList = document.getElementById('assetType') as HTMLSelectElement;
+		let typeList = document.getElementById('assetType') as HTMLSelectElement;
 		var type = typeList.options[typeList.selectedIndex].text;
 
 		alert('Asset made with name ' + name + ', link ' + link + ' and with type ' + type);
 	}
+
+	function metadataUI() {}
 
 	addTypeOptions();
 </script>
@@ -31,6 +33,10 @@
 		<select id="assetType"> </select>
 
 		<br />
+		<br />
 	</form>
+	<form id="metadataForm"></form>
+	<br />
+	<br />
 	<button id="assetMaker" on:click={makeAsset}> Make Asset</button>
 </div>
