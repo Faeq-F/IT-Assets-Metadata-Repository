@@ -47,7 +47,11 @@ export function addTypeOptions() {
 						child = document.createElement('someuniquetag');
 
 						child.innerHTML =
-							'<input type="text" id="' + metadataKeys[i] + '" name="' + metadataKeys[i] + '" />';
+							'<input type="text" id="' +
+							metadataKeys[i] +
+							'" name="' +
+							metadataKeys[i] +
+							'" /><br />';
 
 						if (metadataForm) metadataForm.appendChild(child);
 

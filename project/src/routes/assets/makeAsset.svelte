@@ -6,11 +6,19 @@
 		var link = (document.getElementById('assetLink') as HTMLInputElement).value;
 		let typeList = document.getElementById('assetType') as HTMLSelectElement;
 		var type = typeList.options[typeList.selectedIndex].text;
+		var metadataForm = document.getElementById('metadataForm') as HTMLFormElement;
 
-		alert('Asset made with name ' + name + ', link ' + link + ' and with type ' + type);
+		let metadataInputs = metadataForm.getElementsByTagName('input');
+		var metadataObject = {};
+		for (let i in metadataInputs) {
+			let key = metadataInputs[i].id;
+			let value = metadataInputs[i].value;
+			metadataObject = { ...metadataObject, [key]: value };
+		}
+		var assetObject = { name: name, link: link, type: type, metadata: metadataObject };
+		localStorage.setItem('Asset_' + name, JSON.stringify(assetObject));
+		alert('The asset has been created');
 	}
-
-	function metadataUI() {}
 
 	addTypeOptions();
 </script>
