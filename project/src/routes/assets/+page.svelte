@@ -8,8 +8,19 @@
 	}
 
 	import { injectAssetDivs } from './assetDivInjection';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	injectAssetDivs();
+
+	let AreThereAssets = false;
+	onMount(() => {
+		if (browser) {
+			if (document.getElementsByClassName('assetsContainer')[0].firstChild) {
+				AreThereAssets = true;
+			}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -26,7 +37,13 @@
 			<button id="assetMaker" class="card cardButton">➕</button>
 		</Trigger>
 	</Modal>
-	<p id="nothingHere">It doesn't look like you have any assets yet, click the ➕ to get started</p>
+	{#if AreThereAssets}
+		<p id="nothingHere">Your assets:</p>
+	{:else}
+		<p id="nothingHere">
+			It doesn't look like you have any assets yet, click the ➕ to get started
+		</p>
+	{/if}
 	<button id="search" type="button" on:click={searchKeyword}>Search</button>
 	<input type="text" id="keyword" name="keyword" placeholder="Enter keyword" />
 </div>

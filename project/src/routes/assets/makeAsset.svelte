@@ -38,7 +38,9 @@
 		/><br /><br />
 
 		<label for="assetType" class="formlabel">Asset Type: </label><br />
-		<select id="assetType"> </select>
+		<select id="assetType">
+			<option>Select type</option>
+		</select>
 
 		<br />
 		<br />

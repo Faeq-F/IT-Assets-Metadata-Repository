@@ -2,8 +2,19 @@
 	import { Content, Modal, Trigger } from 'sv-popup';
 	import MakeType from './MakeType.svelte';
 	import { injectTypeDivs } from './typeDivInjection';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	injectTypeDivs();
+
+	let AreThereTypes = false;
+	onMount(() => {
+		if (browser) {
+			if (document.getElementsByClassName('typesContainer')[0].firstChild) {
+				AreThereTypes = true;
+			}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -20,7 +31,11 @@
 			<button id="assetMaker" class="card cardButton">➕</button>
 		</Trigger>
 	</Modal>
-	<p id="nothingHere">It doesn't look like you have any types yet, click the ➕ to get started</p>
+	{#if AreThereTypes}
+		<p id="nothingHere">Your types:</p>
+	{:else}
+		<p id="nothingHere">It doesn't look like you have any types yet, click the ➕ to get started</p>
+	{/if}
 </div>
 
 <div class="typesContainer"></div>
