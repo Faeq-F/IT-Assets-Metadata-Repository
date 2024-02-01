@@ -1,5 +1,5 @@
 <script>
-	let name = 'Asset App';
+	let name = 'Team Project';
 	let API_URL = 'http://localhost:5038/';
 	let assets = [];
 	let newAssets = '';
@@ -41,7 +41,7 @@
 </script>
 
 <main>
-	<h2>{name}</h2>
+	<h1>{name}</h1>
 	<input bind:value={newAssets} />
 	<button on:click={addAssets}>Add Assets</button>
 	{#each assets as asset}

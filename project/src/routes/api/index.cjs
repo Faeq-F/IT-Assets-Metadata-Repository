@@ -17,6 +17,7 @@ app.listen(5038, () => {
 		console.log('Connected');
 	});
 });
+
 app.get('/api/teamproject/GetAssets', (request, reponse) => {
 	database
 		.collection('Teamproject')
