@@ -1,79 +1,88 @@
-import { describe, it, expect, test } from 'vitest';
+import { MongoClient } from 'mongodb';
+import { describe, it, expect, test, beforeAll } from 'vitest';
 
 var Express = require('express');
 var Mongoclient = require('mongodb').MongoClient;
 var cors = require('cors');
-// @ts-ignore
+
 const multer = require('multer');
-// @ts-ignore
-const { request, response } = require('express');
 
 var app = Express();
 app.use(cors());
 
 var URI = 'mongodb+srv://jack:1234@cluster0.lwomw.mongodb.net/?retryWrites=true&w=majority';
 var DATABASEName = 'Teamproject';
-// @ts-ignore
 var database;
 
-app.listen(5038, () => {
-	// @ts-ignore
-	Mongoclient.connect(URI, (error, client) => {
-		database = client.db(DATABASEName);
-		console.log('Connected');
-	});
-});
-
-// @ts-ignore
-function sum(a, b) {
-	return a + b;
+async function connectToDatabase() {
+    const client = await MongoClient.connect(URI);
+    database = client.db(DATABASEName);
 }
 
-// @ts-ignore
-async function select(num) {
-    let client;
-
+async function insertDB() {
     try {
-        // Connect to the database
-        client = await Mongoclient.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true });
-        const db = client.db(DATABASEName);
-
-        // Perform the database query
-        await db.collection('Asset').insertOne({
+        await database.collection('Asset').insertOne({
             asset_id: 1,
             title: "FileNumberOne",
             link: "www.w3schools.com",
             MetaData: {
                 lineNum: 50,
-                "programming-language": "Java"
+                'programming-language': "Java"
             }
         });
+    } catch (error) {
+        console.log("Could not query db: ", error);
+        throw error;
+    }
+}
+async function initialiseDatabase() {
+    await connectToDatabase();
+    await insertDB();
+}
 
-        const asset = await db.collection('Asset').findOne({ asset_id: num });
-		const asset_id = asset ? asset.asset_id : null;
-        console.log(asset);
-        return asset_id;
-    } finally {
-        // Close the database connection if it was opened
-        if (client) {
-            await client.close();
-        }
+initialiseDatabase()
+
+async function select(query) {
+    try {
+        const asset = await database.collection('Asset').findOne(query);
+        return asset;
+    }  catch (error) {
+        console.log("Could not query db: ", error);
+        throw error;
     }
 }
 
-test("SelectAssetName", async () => {
-	const result = await select(1)
-	expect(result).toEqual(1);
+beforeAll(async () => {
+    await connectToDatabase();
+    await insertDB();
+  });
+  
+test("SelectAssetID", async () => {
+    let query = {asset_id: 1}
+    const result = await select(query)
+    expect(result.asset_id).toEqual(1);
 })
 
-describe('sum test', () => {
-	it('adds 1 + 2 to equal 3', () => {
-		expect(1 + 2).toBe(3);
-	});
-});
+test("SelectAssetTitle", async () => {
+    let query = {title: "FileNumberOne"}
+    const result = await select(query)
+    expect(result.title).toEqual("FileNumberOne");
+})
+    
+test("SelectAssetProgrammingLanguage", async () => {
+    let query = {asset_id: 1}
+	const result = await select(query)
+	expect(result.MetaData['programming-language']).toEqual("Java");
+})
 
+test("SelectAssetLineNum", async () => {
+    let query = {asset_id: 1}
+	const result = await select(query)
+	expect(result.MetaData.lineNum).toEqual(50);
+})
 
-test("add 2 numbers", () => {
-	expect(sum(2,3)).toEqual(5);
-});
-	
+test("SelectAssetLink", async () => {
+    let query = {asset_id: 1}
+	const result = await select(query)
+	expect(result.link).toEqual("www.w3schools.com");
+})
