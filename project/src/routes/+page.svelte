@@ -1,53 +1,48 @@
-<script>
-	let name = 'Team Project';
-	let API_URL = 'http://localhost:5038/';
-	let assets = [];
-	let newAssets = '';
-	function refreshAssets() {
-		fetch(API_URL + 'api/teamproject/GetAssets')
-			.then((response) => response.json())
-			.then((data) => {
-				assets = data;
-			});
-	}
-	import { onMount } from 'svelte';
-	onMount(async () => {
-		refreshAssets();
-	});
-	function addAssets() {
-		console.log('in');
-		const data = new FormData();
-		data.append('newAssets', newAssets);
-		fetch(API_URL + 'api/teamproject/AddAssets', {
-			method: 'POST',
-			body: data
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				alert(data);
-				refreshAssets();
-			});
-	}
-	function deleteAssets(id) {
-		fetch(API_URL + 'api/teamproject/DeleteAssets?id=' + id, {
-			method: 'DELETE'
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				alert(data);
-				refreshAssets();
-			});
-	}
-</script>
 
-<main>
-	<h1>{name}</h1>
-	<input bind:value={newAssets} />
-	<button on:click={addAssets}>Add Assets</button>
-	{#each assets as asset}
-		<p>
-			<b>*{asset.asset_name}</b>
-			<button on:click={deleteAssets(asset.id)}>Delete Assets</button>
-		</p>
-	{/each}
-</main>
+<svelte:head>
+	<title>Login</title>
+</svelte:head>
+
+<form action="" class="userForm">
+	<label for="username" class="formLabel">Username:</label>
+	<input type="text" id="username" name="username" /><br /><br />
+	<label for="password" class="formLabel">Password:</label>
+	<input type="text" id="password" name="password" /><br /><br />
+	<a href="/home">
+		<button class="gradientButton submitButton">
+			<span class="text">Log in</span>
+		</button>
+	</a>
+</form>
+
+<style>
+	@import url('$lib/styles/root.css');
+
+	.userForm {
+		margin: 0;
+		padding: 0;
+		/** Center the form */
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.submitButton {
+		margin: 0 auto;
+		font-size: 1.3em;
+		width: 100%;
+	}
+
+	.formLabel {
+		font-size: 1.3em;
+	}
+
+	/**
+		reuse button style from faeqs site
+		maybe make gradient buttons a seperate component and then nest it in this page
+		@import url('$lib/styles/gradientButtons.css');
+	*/
+	.gradientButton {
+	}
+</style>
