@@ -1,9 +1,14 @@
 <script lang="ts">
+	import { injectTypeDivs } from './typeDivInjection';
+
 	function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
-
-		var fields = (document.getElementById('metadataFields') as HTMLInputElement).value;
-		alert('Type made with name ' + name + ' and with fields ' + fields);
+		var fields = (document.getElementById('metadataFields') as HTMLInputElement).value.split(', ');
+		var typeObject = { fields: fields };
+		localStorage.setItem('Type_' + name, JSON.stringify(typeObject));
+		injectTypeDivs();
+		alert('Type made');
+		//localStorage.getItem('Type_' + name)
 	}
 </script>
 
