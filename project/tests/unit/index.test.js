@@ -20,7 +20,26 @@ async function connectToDatabase() {
 }
 
 async function insertDB() {
+    let assetTypeId;
+
     try {
+        // Insert AssetType and get its _id
+        const assetTypeResult = await database.collection('AssetType').insertOne({
+            typeTitle: "File",
+            MetaData: {
+                lineNum: "int",
+                'programming-language': "string"
+            }
+        });
+        assetTypeId = assetTypeResult.insertedId; // Store the _id of the inserted AssetType
+
+    } catch (error) {
+        console.error("Could not insert into AssetType collection: ", error);
+        throw error; // If error occurs here, we throw it to avoid inconsistent data
+    }
+
+    try {
+        // Insert Asset with a reference to the AssetType's _id
         await database.collection('Asset').insertOne({
             asset_id: 1,
             title: "FileNumberOne",
@@ -28,13 +47,17 @@ async function insertDB() {
             MetaData: {
                 lineNum: 50,
                 'programming-language': "Java"
-            }
+            },
+            assetTypeId: assetTypeId // Reference to AssetType document
         });
+
     } catch (error) {
-        console.log("Could not query db: ", error);
+        console.error("Could not insert into Asset collection: ", error);
         throw error;
     }
 }
+
+
 async function initialiseDatabase() {
     await connectToDatabase();
     await insertDB();
@@ -50,6 +73,16 @@ async function select(query) {
         console.log("Could not query db: ", error);
         throw error;
     }
+}
+
+async function selectType(query) {
+	try {
+		const assetType = await database.collection('AssetType').findOne(query);
+		return assetType;
+	} catch (error) {
+		console.log("Could not query assetType: ", error);
+		throw error;
+	}
 }
 
 beforeAll(async () => {
@@ -85,4 +118,22 @@ test("SelectAssetLink", async () => {
     let query = {asset_id: 1}
 	const result = await select(query)
 	expect(result.link).toEqual("www.w3schools.com");
+})
+
+test("SelectAssetType", async () => {
+	let query = {typeTitle: "File"}
+	const result = await selectType(query)
+	expect(result.typeTitle).toEqual("File");
+})
+
+test("SelectTypeLineNum", async () => {
+	let query = {"MetaData.lineNum": "int"}
+	const result = await selectType(query)
+	expect(result.MetaData.lineNum).toEqual("int");
+})
+
+test("SelectTypeLang", async () => {
+	let query = {"MetaData.programming-language": "string"}
+	const result = await selectType(query)
+	expect(result.MetaData['programming-language']).toEqual("string");
 })
