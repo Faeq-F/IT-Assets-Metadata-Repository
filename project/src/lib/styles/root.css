@@ -6,7 +6,3 @@
 	--primary-highlight: oklch(97% 0.2 var(--hue));
 	--header-bg: oklch(35% 0.01 200);
 }
-
-body {
-	background-color: #f4f7ff;
-}

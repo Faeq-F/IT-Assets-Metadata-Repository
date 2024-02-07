@@ -37,6 +37,8 @@ You may edit it as you like, but please do not remove the default topics or the 
 
 ### Suggestions
 
+- read the 'Skeleton' [UI Library's documentation](https://www.skeleton.dev/docs/introduction) while developing the site - has many components that you can immediately import and use
+- install the 'Tailwind CSS IntelliSense' extension for VS Code - IntelliSense for Tailwind
 - install the 'Document This' extension for VS Code - Automatically generates detailed JSDoc comments
 - install the 'Simple Hide Files' extension for VS Code - Hides files that you do not need to look at from the explorer pane
 - have the local server running while writing code - it can provide further insights into errors

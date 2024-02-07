@@ -15,6 +15,9 @@
     "project/playwright.config.js": true,
     "project/svelte.config.js": true,
     "project/vite.config.js": true,
-    "project/node_modules": true
+    "project/node_modules": true,
+    "project/postcss.config.cjs": true,
+    "project/tailwind.config.js": true,
+    "project/tsconfig.json": true
   }
 }
