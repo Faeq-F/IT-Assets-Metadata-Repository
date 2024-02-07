@@ -11,7 +11,7 @@
     "project/.prettierrc": true,
     "project/jsconfig.json": true,
     "project/jsdoc-config.json": true,
-    "project/package-lock.json": true,
+    "project/package-lock.json": false,
     "project/playwright.config.js": true,
     "project/svelte.config.js": true,
     "project/vite.config.js": true,

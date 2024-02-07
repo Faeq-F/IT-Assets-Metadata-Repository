@@ -2,7 +2,20 @@
 	import { Content, Modal, Trigger } from 'sv-popup';
 	import MakeType from './MakeType.svelte';
 	import { AppBar } from '@skeletonlabs/skeleton';
-	import MakeAsset from '../assets/makeAsset.svelte';
+	import { injectTypeDivs } from './typeDivInjection';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
+
+	injectTypeDivs();
+
+	let AreThereTypes = false;
+	onMount(() => {
+		if (browser) {
+			if (document.getElementsByClassName('typesContainer')[0].firstChild) {
+				AreThereTypes = true;
+			}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -15,15 +28,19 @@
 	<div class="card" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				<p id="nothingHere">
-					It doesn't look like you have any types yet, click the ➕ to get started
-				</p>
+				{#if AreThereTypes}
+					<p id="nothingHere">Your types:</p>
+				{:else}
+					<p id="nothingHere">
+						It doesn't look like you have any types yet, click the ➕ to get started
+					</p>
+				{/if}
 			</svelte:fragment>
 
 			<svelte:fragment slot="trail">
 				<Modal>
 					<Content>
-						<MakeAsset />
+						<MakeType />
 					</Content>
 					<Trigger>
 						<button id="assetMaker" class="cardButton card">➕</button>
@@ -34,11 +51,7 @@
 	</div>
 </div>
 
-<div class="assetsContainer">
-	<div class="assetCard card">Example Type Card 1</div>
-</div>
-
-<p id="bottom">Something at the bottom to see navbar animation work</p>
+<div class="typesContainer"></div>
 
 <style>
 	@import url('$lib/styles/card.css');
@@ -74,7 +87,7 @@
 		display: table;
 	}
 
-	.assetsContainer {
+	.typesContainer {
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;

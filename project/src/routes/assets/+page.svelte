@@ -7,6 +7,21 @@
 	function searchKeyword() {
 		alert((document.getElementById('keyword') as HTMLInputElement).value);
 	}
+
+	import { injectAssetDivs } from './assetDivInjection';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+
+	injectAssetDivs();
+
+	let AreThereAssets = false;
+	onMount(() => {
+		if (browser) {
+			if (document.getElementsByClassName('assetsContainer')[0].firstChild) {
+				AreThereAssets = true;
+			}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -19,9 +34,13 @@
 	<div class="card" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				<p id="nothingHere">
-					It doesn't look like you have any assets yet, click the ➕ to get started
-				</p>
+				{#if AreThereAssets}
+					<p id="nothingHere">Your assets:</p>
+				{:else}
+					<p id="nothingHere">
+						It doesn't look like you have any assets yet, click the ➕ to get started
+					</p>
+				{/if}
 			</svelte:fragment>
 
 			<svelte:fragment slot="trail">
@@ -49,16 +68,7 @@
 	</div>
 </div>
 <br />
-<div class="assetsContainer">
-	<div class="assetCard card">Example Asset Card 1</div>
-	<div class="assetCard card">Example Asset Card 2</div>
-	<div class="assetCard card">Example Asset Card 3</div>
-	<div class="assetCard card">Example Asset Card 4</div>
-	<div class="assetCard card">Example Asset Card 5</div>
-	<div class="assetCard card">Example Asset Card 6</div>
-	<!--There is an odd number of assets that are currently loaded in this div, so the last card should fill the remaining area-->
-	<div class="assetCard card">Example Asset Card 7</div>
-</div>
+<div class="assetsContainer"></div>
 
 <style>
 	@import url('$lib/styles/root.css');

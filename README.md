@@ -14,9 +14,12 @@ You may edit it as you like, but please do not remove the default topics or the 
 ## Run project locally
 
 - run 'npm run build'
-- run 'npm run preview'
+- run 'node ./src/routes/api/index.cjs' to start the database server
+- run 'npm run preview' to see the deliverable application (run in a different thread / terminal)
 
 ## Development
+
+- run 'node ./src/routes/api/index.cjs' to start the database server
 
 - run 'npm run dev' to run the project with live-reload and error messaging
 
