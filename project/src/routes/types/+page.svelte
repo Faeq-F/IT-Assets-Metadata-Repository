@@ -16,6 +16,7 @@
 			}
 		}
 	});
+	let closeModal = false;
 </script>
 
 <svelte:head>
@@ -25,7 +26,7 @@
 <h1 class="h1">Asset types management</h1>
 <br />
 <div>
-	<div class="card" id="assetHeader">
+	<div class="Card" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AreThereTypes}
@@ -38,12 +39,12 @@
 			</svelte:fragment>
 
 			<svelte:fragment slot="trail">
-				<Modal>
+				<Modal close={closeModal}>
 					<Content>
-						<MakeType />
+						<MakeType {closeModal} />
 					</Content>
 					<Trigger>
-						<button id="assetMaker" class="cardButton card">➕</button>
+						<button id="assetMaker" class="CardButton Card">➕</button>
 					</Trigger>
 				</Modal>
 			</svelte:fragment>

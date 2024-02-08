@@ -12,7 +12,7 @@ export function injectAssetDivs() {
 					var child = document.createElement('someuniquetag');
 
 					child.innerHTML =
-						'<div class="card assetCard"><pre>' +
+						'<div class="Card assetCard"><pre>' +
 						key.replace('Asset_', '') +
 						'<br /><br />Link: ' +
 						JSON.parse(value).link +

@@ -24,29 +24,56 @@
 </script>
 
 <div class="makeAssets card">
-	<header>Make Assets</header>
-	<form>
-		<label for="assetName" class="formlabel">Asset Name: </label>
-		<input type="text" id="assetName" name="assetName" placeholder="Enter Asset Name" /><br /><br />
+	<div class="Card">
+		<header class="h2">Make an Asset</header>
+		<form>
+			<label for="assetName" class="formlabel">
+				<p>Asset Name:</p>
+				<input
+					type="text"
+					id="assetName"
+					name="assetName"
+					placeholder="Enter Asset Name"
+					data-focusindex="0"
+					class="input w-96"
+				/>
+			</label><br />
 
-		<label for="assetLink" class="formlabel">Asset Link: </label>
-		<input
-			type="text"
-			id="assetLink"
-			name="assetLink"
-			placeholder="Enter the link to the Asset"
-		/><br /><br />
+			<label for="assetLink" class="formlabel">
+				<p>Asset Link:</p>
+				<input
+					type="text"
+					id="assetLink"
+					name="assetLink"
+					placeholder="Enter the link to the Asset"
+					data-focusindex="0"
+					class="input w-96"
+				/>
+			</label><br />
 
-		<label for="assetType" class="formlabel">Asset Type: </label><br />
-		<select id="assetType">
-			<option>Select type</option>
-		</select>
+			<label for="assetType" class="formlabel">
+				<p>Asset Type:</p>
 
-		<br />
-		<br />
-	</form>
-	<form id="metadataForm"></form>
-	<br />
-	<br />
-	<button id="assetMaker" on:click={makeAsset}> Make Asset</button>
+				<select id="assetType" class="select">
+					<option>Select type</option>
+				</select>
+			</label>
+
+			<br />
+			<form id="metadataForm"></form>
+			<br />
+			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeAsset}>
+				Make Asset</button
+			>
+		</form>
+	</div>
 </div>
+
+<style>
+	@import url('$lib/styles/card.css');
+	@import url('$lib/styles/makeModal.css');
+
+	#metadataForm {
+		position: initial;
+	}
+</style>

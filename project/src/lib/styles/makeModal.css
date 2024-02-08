@@ -1,0 +1,26 @@
+.Card {
+  margin: 0px;
+  padding: 10px;
+  max-width: 100%;
+  width: 100%;
+}
+
+.makeAssets {
+  padding: 30px;
+}
+
+header {
+  margin-top: 30px;
+}
+
+p {
+  margin-bottom: 5px;
+}
+
+form {
+  /** Center the form */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

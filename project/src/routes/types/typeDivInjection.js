@@ -12,7 +12,7 @@ export function injectTypeDivs() {
 					var child = document.createElement('someuniquetag');
 
 					child.innerHTML =
-						'<div class="card typeCard">' +
+						'<div>' +
 						key.replace('Type_', '') +
 						'<br /><br />Fields required: ' +
 						JSON.parse(value).fields +
