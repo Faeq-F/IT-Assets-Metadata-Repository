@@ -36,8 +36,13 @@ app.post('/api/teamproject/AddAssets', multer().none(), (request, response) => {
 	});
 });
 app.delete('/api/teamproject/DeleteAssets', (request, response) => {
-	database.collection('Teamproject').deleteOne({
-		id: request.query.id
+	const asset = request.body;
+
+	database.collection('Asset').deleteOne({
+		title: asset.name,
+		link: asset.link,
+		'MetaData.lineNum': asset.metadata[line-num],
+		'MetaData.programming-language': asset.metadata[programming-language] 
 	});
 	response.json('Deleted');
 });
