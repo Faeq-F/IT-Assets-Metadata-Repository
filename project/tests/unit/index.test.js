@@ -1,3 +1,4 @@
+import { response } from 'express';
 import { MongoClient } from 'mongodb';
 import { describe, it, expect, test, beforeAll } from 'vitest';
 
@@ -13,6 +14,15 @@ app.use(cors());
 var URI = 'mongodb+srv://jack:1234@cluster0.lwomw.mongodb.net/?retryWrites=true&w=majority';
 var DATABASEName = 'Teamproject';
 var database;
+let assets = [];
+
+function refreshAssets() {
+    fetch(URI + 'api/teamproject/GetAssets')
+        .then((response) => response.json())
+        .then((data) => {
+            assets = data;
+        });
+}
 
 async function connectToDatabase() {
     const client = await MongoClient.connect(URI);
@@ -136,4 +146,38 @@ test("SelectTypeLang", async () => {
 	let query = {"MetaData.programming-language": "string"}
 	const result = await selectType(query)
 	expect(result.MetaData['programming-language']).toEqual("string");
+})
+
+test("DeleteWithAPI", async () => {
+    const resp = fetch(URI + '/api/teamproject/DeleteAssets', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: "Login API",
+            link: "www.api.com",
+            metadata: {
+                "programming-language": "Python",
+                "line-num": 30
+            }
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to delete asset');
+        }
+    })
+    .then(data => {
+        console.log(data); // Output the response from the server
+    })
+    .catch(error => {
+        console.error('Error deleting asset:', error);
+    });
+
+    let query = {title: "FileNumberOne"}
+    const result = await selectType(query)
+    expect(result).toEqual(null);
 })

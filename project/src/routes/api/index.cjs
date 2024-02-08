@@ -27,17 +27,26 @@ app.get('/api/teamproject/GetAssets', (request, reponse) => {
 		});
 });
 app.post('/api/teamproject/AddAssets', multer().none(), (request, response) => {
-	database.collection('Teamproject').count({}, function (error, numOfAssets) {
-		database.collection('Teamproject').insertOne({
-			id: (numOfAssets + 1).toString(),
-			asset_name: request.body.newAssets
-		});
-		response.json('Added sir');
+	const asset = request.body;
+
+	database.collection('Asset').insertOne({
+		title: asset.name,
+		link: asset.link,
+		MetaData: asset.metadata,
+		assetType: asset.assetType
 	});
+
+	response.json('Added sir');
 });
+
 app.delete('/api/teamproject/DeleteAssets', (request, response) => {
-	database.collection('Teamproject').deleteOne({
-		id: request.query.id
+	const asset = request.body;
+
+	database.collection('Asset').deleteOne({
+		title: asset.name,
+		link: asset.link,
+		'MetaData.lineNum': asset.metadata[line-num],
+		'MetaData.programming-language': asset.metadata[programming-language] 
 	});
 	response.json('Deleted');
 });
