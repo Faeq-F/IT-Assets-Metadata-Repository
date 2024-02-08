@@ -3,12 +3,12 @@
 </script>
 
 <svelte:head>
-	<title>Login</title>
+	<title>Register</title>
 </svelte:head>
 
 <form action="" class="userForm" use:focusTrap={true}>
 	<label for="username" class="label">
-		<p>Username:</p>
+		<p>Choose a username:</p>
 		<div class="input-group input-group-divider grid-cols-[1fr_auto]">
 			<input
 				type="text"
@@ -25,7 +25,7 @@
 	</label>
 	<br />
 	<label for="password" class="label">
-		<p>Password:</p>
+		<p>Choose a Password:</p>
 		<input
 			type="password"
 			id="password"
@@ -36,11 +36,23 @@
 		/>
 	</label>
 	<br />
-	<a href="/home">
-		<button class="variant-filled-primary btn w-52">Log in</button>
+	<label for="repeatPassword" class="label">
+		<p>Repeat Password:</p>
+		<input
+			type="password"
+			id="password"
+			name="password"
+			data-focusindex="1"
+			class="input"
+			placeholder="Enter Password again..."
+		/>
+	</label>
+	<br />
+	<a href="/">
+		<button class="variant-filled-primary btn w-52">Back to login</button>
 	</a>
 	<a href="/register">
-		<button class="variant-filled-primary btn w-52">Sign up</button>
+		<button class="variant-filled-primary btn w-52">Create account</button>
 	</a>
 </form>
 
