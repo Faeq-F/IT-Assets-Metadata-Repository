@@ -15,8 +15,13 @@
 			let value = metadataInputs[i].value;
 			metadataObject = { ...metadataObject, [key]: value };
 		}
+		// fetch request to server-side
 		var assetObject = { name: name, link: link, type: type, metadata: metadataObject };
-		localStorage.setItem('Asset_' + name, JSON.stringify(assetObject));
+		let API_URL = 'http://localhost:5038/';
+		fetch(API_URL + '/api/teamproject/AddAssets', {
+			method: 'POST',
+			body: JSON.stringify(assetObject)
+		});
 		alert('The asset has been created');
 	}
 
