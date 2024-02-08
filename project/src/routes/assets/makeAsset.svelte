@@ -17,7 +17,7 @@
 		}
 		// fetch request to server-side
 		var assetObject = { name: name, link: link, type: type, metadata: metadataObject };
-		let API_URL = 'http://localhost:5038/';
+		let API_URL = 'http://localhost:5038';
 		fetch(API_URL + '/api/teamproject/AddAssets', {
 			method: 'POST',
 			body: JSON.stringify(assetObject)
