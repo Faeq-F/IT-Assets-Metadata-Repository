@@ -7,8 +7,8 @@ const { request, response } = require('express');
 var app = Express();
 app.use(cors());
 
-var URI = 'mongodb+srv://jack:1234@cluster0.lwomw.mongodb.net/?retryWrites=true&w=majority';
-var DATABASEName = 'Teamproject';
+var URI = 'mongodb+srv://zlac241:123@cluster0.hc6vpim.mongodb.net/?retryWrites=true&w=majority';
+var DATABASEName = 'teamproject';
 var database;
 
 app.listen(5038, () => {
