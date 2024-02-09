@@ -28,7 +28,7 @@
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
 	<svelte:fragment slot="header">
-		{#if $page.url.pathname != '/'}
+		{#if ($page.url.pathname != '/' && $page.url.pathname != '/register')}
 			<NavBar></NavBar>
 		{/if}
 	</svelte:fragment>
