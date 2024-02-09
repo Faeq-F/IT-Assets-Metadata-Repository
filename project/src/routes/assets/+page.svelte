@@ -32,12 +32,20 @@
 	function drawerOpen(): void {
 		drawerStore.open({});
 	}
+	function applyFilters(): void {
+		drawerStore.close();
+	}
 </script>
 
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
-<Drawer><FilterDrawer /></Drawer>
+<Drawer>
+		<FilterDrawer />
+		<div class="variant-ghost" id="applyButton">    
+			<button type="button" on:click={applyFilters}> Apply Filters</button>
+		</div>
+</Drawer>
 <AppShell slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64">
 	<svelte:fragment slot="header">
 		<h1 class="h1">Assets</h1>
@@ -77,12 +85,10 @@
 						</Modal>
 						{#if AreThereAssets}
 							<div class="items-left">
-								<button class="filterButton" on:click={drawerOpen}>
-									Filters
-								</button>
+								<button class="filterButton" on:click={drawerOpen}> Filters </button>
 							</div>
 						{:else}
-						<p></p>
+							<p></p>
 						{/if}
 					</svelte:fragment>
 				</AppBar>
@@ -138,5 +144,11 @@
 		float: right;
 		margin-right: 20px;
 	}
-
+	
+    #applyButton{
+        text-align: center;
+        margin-top: 5%;
+        margin-left: 45%;
+        margin-right: 45%;
+    }
 </style>
