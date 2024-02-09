@@ -18,9 +18,6 @@
 				data-focusindex="0"
 				class="input w-96"
 			/>
-			<a href="/" title="Username already in use"
-				><i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i></a
-			>
 		</div>
 	</label>
 	<br />
