@@ -2,6 +2,7 @@
 	//Run 'npm install' to make sure you have all the dependencies
 	import { Modal, Content, Trigger } from 'sv-popup';
 	import MakeAsset from './makeAsset.svelte';
+	import FilterDrawer from './filterDrawer.svelte';
 	import { AppBar, AppShell, Autocomplete } from '@skeletonlabs/skeleton';
 
 	function searchKeyword() {
@@ -36,7 +37,7 @@
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
-<Drawer>Filters</Drawer>
+<Drawer><FilterDrawer /></Drawer>
 <AppShell slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64">
 	<svelte:fragment slot="header">
 		<h1 class="h1">Assets</h1>
@@ -45,11 +46,6 @@
 			<div class="card" id="assetHeader">
 				<AppBar background="transparent">
 					<svelte:fragment slot="lead">
-						<div class="items-left">
-							<button class="btn btn-sm mr-4 " on:click={drawerOpen}>
-								Filters
-							</button>
-						</div>
 						{#if AreThereAssets}
 							<p id="nothingHere">Your assets:</p>
 						{:else}
@@ -79,15 +75,21 @@
 								<button id="assetMaker" class="cardButton card">➕</button>
 							</Trigger>
 						</Modal>
+						{#if AreThereAssets}
+							<div class="items-left">
+								<button class="filterButton" on:click={drawerOpen}>
+									Filters
+								</button>
+							</div>
+						{:else}
+						<p></p>
+						{/if}
 					</svelte:fragment>
 				</AppBar>
 			</div>
 		</div>
 		<br />
 	</svelte:fragment>
-	<!-- <svelte:fragment slot="sidebarLeft">
-		<FilterDrawer />
-	</svelte:fragment> -->
 </AppShell>
 <div class="assetsContainer"></div>
 
@@ -136,4 +138,5 @@
 		float: right;
 		margin-right: 20px;
 	}
+
 </style>
