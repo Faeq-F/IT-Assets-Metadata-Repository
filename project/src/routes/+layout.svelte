@@ -1,7 +1,8 @@
 <script lang="ts">
 	import '../app.pcss';
-	import { page } from '$app/stores';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	//@ts-ignore
+	import { page } from '$app/stores'; //Does work
+	import { AppShell } from '@skeletonlabs/skeleton';
 
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';

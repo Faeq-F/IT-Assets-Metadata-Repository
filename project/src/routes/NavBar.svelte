@@ -9,7 +9,9 @@
 	class="header sticky"
 >
 	<svelte:fragment slot="lead">
-		<strong class="text-xl uppercase">Asset Application</strong>
+		<strong class="text-xl uppercase"
+			><i class="fa-brands fa-codepen"></i>&nbsp;&nbsp;IT Assets Metadata Repository
+		</strong>
 	</svelte:fragment>
 
 	<svelte:fragment slot="trail">

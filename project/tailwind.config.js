@@ -1,7 +1,6 @@
 // @ts-check
 import { join } from 'path';
 
-import { UItheme } from './UItheme';
 import forms from '@tailwindcss/forms';
 
 // 1. Import the Skeleton plugin
@@ -24,7 +23,7 @@ export default {
 		// 4. Append the Skeleton plugin (after other plugins)
 		skeleton({
 			themes: {
-				custom: [UItheme],
+				custom: [],
 				preset: [
 					{
 						name: 'modern',

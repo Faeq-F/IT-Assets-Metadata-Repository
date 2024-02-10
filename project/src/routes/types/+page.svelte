@@ -1,9 +1,9 @@
-<script>
-	import { Content, Modal, Trigger } from 'sv-popup';
+<script lang="ts">
 	import MakeType from './MakeType.svelte';
-	import { AppBar } from '@skeletonlabs/skeleton';
+	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { injectTypeDivs } from './typeDivInjection';
-	import { browser } from '$app/environment';
+	//@ts-ignore
+	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 
 	injectTypeDivs();
@@ -16,7 +16,13 @@
 			}
 		}
 	});
-	let closeModal = false;
+
+	const makeTypePopup: PopupSettings = {
+		event: 'click',
+		target: 'makeTypePopup',
+		placement: 'bottom',
+		closeQuery: ''
+	};
 </script>
 
 <svelte:head>
@@ -37,16 +43,9 @@
 					</p>
 				{/if}
 			</svelte:fragment>
-
 			<svelte:fragment slot="trail">
-				<Modal close={closeModal}>
-					<Content>
-						<MakeType {closeModal} />
-					</Content>
-					<Trigger>
-						<button id="assetMaker" class="CardButton Card">➕</button>
-					</Trigger>
-				</Modal>
+				<button id="assetMaker" class="CardButton Card" use:popup={makeTypePopup}>➕</button>
+				<MakeType />
 			</svelte:fragment>
 		</AppBar>
 	</div>
@@ -55,15 +54,8 @@
 <div class="typesContainer"></div>
 
 <style>
+	@import url('$lib/styles/root.css');
 	@import url('$lib/styles/card.css');
-
-	h1 {
-		text-align: center;
-		margin-top: 15vh;
-	}
-	#bottom {
-		margin-top: 150vh;
-	}
 
 	#assetMaker {
 		width: 2vw;

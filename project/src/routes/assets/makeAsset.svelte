@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { addTypeOptions } from './makeAsset';
+	import { addTypeOptions } from './makeAssetUI';
+
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 
 	function makeAsset() {
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;
@@ -17,16 +20,22 @@
 		}
 		var assetObject = { name: name, link: link, type: type, metadata: metadataObject };
 		localStorage.setItem('Asset_' + name, JSON.stringify(assetObject));
-		alert('The asset has been created');
+
+		toastStore.trigger({
+			message: 'Asset created',
+			background: 'variant-ghost-success',
+			timeout: 3000
+		});
 	}
 
 	addTypeOptions();
 </script>
 
-<div class="makeAssets card">
+<div class="makeAssets card w-72 p-4 shadow-xl" data-popup="makeAssetPopup" id="makeAssetPopup">
 	<div class="Card">
 		<header class="h2">Make an Asset</header>
-		<form>
+		<br /><br />
+		<form id="rootCreateAssetForm">
 			<label for="assetName" class="formlabel">
 				<p>Asset Name:</p>
 				<input
@@ -54,14 +63,13 @@
 			<label for="assetType" class="formlabel">
 				<p>Asset Type:</p>
 
-				<select id="assetType" class="select">
+				<select id="assetType" class="select w-96">
 					<option>Select type</option>
 				</select>
 			</label>
 
 			<br />
 			<form id="metadataForm"></form>
-			<br />
 			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeAsset}>
 				Make Asset</button
 			>
@@ -73,7 +81,22 @@
 	@import url('$lib/styles/card.css');
 	@import url('$lib/styles/makeModal.css');
 
+	#makeAssetPopup {
+		position: absolute;
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%);
+		width: 50vw;
+		height: 60vh;
+	}
+
 	#metadataForm {
 		position: initial;
+		transform: initial;
+	}
+
+	#rootCreateAssetForm {
+		height: 75%;
+		overflow-y: scroll;
 	}
 </style>

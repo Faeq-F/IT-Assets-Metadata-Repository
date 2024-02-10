@@ -1,4 +1,3 @@
-.typesContainer>*,
 .Card {
 	height: 50vh;
 	width: 70%;
@@ -35,11 +34,4 @@
 .CardButton {
 	height: initial;
 	width: initial;
-}
-
-.typesContainer * {
-	height: 50vh;
-	min-width: 30vw;
-	margin: 10px;
-	flex: 1;
 }

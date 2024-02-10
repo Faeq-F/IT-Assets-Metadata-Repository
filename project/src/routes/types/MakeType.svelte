@@ -1,30 +1,27 @@
 <script lang="ts">
-	import { Toast, getToastStore } from '@skeletonlabs/skeleton';
-	import type { ToastSettings, ToastStore } from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 
 	import { injectTypeDivs } from './typeDivInjection';
-	export let closeModal;
 	function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
 		var fields = (document.getElementById('metadataFields') as HTMLInputElement).value.split(', ');
 		var typeObject = { fields: fields };
 		localStorage.setItem('Type_' + name, JSON.stringify(typeObject));
-		closeModal = true;
 		injectTypeDivs();
-		const t: ToastSettings = {
+
+		toastStore.trigger({
 			message: 'Type created',
 			background: 'variant-ghost-success',
 			timeout: 3000
-		};
-		toastStore.trigger(t);
+		});
 	}
 </script>
 
-<div class="makeAssets card">
+<div class="makeAssets card w-72 p-4 shadow-xl" data-popup="makeTypePopup" id="makeTypePopup">
 	<div class="Card">
 		<header class="h2">Make an Asset Type</header>
-
+		<br /><br />
 		<form>
 			<label for="typeName" class="formlabel">
 				<p>Type Name:</p>
@@ -60,4 +57,12 @@
 <style>
 	@import url('$lib/styles/card.css');
 	@import url('$lib/styles/makeModal.css');
+	#makeTypePopup {
+		position: absolute;
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%);
+		width: 50vw;
+		height: 50vh;
+	}
 </style>

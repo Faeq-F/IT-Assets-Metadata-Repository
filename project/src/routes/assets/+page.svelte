@@ -1,78 +1,17 @@
 <script lang="ts">
-	//Run 'npm install' to make sure you have all the dependencies
-	import { Modal, Content, Trigger } from 'sv-popup';
-	import MakeAsset from './makeAsset.svelte';
-	import { AppBar, Autocomplete } from '@skeletonlabs/skeleton';
-
-	function searchKeyword() {
-		alert((document.getElementById('keyword') as HTMLInputElement).value);
-	}
+	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { filterAssets } from './keywordSearch';
 
 	import { injectAssetDivs } from './assetDivInjection';
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
+	//@ts-ignore
+	import { browser } from '$app/environment'; //Does work
+	import MakeAsset from './makeAsset.svelte';
 
 	injectAssetDivs();
 
 	let AreThereAssets = false;
 
-	function highlight(text: string) {
-		var container = document.getElementsByClassName('assetsContainer')[0];
-		let items = container.getElementsByTagName('*');
-		for (let i in items) {
-			let inputText = items[i];
-			var innerHTML = inputText.innerHTML;
-			var index = innerHTML.indexOf(text);
-			if (index >= 0) {
-				index = innerHTML.indexOf(text);
-				innerHTML =
-					innerHTML.substring(0, index) +
-					"<span style='background-color: yellow;' class='highlight'>" +
-					innerHTML.substring(index, index + text.length) +
-					'</span>' +
-					innerHTML.substring(index + text.length);
-				inputText.innerHTML = innerHTML;
-			}
-		}
-	}
-
-	function removeHighlights() {
-		var highlightElements = document.getElementsByClassName('highlight');
-		for (let i in highlightElements) {
-			let element = highlightElements[i] as HTMLElement;
-			if (element.outerHTML) {
-				element.outerHTML = element.innerText;
-			}
-		}
-	}
-
-	function filterAssets() {
-		let container = document.getElementsByClassName('assetsContainer')[0];
-		let items = container.getElementsByTagName('*');
-		let searchTerm = (document.getElementById('keyword') as HTMLInputElement).value;
-		if (searchTerm != '') {
-			for (let i in items) {
-				if (items[i].tagName == 'DIV') {
-					let data = (items[i] as HTMLDivElement).innerText;
-					data = data.replace(/(\r\n|\n|\r)/gm, '');
-					if (!data.includes(searchTerm)) {
-						(items[i] as HTMLDivElement).style.display = 'none';
-					} else {
-						(items[i] as HTMLDivElement).style.display = '';
-					}
-				}
-			}
-			removeHighlights();
-			highlight(searchTerm);
-		} else {
-			for (let i in items) {
-				if (items[i].tagName == 'DIV') {
-					(items[i] as HTMLDivElement).style.display = '';
-				}
-			}
-			removeHighlights();
-		}
-	}
 	onMount(() => {
 		if (browser) {
 			if (document.getElementsByClassName('assetsContainer')[0].firstChild) {
@@ -87,6 +26,13 @@
 			filterAssets();
 		}
 	});
+
+	const makeAssetPopup: PopupSettings = {
+		event: 'click',
+		target: 'makeAssetPopup',
+		placement: 'bottom',
+		closeQuery: ''
+	};
 </script>
 
 <svelte:head>
@@ -120,14 +66,9 @@
 						on:keyup={filterAssets}
 					/>
 				</div>
-				<Modal>
-					<Content>
-						<MakeAsset />
-					</Content>
-					<Trigger>
-						<button id="assetMaker" class="CardButton Card">➕</button>
-					</Trigger>
-				</Modal>
+
+				<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
+				<MakeAsset />
 			</svelte:fragment>
 		</AppBar>
 	</div>
@@ -138,11 +79,6 @@
 <style>
 	@import url('$lib/styles/root.css');
 	@import url('$lib/styles/card.css');
-
-	h1 {
-		text-align: center;
-		margin-top: 15vh;
-	}
 
 	#assetMaker {
 		width: 2vw;
