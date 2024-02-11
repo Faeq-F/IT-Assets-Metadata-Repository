@@ -1,52 +1,68 @@
-var Express = require('express');
-var Mongoclient = require('mongodb').MongoClient;
-var cors = require('cors');
-const multer = require('multer');
-const { request, response } = require('express');
+const MongoClient = require('mongodb').MongoClient;
+const dotenv = require('dotenv');
+//get env vars
+const result = dotenv.config();
+if (result.error) {
+	throw result.error;
+}
+//save environment vars for current process
+const { parsed: envs } = result;
 
-var app = Express();
-app.use(cors());
-
-var URI = 'mongodb+srv://jack:1234@cluster0.lwomw.mongodb.net/?retryWrites=true&w=majority';
-var DATABASEName = 'Teamproject';
-var database;
-
-app.listen(5038, () => {
-	Mongoclient.connect(URI, (error, client) => {
-		database = client.db(DATABASEName);
-		console.log('Connected');
-	});
-});
-
-app.get('/api/teamproject/GetAssets', (request, reponse) => {
-	database
-		.collection('Teamproject')
-		.find({})
-		.toArray((error, result) => {
-			reponse.send(result);
+/**
+    Draw the connection srv and the db name from the config to return just one instance of that db.
+    Now this function call be called wherever a connection is needed.
+*/
+const getDbInstance = (/** @type {{ dbUrl: string; dbName: string; }} */ config) =>
+	new Promise((resolve, reject) => {
+		const client = new MongoClient(config.dbUrl, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true
 		});
-});
-app.post('/api/teamproject/AddAssets', multer().none(), (request, response) => {
-	const asset = request.body;
 
-	database.collection('Asset').insertOne({
-		title: asset.name,
-		link: asset.link,
-		MetaData: asset.metadata,
-		assetType: asset.assetType
+		client.connect((/** @type {any} */ error) => {
+			if (error) {
+				console.error(error);
+				reject(error);
+			}
+			let db = client.db(config.dbName);
+			resolve(db);
+		});
 	});
 
-	response.json('Added sir');
-});
+//DB operation functions
 
-app.delete('/api/teamproject/DeleteAssets', (request, response) => {
-	const asset = request.body;
-
-	database.collection('Asset').deleteOne({
-		title: asset.name,
-		link: asset.link,
-		'MetaData.lineNum': asset.metadata[line-num],
-		'MetaData.programming-language': asset.metadata[programming-language] 
+const insertDocument = async (/** @type {string} */ collection, /** @type {any} */ document) => {
+	const db = await getDbInstance({
+		dbUrl: envs.DB_API_URL,
+		dbName: envs.DB_NAME
 	});
-	response.json('Deleted');
-});
+	db.command({
+		insert: collection,
+		documents: [document]
+	});
+};
+
+//General use of insertDocument
+// insertDocument('AssetType', {
+// 	typeName: 'Source Code File1',
+// 	metadataFields: { Language: 'Text', Lines: 'Number' }
+// }).catch((err) => {
+// 	console.error(err);
+// });
+
+const readDocuments = async (/** @type {string} */ collection) => {
+	const db = await getDbInstance({
+		dbUrl: envs.DB_API_URL,
+		dbName: envs.DB_NAME
+	});
+	let dbCollection = db.collection(collection);
+	let result = await dbCollection.find();
+	return await result.toArray();
+};
+
+//General use of readDocuments
+// readDocuments('AssetType')
+// 	.then((result) => console.log(result))
+// 	.catch((err) => {
+// 		console.error(err);
+// 	});

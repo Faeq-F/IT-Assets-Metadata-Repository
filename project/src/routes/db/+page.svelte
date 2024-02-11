@@ -1,6 +1,9 @@
 <script>
 	let name = 'Asset App';
 	let API_URL = 'http://localhost:5038/';
+	/**
+	 * @type {any[]}
+	 */
 	let assets = [];
 	let newAssets = '';
 	function refreshAssets() {
@@ -28,6 +31,9 @@
 				refreshAssets();
 			});
 	}
+	/**
+	 * @param {string} id
+	 */
 	function deleteAssets(id) {
 		fetch(API_URL + 'api/teamproject/DeleteAssets?id=' + id, {
 			method: 'DELETE'
@@ -47,7 +53,7 @@
 	{#each assets as asset}
 		<p>
 			<b>*{asset.asset_name}</b>
-			<button on:click={deleteAssets(asset.id)}>Delete Assets</button>
+			<button on:click={() => deleteAssets(asset.id)}>Delete Assets</button>
 		</p>
 	{/each}
 </main>
