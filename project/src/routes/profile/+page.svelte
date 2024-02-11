@@ -2,17 +2,8 @@
 	<title>Profile</title>
 </svelte:head>
 
-<h1>Your account</h1>
-<p id="bottom">Something at the bottom to see navbar animation work</p>
+<h1 class="h1">Your account</h1>
 
 <style>
 	@import url('$lib/styles/root.css');
-
-	h1 {
-		text-align: center;
-		margin-top: 15vh;
-	}
-	#bottom {
-		margin-top: 150vh;
-	}
 </style>

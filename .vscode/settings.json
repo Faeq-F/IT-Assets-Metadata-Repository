@@ -11,10 +11,15 @@
     "project/.prettierrc": true,
     "project/jsconfig.json": true,
     "project/jsdoc-config.json": true,
-    "project/package-lock.json": true,
+    "project/package-lock.json": false,
     "project/playwright.config.js": true,
     "project/svelte.config.js": true,
     "project/vite.config.js": true,
-    "project/node_modules": true
-  }
+    "project/node_modules": true,
+    "project/postcss.config.cjs": true,
+    "project/tailwind.config.js": true,
+    "project/tsconfig.json": true,
+    "project/rollup.config.js": true
+  },
+  "cSpell.words": ["Mongoclient", "skeletonlabs", "Teamproject"]
 }
