@@ -18,7 +18,14 @@
 			let value = metadataInputs[i].value;
 			metadataObject = { ...metadataObject, [key]: value };
 		}
+
 		var assetObject = { name: name, link: link, type: type, metadata: metadataObject };
+		// fetch request to server-side
+		let API_URL = 'http://localhost:5038';
+		fetch(API_URL + '/api/teamproject/AddAssets', {
+			method: 'POST',
+			body: JSON.stringify(assetObject)
+		});
 		localStorage.setItem('Asset_' + name, JSON.stringify(assetObject));
 
 		toastStore.trigger({

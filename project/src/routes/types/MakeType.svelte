@@ -1,20 +1,59 @@
 <script lang="ts">
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { getToastStore, SlideToggle } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 
-	import { injectTypeDivs } from './typeDivInjection';
+	import { insertDocument } from '../api/apiRequests';
+
 	function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
-		var fields = (document.getElementById('metadataFields') as HTMLInputElement).value.split(', ');
-		var typeObject = { fields: fields };
-		localStorage.setItem('Type_' + name, JSON.stringify(typeObject));
-		injectTypeDivs();
-
-		toastStore.trigger({
-			message: 'Type created',
-			background: 'variant-ghost-success',
-			timeout: 3000
+		var typeObject = { typeName: name, metadataFields: fieldsSaved };
+		const data = new FormData();
+		data.append('newData', JSON.stringify(typeObject));
+		insertDocument('AssetType', data).then((response) => {
+			console.log(response);
 		});
+
+		//injectTypeDivs();
+	}
+
+	let fieldsSaved: any[] = [];
+
+	let currentFieldAddition: boolean = false;
+
+	function removeBottom(): void {
+		fieldsSaved.pop();
+		loadValuesIntoMetadataFieldsList();
+	}
+
+	function loadValuesIntoMetadataFieldsList() {
+		let list = document.getElementById('createdMetadataFieldsList') as HTMLUListElement;
+		let temp = '';
+		for (let field of fieldsSaved) {
+			temp += `<li class="variant-ghost-surface card"><span class="flex-auto">${field.field} is of type ${field.dataType} and it is ${field.list} that it can hold a list</span></li>`;
+		}
+		list.innerHTML = temp;
+	}
+
+	function addMetadataField() {
+		let name = (document.getElementById('addMetadataFieldName') as HTMLInputElement).value;
+		let typeList = document.getElementById('addMetadataFieldDataType') as HTMLSelectElement;
+		let type = typeList.options[typeList.selectedIndex].text;
+		if (name == '') {
+			toastStore.trigger({
+				message: 'Please give the field a name',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+		} else if (type == 'Select data type') {
+			toastStore.trigger({
+				message: 'Please choose a data type for the field',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+		} else {
+			fieldsSaved.push({ field: name, dataType: type, list: currentFieldAddition });
+			loadValuesIntoMetadataFieldsList();
+		}
 	}
 </script>
 
@@ -22,7 +61,7 @@
 	<div class="Card">
 		<header class="h2">Make an Asset Type</header>
 		<br /><br />
-		<form>
+		<form id="rootCreateTypeForm">
 			<label for="typeName" class="formlabel">
 				<p>Type Name:</p>
 				<input
@@ -36,15 +75,42 @@
 			</label>
 			<br />
 			<label for="metadataFields" class="formlabel">
-				<p>Metadata Fields:</p>
+				<p class="inline">Metadata Fields:</p>
+				<p class="absolute right-4 inline cursor-pointer text-sm" on:click={removeBottom}>
+					remove bottom field
+				</p>
+				<ul class="list" id="createdMetadataFieldsList"></ul>
+			</label>
+			<br />
+			<label for="addMetadata" class="formlabel">
+				<p>Add a metadata field:</p>
 				<input
 					type="text"
-					id="metadataFields"
-					name="metadataFields"
-					placeholder="Field1, Field2, Field3, etc."
+					id="addMetadataFieldName"
+					name="addMetadataFieldName"
+					placeholder="Field name, e.g. Author"
 					data-focusindex="0"
-					class="input w-96"
+					class="input w-auto"
 				/>
+				<select id="addMetadataFieldDataType" class="select w-auto">
+					<option>Select data type</option>
+					<option>Text</option>
+					<option>Number</option>
+					<option>Account</option>
+					<option>Asset</option>
+				</select>
+				<button id="metadataFieldAdder" class="CardButton Card" on:click={addMetadataField}
+					>➕</button
+				>
+				<span style="margin-top: 10px;display: block;">
+					<SlideToggle name="list" bind:checked={currentFieldAddition} active="bg-primary-700"
+						>{#if currentFieldAddition}
+							The Field holds a list
+						{:else}
+							The Field is a single value
+						{/if}
+					</SlideToggle>
+				</span>
 			</label>
 			<br />
 			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeType}
@@ -63,6 +129,17 @@
 		left: 50% !important;
 		transform: translate(-50%, -50%);
 		width: 50vw;
-		height: 50vh;
+		height: 60vh;
+	}
+	#metadataFieldAdder {
+		width: 2vw;
+		height: 2vw;
+		margin-left: 10px;
+		padding: 0;
+		display: inline;
+	}
+	#rootCreateTypeForm {
+		height: 75%;
+		overflow-y: scroll;
 	}
 </style>

@@ -2,7 +2,6 @@
 	"name": "project",
 	"version": "0.0.1",
 	"private": true,
-	"main": "./src/routes/api/index.cjs",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
@@ -70,6 +69,7 @@
 	"type": "module",
 	"dependencies": {
 		"@floating-ui/dom": "1.6.1",
+		"@types/mongodb": "^4.0.7",
 		"highlight.js": "11.9.0"
 	}
 }
