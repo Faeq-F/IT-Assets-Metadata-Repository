@@ -50,19 +50,33 @@ app.get(
 	}
 );
 
+//▰▰▰▰▰▰▰▰▰
+
+//insert a document into a collection
 app.post(
 	'/api/insert/collection/:name',
 	multer().none(),
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
-		const dataForm = request.body;
-		database.collection('Asset').insertOne({
-			title: dataForm.name,
-			link: dataForm.link,
-			MetaData: dataForm.metadata,
-			assetType: dataForm.assetType
-		});
+		let result = async (/** @type {string} */ collection) => {
+			const formData = request.body;
+			database.collection(collection).insertOne(JSON.parse(formData.newData));
+		};
+		result(request.params.name.toString()).then((result) => response.send(result));
 	}
 );
+
+/*
+	a response looks like:
+	{
+		"acknowledged" : true,
+		"insertedId" : ObjectId("56fc40f9d735c28df206d078")
+	}
+
+
+	you can use the acknowledged field to do error handling
+ */
+
+//▰▰▰▰▰▰▰▰▰
 
 // app.delete('/api/teamproject/DeleteAssets', (request, response) => {
 // 	const asset = request.body;
