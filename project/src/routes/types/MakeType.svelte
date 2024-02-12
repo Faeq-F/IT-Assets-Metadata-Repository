@@ -2,26 +2,17 @@
 	import { getToastStore, SlideToggle } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 
+	import { insertDocument } from '../api/apiRequests';
+
 	function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
 		var typeObject = { typeName: name, metadataFields: fieldsSaved };
-		// insertDocument('AssetType', typeObject)
-		// 	.then(() => {
-		// 		toastStore.trigger({
-		// 			message: 'Type created',
-		// 			background: 'variant-ghost-success',
-		// 			timeout: 3000
-		// 		});
-		// 	})
-		// 	.catch((err) => {
-		// 		toastStore.trigger({
-		// 			message: 'The Type could not be created',
-		// 			background: 'variant-ghost-error',
-		// 			timeout: 3000
-		// 		});
-		// 		console.error(err);
-		// 	});
-		//localStorage.setItem('Type_' + name, JSON.stringify(typeObject));
+		const data = new FormData();
+		data.append('newData', JSON.stringify(typeObject));
+		insertDocument('AssetType', data).then((response) => {
+			console.log(response);
+		});
+
 		//injectTypeDivs();
 	}
 
