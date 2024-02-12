@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
 	import '../app.pcss';
-	import { page } from '$app/stores';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	//@ts-ignore
+	import { page } from '$app/stores'; //Does work
+	import { AppShell } from '@skeletonlabs/skeleton';
 
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
@@ -24,8 +25,13 @@
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	import NavBar from './NavBar.svelte';
+
+	import { Toast } from '@skeletonlabs/skeleton';
+	import { initializeStores } from '@skeletonlabs/skeleton';
+	initializeStores();
 </script>
 
+<Toast />
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
 	<svelte:fragment slot="header">
 		{#if ($page.url.pathname != '/' && $page.url.pathname != '/register')}

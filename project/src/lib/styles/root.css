@@ -1,8 +1,9 @@
-:root {
-	--hue: 288;
-	--primary: oklch(0.8 0.2 var(--hue));
-	--secondaryPrimaryHue: calc(var(--hue) - 20);
-	--secondaryPrimaryColor: oklch(90% 0.2 var(--otherColorHue));
-	--primary-highlight: oklch(97% 0.2 var(--hue));
-	--header-bg: oklch(35% 0.01 200);
+* {
+	scrollbar-color: rgb(213, 144, 235) white;
+	scrollbar-width: thin;
+}
+
+h1 {
+	text-align: center;
+	margin-top: 15vh;
 }

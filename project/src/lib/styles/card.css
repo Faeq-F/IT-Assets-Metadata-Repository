@@ -1,4 +1,4 @@
-.card {
+.Card {
 	height: 50vh;
 	width: 70%;
 	max-width: 95%;
@@ -31,10 +31,11 @@
 		opacity 0.5s;
 }
 
-.cardButton {
+.CardButton {
 	height: initial;
 	width: initial;
 }
+<<<<<<< HEAD
 
 .typeCard,
 .assetCard {
@@ -43,3 +44,5 @@
 	margin: 10px;
 	flex: 1;
 }
+=======
+>>>>>>> main
