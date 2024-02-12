@@ -1,18 +1,19 @@
-import { browser } from '$app/environment';
+//@ts-ignore
+import { browser } from '$app/environment'; //Does work
+
 import { onMount } from 'svelte';
 
 export function injectAssetDivs() {
 	onMount(() => {
 		if (browser) {
 			const typesContainer = document.getElementsByClassName('assetsContainer')[0];
-			let storage = { ...localStorage };
 
 			for (const [key, value] of Object.entries(window.localStorage)) {
 				if (key.startsWith('Asset_')) {
 					var child = document.createElement('someuniquetag');
 
 					child.innerHTML =
-						'<div class="card assetCard"><pre>' +
+						'<div class="card assetCard variant-ghost-surface" style="padding: 10px; margin: 10px;"><pre>' +
 						key.replace('Asset_', '') +
 						'<br /><br />Link: ' +
 						JSON.parse(value).link +

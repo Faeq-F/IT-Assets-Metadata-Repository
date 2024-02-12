@@ -13,11 +13,16 @@ You may edit it as you like, but please do not remove the default topics or the 
 
 ## Run project locally
 
+- ensure your local .env file has the correct credentials
 - run 'npm run build'
 - run 'node ./src/routes/api/index.cjs' to start the database server
 - run 'npm run preview' to see the deliverable application (run in a different thread / terminal)
 
 ## Development
+
+- ensure your local .env file has the correct credentials
+
+- run 'npm run check' to type-check components with TypeScript
 
 - run 'node ./src/routes/api/index.cjs' to start the database server
 
@@ -40,7 +45,9 @@ You may edit it as you like, but please do not remove the default topics or the 
 
 ### Suggestions
 
+- use the [fontawesome site (free section)](https://fontawesome.com/search?o=r&m=free) to find icons - has many icons that you can immediately copy and paste the code for
 - read the 'Skeleton' [UI Library's documentation](https://www.skeleton.dev/docs/introduction) while developing the site - has many components that you can immediately import and use
+- use a cheat sheet for Tailwind CSS - [I use this one](https://flowbite.com/tools/tailwind-cheat-sheet/) - helps with knowing what certain classes are equivalent to
 - install the 'Tailwind CSS IntelliSense' extension for VS Code - IntelliSense for Tailwind
 - install the 'Document This' extension for VS Code - Automatically generates detailed JSDoc comments
 - install the 'Simple Hide Files' extension for VS Code - Hides files that you do not need to look at from the explorer pane
