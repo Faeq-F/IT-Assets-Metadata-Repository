@@ -1,28 +1,28 @@
-import { browser } from '$app/environment';
+//@ts-ignore
+import { browser } from '$app/environment'; //Does work
 import { onMount } from 'svelte';
+
+import { fetchDocuments } from '../api/apiRequests';
 
 export function injectTypeDivs() {
 	onMount(() => {
 		if (browser) {
-			const typesContainer = document.getElementsByClassName('typesContainer')[0];
-			let storage = { ...localStorage };
-
-			for (const [key, value] of Object.entries(window.localStorage)) {
-				if (key.startsWith('Type_')) {
+			fetchDocuments('AssetType').then((assetTypeDocuments) => {
+				const typesContainer = document.getElementsByClassName('typesContainer')[0];
+				for (let i of assetTypeDocuments) {
 					var child = document.createElement('someuniquetag');
-
 					child.innerHTML =
-						'<div class="card typeCard">' +
-						key.replace('Type_', '') +
+						'<div class="card assetCard variant-ghost-surface" style="padding: 10px; margin: 10px;">' +
+						i.typeName +
 						'<br /><br />Fields required: ' +
-						JSON.parse(value).fields +
+						JSON.stringify(i.metadataFields) +
 						'</div>';
 
 					typesContainer.appendChild(child);
 
 					child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
 				}
-			}
+			});
 		}
 	});
 }

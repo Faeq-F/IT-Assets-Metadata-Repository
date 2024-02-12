@@ -1,27 +1,38 @@
 <script lang="ts">
-	//Run 'npm install' to make sure you have all the dependencies
-	import { Modal, Content, Trigger } from 'sv-popup';
-	import MakeAsset from './makeAsset.svelte';
-	import { AppBar, Autocomplete } from '@skeletonlabs/skeleton';
-
-	function searchKeyword() {
-		alert((document.getElementById('keyword') as HTMLInputElement).value);
-	}
+	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { filterAssets } from './keywordSearch';
 
 	import { injectAssetDivs } from './assetDivInjection';
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
+	//@ts-ignore
+	import { browser } from '$app/environment'; //Does work
+	import MakeAsset from './makeAsset.svelte';
 
 	injectAssetDivs();
 
 	let AreThereAssets = false;
+
 	onMount(() => {
 		if (browser) {
 			if (document.getElementsByClassName('assetsContainer')[0].firstChild) {
 				AreThereAssets = true;
 			}
+
+			(document.getElementById('keyword') as HTMLInputElement).addEventListener(
+				'onkeyup',
+				filterAssets
+			);
+
+			filterAssets();
 		}
 	});
+
+	const makeAssetPopup: PopupSettings = {
+		event: 'click',
+		target: 'makeAssetPopup',
+		placement: 'bottom',
+		closeQuery: ''
+	};
 </script>
 
 <svelte:head>
@@ -31,7 +42,7 @@
 <h1 class="h1">Assets</h1>
 <br />
 <div>
-	<div class="card" id="assetHeader">
+	<div class="Card" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AreThereAssets}
@@ -52,17 +63,12 @@
 						name="keyword"
 						placeholder="Enter search term"
 						class=""
+						on:keyup={filterAssets}
 					/>
-					<button class="variant-ghost" on:click={searchKeyword}>Submit</button>
 				</div>
-				<Modal>
-					<Content>
-						<MakeAsset />
-					</Content>
-					<Trigger>
-						<button id="assetMaker" class="cardButton card">➕</button>
-					</Trigger>
-				</Modal>
+
+				<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
+				<MakeAsset />
 			</svelte:fragment>
 		</AppBar>
 	</div>
@@ -73,11 +79,6 @@
 <style>
 	@import url('$lib/styles/root.css');
 	@import url('$lib/styles/card.css');
-
-	h1 {
-		text-align: center;
-		margin-top: 15%;
-	}
 
 	#assetMaker {
 		width: 2vw;

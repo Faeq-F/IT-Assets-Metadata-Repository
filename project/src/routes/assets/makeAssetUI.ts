@@ -1,4 +1,6 @@
-import { browser } from '$app/environment';
+//@ts-ignore
+import { browser } from '$app/environment'; //Does work
+
 import { onMount } from 'svelte';
 
 export function addTypeOptions() {
@@ -8,7 +10,7 @@ export function addTypeOptions() {
 			var metadataForm = document.getElementById('metadataForm');
 
 			// @ts-ignore
-			for (const [key, value] of Object.entries(window.localStorage)) {
+			for (const [key] of Object.entries(window.localStorage)) {
 				if (key.startsWith('Type_')) {
 					var child = document.createElement('someuniquetag');
 
@@ -21,11 +23,13 @@ export function addTypeOptions() {
 			}
 
 			if (typeList) {
-				// @ts-ignore
-				typeList.addEventListener('change', (event) => {
+				// eslint-disable-line no-unused-vars
+				typeList.addEventListener('change', () => {
 					if (metadataForm) metadataForm.innerHTML = '';
-					// @ts-ignore
-					var selectedOption = typeList.options[typeList.selectedIndex].text;
+
+					var selectedOption = (typeList as HTMLSelectElement).options[
+						(typeList as HTMLSelectElement).selectedIndex
+					].text;
 					let metadataKeys = JSON.parse(
 						window.localStorage.getItem('Type_' + selectedOption) || ''
 					).fields;
@@ -36,9 +40,9 @@ export function addTypeOptions() {
 						child.innerHTML =
 							'<label for="' +
 							metadataKeys[i] +
-							'" class="formlabel">' +
+							'" class="formlabel"><p>' +
 							metadataKeys[i] +
-							': </label>';
+							':</p></label>';
 
 						if (metadataForm) metadataForm.appendChild(child);
 
@@ -47,11 +51,11 @@ export function addTypeOptions() {
 						child = document.createElement('someuniquetag');
 
 						child.innerHTML =
-							'<input type="text" id="' +
+							'<input type="text" class="input w-96" id="' +
 							metadataKeys[i] +
 							'" name="' +
 							metadataKeys[i] +
-							'" /><br />';
+							'" /><br /><br />';
 
 						if (metadataForm) metadataForm.appendChild(child);
 
