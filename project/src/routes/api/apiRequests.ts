@@ -21,6 +21,20 @@ export const insertDocument = (collectionName: string, formData:any) => {
 
 }
 
+//update assets
+
+export const updateDocuments = (collectionName : string, formData:any) => {
+	return fetch('http://localhost:5038/api/update/'+collectionName,{
+		method:'PUT',
+		body: formData
+
+	})
+		.then((response) => { return response.json() })
+		.then((data) => {
+			return data
+		});
+}
+
 
 // insertDocument('AssetType', typeObject)
 		// 	.then(() => {
