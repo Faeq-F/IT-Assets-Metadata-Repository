@@ -1,68 +1,67 @@
 //@ts-ignore
 import { browser } from '$app/environment'; //Does work
-
 import { onMount } from 'svelte';
+
+import { fetchDocuments } from '../api/apiRequests';
 
 export function addTypeOptions() {
 	onMount(() => {
 		if (browser) {
-			var typeList = document.getElementById('assetType');
-			var metadataForm = document.getElementById('metadataForm');
+			fetchDocuments('AssetType').then((assetTypeDocuments) => {
+				var typeList = document.getElementById('assetType') as HTMLSelectElement;
+				var metadataForm = document.getElementById('metadataForm') as HTMLFormElement;
 
-			// @ts-ignore
-			for (const [key] of Object.entries(window.localStorage)) {
-				if (key.startsWith('Type_')) {
-					var child = document.createElement('someuniquetag');
-
-					child.innerHTML = '<option>' + key.replace('Type_', '') + '</option>';
-
-					if (typeList) typeList.appendChild(child);
-
-					child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
-				}
-			}
-
-			if (typeList) {
-				// eslint-disable-line no-unused-vars
-				typeList.addEventListener('change', () => {
-					if (metadataForm) metadataForm.innerHTML = '';
-
-					var selectedOption = (typeList as HTMLSelectElement).options[
-						(typeList as HTMLSelectElement).selectedIndex
-					].text;
-					let metadataKeys = JSON.parse(
-						window.localStorage.getItem('Type_' + selectedOption) || ''
-					).fields;
-
-					for (let i in metadataKeys) {
+				for (let i of assetTypeDocuments) {
 						var child = document.createElement('someuniquetag');
 
-						child.innerHTML =
-							'<label for="' +
-							metadataKeys[i] +
-							'" class="formlabel"><p>' +
-							metadataKeys[i] +
-							':</p></label>';
-
-						if (metadataForm) metadataForm.appendChild(child);
+						child.innerHTML = '<option>' + i.typeName + '</option>';
+						typeList.appendChild(child);
 
 						child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
+				}
 
-						child = document.createElement('someuniquetag');
+					// eslint-disable-line no-unused-vars
+					typeList.addEventListener('change', () => {
+						metadataForm.innerHTML = '';
 
-						child.innerHTML =
-							'<input type="text" class="input w-96" id="' +
-							metadataKeys[i] +
-							'" name="' +
-							metadataKeys[i] +
-							'" /><br /><br />';
+						var selectedOption = (typeList).options[(typeList).selectedIndex].text;
+						fetchDocuments('AssetType').then((assetTypeDocuments) => {
+							for (let i of assetTypeDocuments) {
+								if (i.typeName == selectedOption) {
+									return i.metadataFields;
+								}
+							}
+						}).then((metadataFields) => {
+							for (let i of metadataFields) {
+								var child = document.createElement('someuniquetag');
 
-						if (metadataForm) metadataForm.appendChild(child);
+								child.innerHTML =
+									'<label for="' +
+									i.field +
+									'" class="formlabel"><p>' +
+									i.field +
+									':</p></label>';
 
-						child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
-					}
-				});
-			}
+								if (metadataForm) metadataForm.appendChild(child);
+
+								child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
+
+								child = document.createElement('someuniquetag');
+
+								child.innerHTML =
+									'<input type="text" class="input w-96" id="' +
+									i.field +
+									'" name="' +
+									i.field +
+									'" /><br /><br />';
+
+								if (metadataForm) metadataForm.appendChild(child);
+
+								child.outerHTML = child.outerHTML.replace(/<\/?someuniquetag>/, '');
+							}
+						});
+					});
+			});
 		}
 	});
 }
