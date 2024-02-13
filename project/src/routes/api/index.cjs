@@ -66,7 +66,7 @@ app.post(
 );
 //▰▰▰▰▰▰▰▰▰
 
-// update a document into collection
+// update a document in a collection
 app.put(
 	'/api/update/collection/:name',
 	multer().none(),
@@ -78,9 +78,6 @@ app.put(
 		result(request.params.name.toString()).then((result) => response.send(result));
 	}
 );
-
-
-
 
 /*
 	a response looks like:

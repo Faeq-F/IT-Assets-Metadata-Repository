@@ -4,6 +4,8 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 
+	import { insertDocument } from '../api/apiRequests';
+
 	function makeAsset() {
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;
 		var link = (document.getElementById('assetLink') as HTMLInputElement).value;
@@ -13,20 +15,39 @@
 
 		let metadataInputs = metadataForm.getElementsByTagName('input');
 		var metadataObject = {};
-		for (let i in metadataInputs) {
-			let key = metadataInputs[i].id;
-			let value = metadataInputs[i].value;
+		for (let i of metadataInputs) {
+			let key = i.id;
+			let value;
+			if (key.endsWith('-ListIDaddon')) {
+				key = key.substring(0, key.length - 12);
+				value = i.value.split(', ');
+				let newArr: number[] = [];
+				if (key.endsWith('-Number')) {
+					key = key.substring(0, key.length - 7);
+					for (let i in value) {
+						newArr[i] = parseInt(value[i]);
+					}
+					value = newArr;
+				} else if (key.endsWith('-Text')) {
+					key = key.substring(0, key.length - 5);
+				}
+			} else {
+				value = i.value;
+			}
 			metadataObject = { ...metadataObject, [key]: value };
 		}
 
-		var assetObject = { name: name, link: link, type: type, metadata: metadataObject };
-		// fetch request to server-side
-		let API_URL = 'http://localhost:5038';
-		fetch(API_URL + '/api/teamproject/AddAssets', {
-			method: 'POST',
-			body: JSON.stringify(assetObject)
+		var assetObject = {
+			assetName: name,
+			assetLink: link,
+			assetType: type,
+			metadataFields: metadataObject
+		};
+		const data = new FormData();
+		data.append('newData', JSON.stringify(assetObject));
+		insertDocument('Asset', data).then((response) => {
+			console.log(response);
 		});
-		localStorage.setItem('Asset_' + name, JSON.stringify(assetObject));
 
 		toastStore.trigger({
 			message: 'Asset created',
