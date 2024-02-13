@@ -1,4 +1,4 @@
-function hashCode(string: string){
+export function hashCode(string: string){
     var hashVal = 0;
     for (var i = 0; i < string.length; i++) {
         var unicode = string.charCodeAt(i);
