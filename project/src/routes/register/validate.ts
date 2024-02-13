@@ -1,5 +1,16 @@
+function hashCode(string: string){
+    var hashVal = 0;
+    for (var i = 0; i < string.length; i++) {
+        var unicode = string.charCodeAt(i);
+        hashVal = ((hashVal<<5) - hashVal) + unicode;
+		// Convert to a 32-bit integer
+        hashVal = hashVal & hashVal; 
+    }
+    return hashVal;
+}
+
 export function checkPasswordsMatch(value: string, form) {
-	if (value !== form.values.password) {
+	if (hashCode(value) !== hashCode(form.values.password)) {
 		return { checkPasswordsMatch: true };
 	}
 }
