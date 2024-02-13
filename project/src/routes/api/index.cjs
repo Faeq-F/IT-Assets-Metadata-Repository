@@ -64,6 +64,23 @@ app.post(
 		result(request.params.name.toString()).then((result) => response.send(result));
 	}
 );
+//▰▰▰▰▰▰▰▰▰
+
+// update a document into collection
+app.put(
+	'/api/update/collection/:name',
+	multer().none(),
+	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
+		let result = async (/** @type {string} */ collection) => {
+			const formData = request.body;
+			database.collection(collection).updateOne(JSON.parse(formData.newData));
+		};
+		result(request.params.name.toString()).then((result) => response.send(result));
+	}
+);
+
+
+
 
 /*
 	a response looks like:
