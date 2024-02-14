@@ -3,17 +3,40 @@
 	const toastStore = getToastStore();
 
 	import { insertDocument } from '../api/apiRequests';
+	import { injectTypeDivs } from './typeDivInjection';
 
 	function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
-		var typeObject = { typeName: name, metadataFields: fieldsSaved };
-		const data = new FormData();
-		data.append('newData', JSON.stringify(typeObject));
-		insertDocument('AssetType', data).then((response) => {
-			console.log(response);
-		});
+		if (name == '') {
+			toastStore.trigger({
+				message: 'Please give the type a name',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+		} else {
+			var typeObject = { typeName: name, metadataFields: fieldsSaved };
+			const data = new FormData();
+			data.append('newData', JSON.stringify(typeObject));
+			insertDocument('AssetType', data)
+				.then((response) => {
+					console.log(response);
+					toastStore.trigger({
+						message: 'Asset Type created',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+				})
+				.catch((err) => {
+					console.log(err);
+					toastStore.trigger({
+						message: 'Unable to create type - does one of the same name already exist?',
+						background: 'variant-ghost-error',
+						timeout: 3000
+					});
+				});
 
-		//injectTypeDivs();
+			injectTypeDivs();
+		}
 	}
 
 	let fieldsSaved: any[] = [];

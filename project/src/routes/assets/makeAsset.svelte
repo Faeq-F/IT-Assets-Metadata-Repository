@@ -5,12 +5,36 @@
 	const toastStore = getToastStore();
 
 	import { insertDocument } from '../api/apiRequests';
+	import { injectAssetDivs } from './assetDivInjection';
+	import { filterAssets } from './keywordSearch';
 
 	function makeAsset() {
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;
 		var link = (document.getElementById('assetLink') as HTMLInputElement).value;
 		let typeList = document.getElementById('assetType') as HTMLSelectElement;
 		var type = typeList.options[typeList.selectedIndex].text;
+		if (name == '') {
+			toastStore.trigger({
+				message: 'Please give the asset a name',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+			return;
+		} else if (link == '') {
+			toastStore.trigger({
+				message: 'Please give the asset a link',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+			return;
+		} else if (type == 'Select type') {
+			toastStore.trigger({
+				message: 'Please give the asset a type',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+			return;
+		}
 		var metadataForm = document.getElementById('metadataForm') as HTMLFormElement;
 
 		let metadataInputs = metadataForm.getElementsByTagName('input');
@@ -54,6 +78,8 @@
 			background: 'variant-ghost-success',
 			timeout: 3000
 		});
+		injectAssetDivs();
+		filterAssets();
 	}
 
 	addTypeOptions();

@@ -59,7 +59,15 @@ app.post(
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection) => {
 			const formData = request.body;
-			database.collection(collection).insertOne(JSON.parse(formData.newData));
+			database
+				.collection(collection)
+				.insertOne(JSON.parse(formData.newData))
+				.then((/** @type {any} */ result) => {
+					return result;
+				})
+				.catch((/** @type {any} */ err) => {
+					return err;
+				});
 		};
 		result(request.params.name.toString()).then((result) => response.send(result));
 	}

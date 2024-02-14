@@ -14,11 +14,10 @@ export const insertDocument = (collectionName: string, formData:any) => {
 			method: 'POST',
 			body: formData
 		})
-			.then((response) => { return response.json() })
+			.then((response) => { return response })
 			.then((data) => {
 				return data
-			});
-
+			}).catch(err => { return err });
 }
 
 //update assets
