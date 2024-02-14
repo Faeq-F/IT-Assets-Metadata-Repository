@@ -9,7 +9,7 @@
 		required,
 		email
 	} from 'svelte-use-form';
-	import { checkPasswordsMatch, containNumbers, hashCode } from './validate';
+	import { checkPasswordsMatch, containNumbers, hashCode, duplicateUsername } from './validate';
 	import { insertDocument, fetchDocuments } from '../api/apiRequests';
 
 	const form = useForm();
@@ -20,14 +20,10 @@
 		let username = document.getElementById('username').value;
 		
 		fetchDocuments('User').then((documentsReturned) => {
-			for (let i = 0; i < documentsReturned.length; i++) {
-				if (i == username) {
-					console.log("Username already exists");
-					break;
-				} 
-			}
-			return;
+			console.log(duplicateUsername(username, documentsReturned))
+			console.log("Hi")
 		});
+
 		// @ts-ignore
 		let password = document.getElementById('passwordConfirmation').value;
 		// @ts-ignore

@@ -22,3 +22,17 @@ export function containNumbers(numbers: number) {
 		}
 	};
 }
+
+export function duplicateUsername(username: string, checkedUsernames: any[]) : boolean {
+	for (let index = 0; index < checkedUsernames.length-1; index++) {
+		console.log(checkedUsernames[index].username)
+		console.log("vs")
+		console.log(username)
+		console.log("-----------------------")
+		if (checkedUsernames[index].username == username) {
+			console.log("3")
+			return true;
+		}
+	}
+	return false;
+}
