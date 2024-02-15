@@ -1,22 +1,33 @@
-<script>
+<script lang="ts">
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import { fetchDocuments } from './api/apiRequests';
 	import { hashCode } from './register/validate';
+	import Cookies from 'js-cookie';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 
+	if (
+		(Cookies.get('savedLogin-username') != undefined ||
+			Cookies.get('savedLogin-email') != undefined) &&
+		Cookies.get('savedLogin-password') != undefined
+	) {
+		window.location.href = '/home';
+	}
 	function loginUser() {
 		fetchDocuments('User').then((userDocuments) => {
-			// @ts-ignore
-			let username = document.getElementById('username').value;
-			// @ts-ignore
-			let password = hashCode(document.getElementById('password').value);
-			let user = userDocuments.find(
-				(/** @type {{ username: any; }} */ user) => user.username === username
-			);
-			console.log(user);
+			let username = (document.getElementById('username') as HTMLInputElement).value;
+			let password = hashCode((document.getElementById('password') as HTMLInputElement).value);
+			let user = userDocuments.find((user: { username: string }) => user.username === username);
 			if (user && user.passwordHash === password) {
+				Cookies.set('savedLogin-username', username, { expires: 70 });
+				Cookies.set('savedLogin-password', '' + user.passwordHash, { expires: 70 });
 				window.location.href = '/home';
 			} else {
-				alert('Invalid username or password');
+				toastStore.trigger({
+					message: 'Invalid username or password',
+					background: 'variant-ghost-error',
+					timeout: 3000
+				});
 			}
 		});
 	}

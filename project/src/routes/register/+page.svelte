@@ -10,7 +10,10 @@
 		email
 	} from 'svelte-use-form';
 	import { checkPasswordsMatch, containNumbers, hashCode, duplicateUsername } from './validate';
-	import { insertDocument, fetchDocuments } from '../api/apiRequests';
+	import { insertDocument } from '../api/apiRequests';
+	import Cookies from 'js-cookie';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 
 	const form = useForm();
 	const requiredMsg = 'This field is required';
@@ -40,7 +43,14 @@
 				.catch((error) => {
 					console.error('Registering user error: ', error);
 				});
-			alert('User created');
+			toastStore.trigger({
+				message: 'Account created',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
+			Cookies.set('savedLogin-username', username, { expires: 70 });
+			Cookies.set('savedLogin-email', email, { expires: 70 });
+			Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
 			window.location.href = '../home';
 		}
 	}
@@ -80,7 +90,7 @@
 				id="username"
 				name="username"
 				placeholder="Enter Username..."
-				data-focusindex="0"
+				data-focusindex="1"
 				class="input w-96"
 				on:keyup={checkValidUsername}
 				use:validators={[required, minLength(4)]}
@@ -111,7 +121,7 @@
 			type="password"
 			id="password"
 			name="password"
-			data-focusindex="1"
+			data-focusindex="2"
 			class="input"
 			placeholder="Enter Password..."
 			use:validators={[required, minLength(8), containNumbers(2)]}
@@ -135,7 +145,7 @@
 			type="password"
 			id="passwordConfirmation"
 			name="passwordConfirmation"
-			data-focusindex="1"
+			data-focusindex="3"
 			class="input"
 			placeholder="Enter Password again..."
 			use:validators={[required, checkPasswordsMatch]}
