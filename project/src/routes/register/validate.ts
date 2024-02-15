@@ -1,4 +1,5 @@
 import { fetchDocuments } from "../api/apiRequests";
+import {Form} from "svelte-use-form";
 
 export function hashCode(string: string) {
 	var hashVal = 0;
@@ -11,7 +12,7 @@ export function hashCode(string: string) {
 	return hashVal;
 }
 
-export function checkPasswordsMatch(value: string, form:any) {
+export function checkPasswordsMatch(value: string, form: Form<string>) {
 	if (hashCode(value) !== hashCode(form.values.password)) {
 		return { checkPasswordsMatch: true };
 	}
