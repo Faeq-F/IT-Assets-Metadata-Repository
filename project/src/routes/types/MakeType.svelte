@@ -153,6 +153,7 @@
 		transform: translate(-50%, -50%);
 		width: 50vw;
 		height: 60vh;
+		z-index: 2;
 	}
 	#metadataFieldAdder {
 		width: 2vw;
