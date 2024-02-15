@@ -3,6 +3,12 @@
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	onMount(() => {
+		if (browser) {
+			redirectWhenNotLoggedIn();
+		}
+	});
 
 	import { injectTypeDivs } from './typeDivInjection';
 	import MakeType from './MakeType.svelte';

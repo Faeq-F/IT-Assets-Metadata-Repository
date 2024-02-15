@@ -1,3 +1,15 @@
+<script lang="ts">
+	//@ts-ignore
+	import { browser } from '$app/environment'; //Does work
+	import { onMount } from 'svelte';
+	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	onMount(() => {
+		if (browser) {
+			redirectWhenNotLoggedIn();
+		}
+	});
+</script>
+
 <svelte:head>
 	<title>Home</title>
 </svelte:head>

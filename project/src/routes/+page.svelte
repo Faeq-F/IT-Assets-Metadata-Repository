@@ -5,14 +5,9 @@
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
+	import { redirectWhenLoginSaved } from '$lib/scripts/loginSaved';
+	redirectWhenLoginSaved();
 
-	if (
-		(Cookies.get('savedLogin-username') != undefined ||
-			Cookies.get('savedLogin-email') != undefined) &&
-		Cookies.get('savedLogin-password') != undefined
-	) {
-		window.location.href = '/home';
-	}
 	function loginUser() {
 		fetchDocuments('User').then((userDocuments) => {
 			let username = (document.getElementById('username') as HTMLInputElement).value;

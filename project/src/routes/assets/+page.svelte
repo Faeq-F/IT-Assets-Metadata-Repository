@@ -2,6 +2,12 @@
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
+	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	onMount(() => {
+		if (browser) {
+			redirectWhenNotLoggedIn();
+		}
+	});
 
 	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 
