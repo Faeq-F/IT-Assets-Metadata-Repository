@@ -1,5 +1,5 @@
-import { fetchDocuments } from "../api/apiRequests";
-import {Form} from "svelte-use-form";
+import { fetchDocuments } from '../api/apiRequests';
+import { Form } from 'svelte-use-form';
 
 export function hashCode(string: string) {
 	var hashVal = 0;

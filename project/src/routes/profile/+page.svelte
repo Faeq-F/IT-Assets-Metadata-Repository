@@ -15,7 +15,7 @@
 		fetchDocuments('User').then((Users) => {
 			for (let i of Users) {
 				if (i.username == Cookies.get('savedLogin-username')) {
-					deleteDocument('User', i._id).then((response) => {
+					deleteDocument('User', i._id).then(() => {
 						logOut();
 					});
 				}

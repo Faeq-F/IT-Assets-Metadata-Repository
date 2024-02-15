@@ -99,6 +99,7 @@
 			<br />
 			<label for="metadataFields" class="formlabel">
 				<p class="inline">Metadata Fields:</p>
+				<!-- eslint-disable-line svelte/valid-compile -->
 				<p class="absolute right-4 inline cursor-pointer text-sm" on:click={removeBottom}>
 					remove bottom field
 				</p>

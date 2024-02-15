@@ -1,7 +1,7 @@
 // import { response } from 'express';
 // import { MongoClient } from 'mongodb';
 import { expect, test } from 'vitest';
-import { hashCode, containNumbers } from '../../src/routes/register/validate.ts';
+import { hashCode, containNumbers } from '../../src/routes/register/validate';
 
 test('adds 1 + 2 to equal 3', () => {
 	expect(1 + 2).toBe(3);

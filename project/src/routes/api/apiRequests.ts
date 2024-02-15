@@ -21,16 +21,21 @@ export const fetchDocuments = (collectionName: string) => {
  * @param formData The FormData object that holds the document to insert in the 'newData' key
  * @returns Acknowledgment from the database
  */
-export const insertDocument = (collectionName: string, formData:any) => {
-	return fetch('http://localhost:5038/api/insert/collection/'+collectionName, {
+export const insertDocument = (collectionName: string, formData: any) => {
+	return fetch('http://localhost:5038/api/insert/collection/' + collectionName, {
 		method: 'POST',
 		body: formData
 	})
-	.then((response) => { return response })
-	.then((data) => {
-		return data
-	}).catch(err => { return err });
-}
+		.then((response) => {
+			return response;
+		})
+		.then((data) => {
+			return data;
+		})
+		.catch((err) => {
+			return err;
+		});
+};
 
 /**
  * Deletes a document from a collection in the database
@@ -39,14 +44,22 @@ export const insertDocument = (collectionName: string, formData:any) => {
  * @returns Acknowledgment from the database, including json representing the original document that has now been removed
  */
 export const deleteDocument = (collectionName: string, documentID: string) => {
-	return fetch('http://localhost:5038/api/delete/collection/'+collectionName+"/document/"+documentID, {
-		method: 'DELETE',
-	})
-	.then((response) => { return response })
-	.then((data) => {
-		return data
-	}).catch(err => { return err });
-}
+	return fetch(
+		'http://localhost:5038/api/delete/collection/' + collectionName + '/document/' + documentID,
+		{
+			method: 'DELETE'
+		}
+	)
+		.then((response) => {
+			return response;
+		})
+		.then((data) => {
+			return data;
+		})
+		.catch((err) => {
+			return err;
+		});
+};
 
 /**
  * Updates a document in a collection from the database
@@ -54,13 +67,15 @@ export const deleteDocument = (collectionName: string, documentID: string) => {
  * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed
  * @returns Acknowledgment from the database
  */
-export const updateDocuments = (collectionName : string, formData:any) => {
-	return fetch('http://localhost:5038/api/update/'+collectionName,{
-		method:'PUT',
+export const updateDocuments = (collectionName: string, formData: any) => {
+	return fetch('http://localhost:5038/api/update/' + collectionName, {
+		method: 'PUT',
 		body: formData
 	})
-		.then((response) => { return response })
+		.then((response) => {
+			return response;
+		})
 		.then((data) => {
-			return data
+			return data;
 		});
-}
+};
