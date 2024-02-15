@@ -9,8 +9,8 @@
 		required,
 		email
 	} from 'svelte-use-form';
-	import { checkPasswordsMatch, containNumbers, hashCode } from './validate';
-	import { insertDocument } from '../api/apiRequests';
+	import { checkPasswordsMatch, containNumbers, hashCode, duplicateUsername } from './validate';
+	import { insertDocument, fetchDocuments } from '../api/apiRequests';
 
 	const form = useForm();
 	const requiredMsg = 'This field is required';
@@ -18,6 +18,12 @@
 	function registerUser() {
 		// @ts-ignore
 		let username = document.getElementById('username').value;
+		
+		fetchDocuments('User').then((documentsReturned) => {
+			console.log(duplicateUsername(username, documentsReturned))
+			console.log("Hi")
+		});
+
 		// @ts-ignore
 		let password = document.getElementById('passwordConfirmation').value;
 		// @ts-ignore

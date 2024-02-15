@@ -1,6 +1,7 @@
 import { response } from 'express';
 import { MongoClient } from 'mongodb';
 import { describe, it, expect, test, beforeAll } from 'vitest';
+import { hashCode, containNumbers } from '../../src/routes/register/validate.ts';
 
 test('adds 1 + 2 to equal 3', () => {
     expect(1 + 2).toBe(3)
@@ -185,3 +186,19 @@ test('adds 1 + 2 to equal 3', () => {
 //     const result = await selectType(query)
 //     expect(result).toEqual(null);
 // })
+test("HashCode", () => {
+    const result = hashCode("test")
+    expect(result).toEqual(3556498);
+})
+
+test("ContainNumbersFail", () => {
+    const check = containNumbers(3)
+    const result = check("test1")
+    expect(result).toEqual({"containNumbers": 3,});
+})
+
+test("ContainNumersPass", () => {
+    const check = containNumbers(1)
+    const result = check("test2")
+    expect(result).toEqual(undefined);
+})
