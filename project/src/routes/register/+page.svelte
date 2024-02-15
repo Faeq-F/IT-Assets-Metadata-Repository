@@ -18,10 +18,10 @@
 	function registerUser() {
 		// @ts-ignore
 		let username = document.getElementById('username').value;
-		
+
 		fetchDocuments('User').then((documentsReturned) => {
-			console.log(duplicateUsername(username, documentsReturned))
-			console.log("Hi")
+			console.log(duplicateUsername(username, documentsReturned));
+			console.log('Hi');
 		});
 
 		// @ts-ignore
@@ -44,6 +44,7 @@
 				.catch((error) => {
 					console.error('Registering user error: ', error);
 				});
+			alert('User created');
 		}
 	}
 </script>

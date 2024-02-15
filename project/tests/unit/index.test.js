@@ -1,11 +1,11 @@
-import { response } from 'express';
-import { MongoClient } from 'mongodb';
-import { describe, it, expect, test, beforeAll } from 'vitest';
+// import { response } from 'express';
+// import { MongoClient } from 'mongodb';
+import { expect, test } from 'vitest';
 import { hashCode, containNumbers } from '../../src/routes/register/validate.ts';
 
 test('adds 1 + 2 to equal 3', () => {
-    expect(1 + 2).toBe(3)
-})
+	expect(1 + 2).toBe(3);
+});
 
 // var Express = require('express');
 // var Mongoclient = require('mongodb').MongoClient;
@@ -72,7 +72,6 @@ test('adds 1 + 2 to equal 3', () => {
 //     }
 // }
 
-
 // async function initialiseDatabase() {
 //     await connectToDatabase();
 //     await insertDB();
@@ -104,7 +103,7 @@ test('adds 1 + 2 to equal 3', () => {
 //     await connectToDatabase();
 //     await insertDB();
 //   });
-  
+
 // test("SelectAssetID", async () => {
 //     let query = {asset_id: 1}
 //     const result = await select(query)
@@ -116,7 +115,7 @@ test('adds 1 + 2 to equal 3', () => {
 //     const result = await select(query)
 //     expect(result.title).toEqual("FileNumberOne");
 // })
-    
+
 // test("SelectAssetProgrammingLanguage", async () => {
 //     let query = {asset_id: 1}
 // 	const result = await select(query)
@@ -186,19 +185,19 @@ test('adds 1 + 2 to equal 3', () => {
 //     const result = await selectType(query)
 //     expect(result).toEqual(null);
 // })
-test("HashCode", () => {
-    const result = hashCode("test")
-    expect(result).toEqual(3556498);
-})
+test('HashCode', () => {
+	const result = hashCode('test');
+	expect(result).toEqual(3556498);
+});
 
-test("ContainNumbersFail", () => {
-    const check = containNumbers(3)
-    const result = check("test1")
-    expect(result).toEqual({"containNumbers": 3,});
-})
+test('ContainNumbersFail', () => {
+	const check = containNumbers(3);
+	const result = check('test1');
+	expect(result).toEqual({ containNumbers: 3 });
+});
 
-test("ContainNumersPass", () => {
-    const check = containNumbers(1)
-    const result = check("test2")
-    expect(result).toEqual(undefined);
-})
+test('ContainNumersPass', () => {
+	const check = containNumbers(1);
+	const result = check('test2');
+	expect(result).toEqual(undefined);
+});

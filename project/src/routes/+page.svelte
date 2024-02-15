@@ -1,5 +1,25 @@
 <script>
 	import { focusTrap } from '@skeletonlabs/skeleton';
+	import { fetchDocuments } from './api/apiRequests';
+	import { hashCode } from './register/validate';
+
+	function loginUser() {
+		fetchDocuments('User').then((userDocuments) => {
+			// @ts-ignore
+			let username = document.getElementById('username').value;
+			// @ts-ignore
+			let password = hashCode(document.getElementById('password').value);
+			let user = userDocuments.find(
+				(/** @type {{ username: any; }} */ user) => user.username === username
+			);
+			console.log(user);
+			if (user && user.passwordHash === password) {
+				window.location.href = '/home';
+			} else {
+				alert('Invalid username or password');
+			}
+		});
+	}
 </script>
 
 <svelte:head>
@@ -33,9 +53,7 @@
 		/>
 	</label>
 	<br />
-	<a href="/home">
-		<button class="variant-filled-primary btn w-52">Log in</button>
-	</a>
+	<button class="variant-filled-primary btn w-52" on:click={loginUser}>Log in</button>
 	<a href="/register">
 		<button class="variant-filled-primary btn w-52">Sign up</button>
 	</a>
