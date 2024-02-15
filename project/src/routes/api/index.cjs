@@ -87,16 +87,23 @@ app.put(
 	}
 );
 
-/*
-	a response looks like:
-	{
-		"acknowledged" : true,
-		"insertedId" : ObjectId("56fc40f9d735c28df206d078")
+//▰▰▰▰▰▰▰▰▰
+
+// delete a document in a collection
+app.delete(
+	'/api/delete/collection/:name/document/:id',
+	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
+		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
+			// @ts-ignore
+			database
+				.collection(collection)
+				.remove({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } });
+		};
+		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
+			response.send(result)
+		);
 	}
-
-
-	you can use the acknowledged field to do error handling
- */
+);
 
 //▰▰▰▰▰▰▰▰▰
 
