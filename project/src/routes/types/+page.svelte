@@ -1,19 +1,17 @@
 <script lang="ts">
-	import MakeType from './MakeType.svelte';
-	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { injectTypeDivs } from './typeDivInjection';
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
+	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 
-	injectTypeDivs();
+	import { injectTypeDivs } from './typeDivInjection';
+	import MakeType from './MakeType.svelte';
 
-	let AreThereTypes = false;
+	let areThereAssetTypes = false;
+
 	onMount(() => {
 		if (browser) {
-			if (document.getElementsByClassName('typesContainer')[0].firstChild) {
-				AreThereTypes = true;
-			}
+			injectTypeDivs().then((thereAre: boolean) => (areThereAssetTypes = thereAre));
 		}
 	});
 
@@ -35,7 +33,7 @@
 	<div class="Card" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				{#if AreThereTypes}
+				{#if areThereAssetTypes}
 					<p id="nothingHere">Your types:</p>
 				{:else}
 					<p id="nothingHere">

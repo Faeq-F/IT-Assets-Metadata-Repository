@@ -15,7 +15,7 @@
 	</svelte:fragment>
 
 	<svelte:fragment slot="trail">
-		<LightSwitch />
+		<LightSwitch bgDark="bg-gray-900" />
 		<a class="variant-ghost-surface btn btn-sm" href="/home" rel="noreferrer"> Home </a>
 		<a class="variant-ghost-surface btn btn-sm" href="/assets" rel="noreferrer"> Assets </a>
 		<a class="variant-ghost-surface btn btn-sm" href="/types" rel="noreferrer"> Types </a>

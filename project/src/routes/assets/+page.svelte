@@ -1,29 +1,22 @@
 <script lang="ts">
-	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { filterAssets } from './keywordSearch';
-
-	import { injectAssetDivs } from './assetDivInjection';
-	import { onMount } from 'svelte';
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
+	import { onMount } from 'svelte';
+
+	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+
+	import { injectAssetDivs } from './assetDivInjection';
 	import MakeAsset from './makeAsset.svelte';
+	import { filterAssets } from './keywordSearch';
 
-	injectAssetDivs();
-
-	let AreThereAssets = false;
+	let areThereAssets = false;
 
 	onMount(() => {
 		if (browser) {
-			if (document.getElementsByClassName('assetsContainer')[0].firstChild) {
-				AreThereAssets = true;
-			}
-
-			(document.getElementById('keyword') as HTMLInputElement).addEventListener(
-				'onkeyup',
-				filterAssets
-			);
-
-			filterAssets();
+			injectAssetDivs().then((thereAre: boolean) => {
+				areThereAssets = thereAre;
+				filterAssets();
+			});
 		}
 	});
 
@@ -45,7 +38,7 @@
 	<div class="Card" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				{#if AreThereAssets}
+				{#if areThereAssets}
 					<p id="nothingHere">Your assets:</p>
 				{:else}
 					<p id="nothingHere">
