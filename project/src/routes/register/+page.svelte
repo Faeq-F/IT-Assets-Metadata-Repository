@@ -9,10 +9,44 @@
 		required,
 		email
 	} from 'svelte-use-form';
-	import { checkPasswordsMatch, containNumbers } from './validate';
+	import { checkPasswordsMatch, containNumbers, hashCode, duplicateUsername } from './validate';
+	import { insertDocument, fetchDocuments } from '../api/apiRequests';
 
 	const form = useForm();
 	const requiredMsg = 'This field is required';
+
+	function registerUser() {
+		// @ts-ignore
+		let username = document.getElementById('username').value;
+
+		fetchDocuments('User').then((documentsReturned) => {
+			console.log(duplicateUsername(username, documentsReturned));
+			console.log('Hi');
+		});
+
+		// @ts-ignore
+		let password = document.getElementById('passwordConfirmation').value;
+		// @ts-ignore
+		let email = document.getElementById('email').value;
+		if (username && password && email) {
+			var passwordHash = hashCode(password);
+
+			var userObj = { username: username, passwordHash: passwordHash, email: email };
+			console.log(userObj);
+
+			const data = new FormData();
+			data.append('newData', JSON.stringify(userObj));
+
+			insertDocument('User', data)
+				.then((response) => {
+					console.log(response);
+				})
+				.catch((error) => {
+					console.error('Registering user error: ', error);
+				});
+			alert('User created');
+		}
+	}
 </script>
 
 <svelte:head>
@@ -95,7 +129,7 @@
 		<p>Repeat Password:</p>
 		<input
 			type="password"
-			id="password"
+			id="passwordConfirmation"
 			name="passwordConfirmation"
 			data-focusindex="1"
 			class="input"
@@ -114,7 +148,7 @@
 		<button class="variant-filled-primary btn w-52">Back to login</button>
 	</a>
 
-	<button class="variant-filled-primary btn w-52" disabled={!$form.valid} on:click|preventDefault>
+	<button class="variant-filled-primary btn w-52" disabled={!$form.valid} on:click={registerUser}>
 		Create account</button
 	>
 </form>
