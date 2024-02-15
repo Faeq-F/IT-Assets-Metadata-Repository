@@ -1,3 +1,5 @@
+import { fetchDocuments } from "../api/apiRequests";
+
 export function hashCode(string: string) {
 	var hashVal = 0;
 	for (var i = 0; i < string.length; i++) {
@@ -9,7 +11,7 @@ export function hashCode(string: string) {
 	return hashVal;
 }
 
-export function checkPasswordsMatch(value: string, form) {
+export function checkPasswordsMatch(value: string, form:any) {
 	if (hashCode(value) !== hashCode(form.values.password)) {
 		return { checkPasswordsMatch: true };
 	}
@@ -23,16 +25,13 @@ export function containNumbers(numbers: number) {
 	};
 }
 
-export function duplicateUsername(username: string, checkedUsernames: any[]): boolean {
-	for (let index = 0; index < checkedUsernames.length - 1; index++) {
-		console.log(checkedUsernames[index].username);
-		console.log('vs');
-		console.log(username);
-		console.log('-----------------------');
-		if (checkedUsernames[index].username == username) {
-			console.log('3');
-			return true;
+export function duplicateUsername(username: string): Promise<boolean> {
+	return fetchDocuments('User').then((documentsReturned) => {
+		for (let i of documentsReturned) {
+			if (i.username == username) {
+				return true;
+			}
 		}
-	}
-	return false;
+		return false;
+	});
 }

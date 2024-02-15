@@ -45,7 +45,7 @@ You may edit it as you like, but please do not remove the default topics or the 
 
 ### Suggestions
 
-- use the [fontawesome site (free section)](https://fontawesome.com/search?o=r&m=free) to find icons - has many icons that you can immediately copy and paste the code for
+- use the [fontawesome site (free section)](https://fontawesome.com/search?o=r&m=free) to find icons - has many icons that you can immediately copy and paste the tags for
 - read the 'Skeleton' [UI Library's documentation](https://www.skeleton.dev/docs/introduction) while developing the site - has many components that you can immediately import and use
 - use a cheat sheet for Tailwind CSS - [I use this one](https://flowbite.com/tools/tailwind-cheat-sheet/) - helps with knowing what certain classes are equivalent to
 - install the 'Tailwind CSS IntelliSense' extension for VS Code - IntelliSense for Tailwind

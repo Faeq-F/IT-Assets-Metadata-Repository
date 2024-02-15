@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import {
 		useForm,
@@ -15,24 +15,20 @@
 	const form = useForm();
 	const requiredMsg = 'This field is required';
 
+	let usernameTaken = true;
+	function checkValidUsername() {
+		let username = (document.getElementById('username') as HTMLInputElement).value;
+		duplicateUsername(username).then((taken) => (usernameTaken = taken));
+	}
+
 	function registerUser() {
-		// @ts-ignore
-		let username = document.getElementById('username').value;
+		let username = (document.getElementById('username') as HTMLInputElement).value;
+		let password = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
+		let email = (document.getElementById('email') as HTMLInputElement).value;
 
-		fetchDocuments('User').then((documentsReturned) => {
-			console.log(duplicateUsername(username, documentsReturned));
-			console.log('Hi');
-		});
-
-		// @ts-ignore
-		let password = document.getElementById('passwordConfirmation').value;
-		// @ts-ignore
-		let email = document.getElementById('email').value;
 		if (username && password && email) {
 			var passwordHash = hashCode(password);
-
 			var userObj = { username: username, passwordHash: passwordHash, email: email };
-			console.log(userObj);
 
 			const data = new FormData();
 			data.append('newData', JSON.stringify(userObj));
@@ -45,6 +41,7 @@
 					console.error('Registering user error: ', error);
 				});
 			alert('User created');
+			window.location.href = '../home';
 		}
 	}
 </script>
@@ -85,11 +82,18 @@
 				placeholder="Enter Username..."
 				data-focusindex="0"
 				class="input w-96"
+				on:keyup={checkValidUsername}
 				use:validators={[required, minLength(4)]}
 			/>
-			<a href="/" title="Username already in use"
-				><i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i></a
-			>
+			{#if usernameTaken}
+				<a href="/" title="Username already in use or invalid">
+					<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+				</a>
+			{:else}
+				<a href="/" title="Valid username">
+					<i class="fa-solid fa-check"></i>
+				</a>
+			{/if}
 		</div>
 	</label>
 
