@@ -1,5 +1,31 @@
-<script>
+<script lang="ts">
 	import { focusTrap } from '@skeletonlabs/skeleton';
+	import { fetchDocuments } from './api/apiRequests';
+	import { hashCode } from './register/validate';
+	import Cookies from 'js-cookie';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
+	import { redirectWhenLoginSaved } from '$lib/scripts/loginSaved';
+	redirectWhenLoginSaved();
+
+	function loginUser() {
+		fetchDocuments('User').then((userDocuments) => {
+			let username = (document.getElementById('username') as HTMLInputElement).value;
+			let password = hashCode((document.getElementById('password') as HTMLInputElement).value);
+			let user = userDocuments.find((user: { username: string }) => user.username === username);
+			if (user && user.passwordHash === password) {
+				Cookies.set('savedLogin-username', username, { expires: 70 });
+				Cookies.set('savedLogin-password', '' + user.passwordHash, { expires: 70 });
+				window.location.href = '/home';
+			} else {
+				toastStore.trigger({
+					message: 'Invalid username or password',
+					background: 'variant-ghost-error',
+					timeout: 3000
+				});
+			}
+		});
+	}
 </script>
 
 <svelte:head>
@@ -18,9 +44,6 @@
 				data-focusindex="0"
 				class="input w-96"
 			/>
-			<a href="/" title="Username already in use"
-				><i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i></a
-			>
 		</div>
 	</label>
 	<br />
@@ -36,8 +59,9 @@
 		/>
 	</label>
 	<br />
-	<a href="/home">
-		<button class="variant-filled-primary btn w-52">Log in</button>
+	<button class="variant-filled-primary btn w-52" on:click={loginUser}>Log in</button>
+	<a href="/register">
+		<button class="variant-filled-primary btn w-52">Sign up</button>
 	</a>
 </form>
 

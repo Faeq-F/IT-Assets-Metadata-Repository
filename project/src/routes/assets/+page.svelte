@@ -1,7 +1,6 @@
 <script lang="ts">
 	//Run 'npm install' to make sure you have all the dependencies
 	import { Modal, Content, Trigger } from 'sv-popup';
-	import MakeAsset from './makeAsset.svelte';
 	import FilterDrawer from './filterDrawer.svelte';
 	import { AppBar, AppShell, Autocomplete } from '@skeletonlabs/skeleton';
 
@@ -10,17 +9,13 @@
 	}
 
 	import { injectAssetDivs } from './assetDivInjection';
+	//@ts-ignore
+	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
-
-	injectAssetDivs();
-
-	let AreThereAssets = false;
+	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	onMount(() => {
 		if (browser) {
-			if (document.getElementsByClassName('assetsContainer')[0].firstChild) {
-				AreThereAssets = true;
-			}
+			redirectWhenNotLoggedIn();
 		}
 	});
 	// code for the filter drawer
@@ -35,6 +30,28 @@
 	function applyFilters(): void {
 		drawerStore.close();
 	}
+
+	import {popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import MakeAsset from './makeAsset.svelte';
+	import { filterAssets } from './keywordSearch';
+
+	let areThereAssets = false;
+
+	onMount(() => {
+		if (browser) {
+			injectAssetDivs().then((thereAre: boolean) => {
+				areThereAssets = thereAre;
+				filterAssets();
+			});
+		}
+	});
+
+	const makeAssetPopup: PopupSettings = {
+		event: 'click',
+		target: 'makeAssetPopup',
+		placement: 'bottom',
+		closeQuery: ''
+	};
 </script>
 
 <svelte:head>
@@ -54,7 +71,7 @@
 			<div class="card" id="assetHeader">
 				<AppBar background="transparent">
 					<svelte:fragment slot="lead">
-						{#if AreThereAssets}
+						{#if areThereAssets}
 							<p id="nothingHere">Your assets:</p>
 						{:else}
 							<p id="nothingHere">
@@ -83,7 +100,7 @@
 								<button id="assetMaker" class="cardButton card">➕</button>
 							</Trigger>
 						</Modal>
-						{#if AreThereAssets}
+						{#if areThereAssets}
 							<div class="items-left">
 								<button class="filterButton" on:click={drawerOpen}> Filters </button>
 							</div>
@@ -97,16 +114,46 @@
 		<br />
 	</svelte:fragment>
 </AppShell>
+<h1 class="h1">Assets</h1>
+<br />
+<div>
+	<div class="Card" id="assetHeader">
+		<AppBar background="transparent">
+			<svelte:fragment slot="lead">
+				{#if areThereAssets}
+					<p id="nothingHere">Your assets:</p>
+				{:else}
+					<p id="nothingHere">
+						It doesn't look like you have any assets yet, click the ➕ to get started
+					</p>
+				{/if}
+			</svelte:fragment>
+
+			<svelte:fragment slot="trail">
+				<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
+					<div class="input-group-shim"><i class="fa-solid fa-search"></i></div>
+					<input
+						type="search"
+						id="keyword"
+						name="keyword"
+						placeholder="Enter search term"
+						class=""
+						on:keyup={filterAssets}
+					/>
+				</div>
+
+				<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
+				<MakeAsset />
+			</svelte:fragment>
+		</AppBar>
+	</div>
+</div>
+<br />
 <div class="assetsContainer"></div>
 
 <style>
 	@import url('$lib/styles/root.css');
 	@import url('$lib/styles/card.css');
-
-	h1 {
-		text-align: center;
-		margin-top: 15%;
-	}
 
 	#assetMaker {
 		width: 2vw;

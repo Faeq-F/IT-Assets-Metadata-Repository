@@ -9,11 +9,13 @@
 	class="header sticky"
 >
 	<svelte:fragment slot="lead">
-		<strong class="text-xl uppercase">Asset Application</strong>
+		<strong class="text-xl uppercase"
+			><i class="fa-brands fa-codepen"></i>&nbsp;&nbsp;IT Assets Metadata Repository
+		</strong>
 	</svelte:fragment>
 
 	<svelte:fragment slot="trail">
-		<LightSwitch />
+		<LightSwitch bgDark="bg-gray-900" />
 		<a class="variant-ghost-surface btn btn-sm" href="/home" rel="noreferrer"> Home </a>
 		<a class="variant-ghost-surface btn btn-sm" href="/assets" rel="noreferrer"> Assets </a>
 		<a class="variant-ghost-surface btn btn-sm" href="/types" rel="noreferrer"> Types </a>
