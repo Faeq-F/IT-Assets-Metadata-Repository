@@ -68,7 +68,7 @@
 		<h1 class="h1">Assets</h1>
 		<br />
 		<div>
-			<div class="card" id="assetHeader">
+			<div class="Card" id="assetHeader">
 				<AppBar background="transparent">
 					<svelte:fragment slot="lead">
 						{#if areThereAssets}
@@ -79,7 +79,7 @@
 							</p>
 						{/if}
 					</svelte:fragment>
-
+		
 					<svelte:fragment slot="trail">
 						<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
 							<div class="input-group-shim"><i class="fa-solid fa-search"></i></div>
@@ -89,24 +89,12 @@
 								name="keyword"
 								placeholder="Enter search term"
 								class=""
+								on:keyup={filterAssets}
 							/>
-							<button class="variant-ghost" on:click={searchKeyword}>Submit</button>
 						</div>
-						<Modal>
-							<Content>
-								<MakeAsset />
-							</Content>
-							<Trigger>
-								<button id="assetMaker" class="cardButton card">➕</button>
-							</Trigger>
-						</Modal>
-						{#if areThereAssets}
-							<div class="items-left">
-								<button class="filterButton" on:click={drawerOpen}> Filters </button>
-							</div>
-						{:else}
-							<p></p>
-						{/if}
+		
+						<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
+						<MakeAsset />
 					</svelte:fragment>
 				</AppBar>
 			</div>
@@ -114,40 +102,6 @@
 		<br />
 	</svelte:fragment>
 </AppShell>
-<h1 class="h1">Assets</h1>
-<br />
-<div>
-	<div class="Card" id="assetHeader">
-		<AppBar background="transparent">
-			<svelte:fragment slot="lead">
-				{#if areThereAssets}
-					<p id="nothingHere">Your assets:</p>
-				{:else}
-					<p id="nothingHere">
-						It doesn't look like you have any assets yet, click the ➕ to get started
-					</p>
-				{/if}
-			</svelte:fragment>
-
-			<svelte:fragment slot="trail">
-				<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
-					<div class="input-group-shim"><i class="fa-solid fa-search"></i></div>
-					<input
-						type="search"
-						id="keyword"
-						name="keyword"
-						placeholder="Enter search term"
-						class=""
-						on:keyup={filterAssets}
-					/>
-				</div>
-
-				<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
-				<MakeAsset />
-			</svelte:fragment>
-		</AppBar>
-	</div>
-</div>
 <br />
 <div class="assetsContainer"></div>
 
