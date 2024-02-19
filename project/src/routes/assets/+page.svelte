@@ -31,7 +31,7 @@
 		drawerStore.close();
 	}
 
-	import {popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import MakeAsset from './makeAsset.svelte';
 	import { filterAssets } from './keywordSearch';
 
@@ -58,10 +58,10 @@
 	<title>Assets</title>
 </svelte:head>
 <Drawer>
-		<FilterDrawer />
-		<div class="variant-ghost" id="applyButton">    
-			<button type="button" on:click={applyFilters}> Apply Filters</button>
-		</div>
+	<FilterDrawer />
+	<div class="variant-ghost" id="applyButton">
+		<button type="button" on:click={applyFilters}> Apply Filters</button>
+	</div>
 </Drawer>
 <AppShell slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64">
 	<svelte:fragment slot="header">
@@ -79,7 +79,7 @@
 							</p>
 						{/if}
 					</svelte:fragment>
-		
+
 					<svelte:fragment slot="trail">
 						<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
 							<div class="input-group-shim"><i class="fa-solid fa-search"></i></div>
@@ -92,10 +92,11 @@
 								on:keyup={filterAssets}
 							/>
 						</div>
-		
+
 						<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
 						<MakeAsset />
 					</svelte:fragment>
+					<button id="openDrawer" class="variant-ghost" on:click={drawerOpen}> Filters</button>
 				</AppBar>
 			</div>
 		</div>
@@ -145,11 +146,11 @@
 		float: right;
 		margin-right: 20px;
 	}
-	
-    #applyButton{
-        text-align: center;
-        margin-top: 5%;
-        margin-left: 45%;
-        margin-right: 45%;
-    }
+
+	#applyButton {
+		text-align: center;
+		margin-top: 5%;
+		margin-left: 45%;
+		margin-right: 45%;
+	}
 </style>
