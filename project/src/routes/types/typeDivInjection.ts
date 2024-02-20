@@ -18,11 +18,11 @@ export async function injectTypeDivs(): Promise<boolean> {
 					temp +=
 						"<li style='margin-top:5px;margin-left:20px;'>⦿ " +
 						j.field +
-						`<span class='card assetCard variant-ghost-surface' style='margin-left: 5px;padding: 2px 5px;'>${j.dataType}</span>`;
+						`<span class='badge card assetCard variant-ghost-surface' style='margin-left: 5px;padding: 2px 5px;'>${j.dataType}</span>`;
 
 					if (j.list) {
 						temp +=
-							"<span class='card assetCard variant-ghost-surface' style='margin-left: 5px;padding: 2px 5px;'>Multi-value</span>";
+							"<span class='badge card assetCard variant-ghost-surface' style='margin-left: 5px;padding: 2px 5px;'>Multi-value</span>";
 					}
 
 					temp += '</li>';

@@ -21,7 +21,6 @@
 		if (browser) {
 			injectAssetDivs().then((thereAre: boolean) => {
 				areThereAssets = thereAre;
-				filterAssets();
 			});
 		}
 	});
