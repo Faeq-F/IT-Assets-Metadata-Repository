@@ -59,7 +59,7 @@ test('ContainNumbersFail', () => {
 	expect(result).toEqual({ containNumbers: 3 });
 });
 
-test('ContainNumersPass', () => {
+test('ContainNumbersPass', () => {
 	const check = containNumbers(1);
 	const result = check('test2');
 	expect(result).toEqual(undefined);

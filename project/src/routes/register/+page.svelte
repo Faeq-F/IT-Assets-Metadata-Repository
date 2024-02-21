@@ -98,11 +98,11 @@
 				use:validators={[required, minLength(4)]}
 			/>
 			{#if usernameTaken}
-				<a href="/" title="Username already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+				<a href="/register" title="Username already in use or invalid">
+					<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse"></i>
 				</a>
 			{:else}
-				<a href="/" title="Valid username">
+				<a href="/register" title="Valid username">
 					<i class="fa-solid fa-check"></i>
 				</a>
 			{/if}
