@@ -1,7 +1,6 @@
 import { fetchDocuments } from '../api/apiRequests';
 
 export function filterAssetsTypes(filters:any[]): Promise<boolean> {
-    console.log(filters);
 	return fetchDocuments('Asset').then((assetDocuments) => {
 		const assetsContainer = document.getElementsByClassName('assetsContainer')[0];
 		assetsContainer.innerHTML = '';
