@@ -27,19 +27,24 @@
 	function drawerOpen(): void {
 		drawerStore.open({});
 	}
+	let filters:any[] = [];
 	function applyFilters(): void {
+		let areThereAssets = false;
+		filterAssetsTypes(filters)
+		console.log(filters)
 		drawerStore.close();
 	}
 
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import MakeAsset from './makeAsset.svelte';
 	import { filterAssets } from './keywordSearch';
+	import { filterAssetsTypes} from './applyFilters';
 
 	let areThereAssets = false;
 
 	onMount(() => {
 		if (browser) {
-			injectAssetDivs().then((thereAre: boolean) => {
+			injectAssetDivs(filters).then((thereAre: boolean) => {
 				areThereAssets = thereAre;
 				filterAssets();
 			});
@@ -58,7 +63,7 @@
 	<title>Assets</title>
 </svelte:head>
 <Drawer>
-	<FilterDrawer />
+	<FilterDrawer activeFilters={filters}/>
 	<div class="variant-ghost" id="applyButton">
 		<button type="button" on:click={applyFilters}> Apply Filters</button>
 	</div>
