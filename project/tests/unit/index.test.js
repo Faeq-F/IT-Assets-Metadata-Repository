@@ -8,20 +8,20 @@ test('adds 1 + 2 to equal 3', () => {
 	expect(1 + 2).toBe(3);
 });
 
- var URI = 'mongodb+srv://teamProject:teamProject@cluster0.hc6vpim.mongodb.net/?retryWrites=true&w=majority';
-
- async function insertDB() {
+var URI = 'mongodb+srv://teamProject:teamProject@cluster0.hc6vpim.mongodb.net/?retryWrites=true&w=majority';
+/*
+async function insertDB() {
 
 	var assetname = "FileOne";
 	var	link = "www.random.com";
 	var type = "File";
-	//metadataFields = "LineNum";
+	var metadataObject = "LineNum";
 
 	var assetObject = {
 		assetName: assetname,
 		assetLink: link,
 		assetType: type,
-		//metadataFields: metadataObject
+		metadataFields: metadataObject
 	};
 	const data = new FormData();
 	data.append('newData', JSON.stringify(assetObject));
@@ -29,13 +29,22 @@ test('adds 1 + 2 to equal 3', () => {
 		console.log(response);
 	});
  }
+*/
+test('SelectAssetName', () => {
+	return fetchDocuments('Asset').then((answer) => {
+		return expect(answer[2].assetName).toEqual("FileOne");
+	});
+});
 
-test("SelectAssetTitle", async () => {
-	insertDB();
-	var assetname = "";
-	fetchDocuments('User').then((documentsReturned) => {
-		assetname += documentsReturned[3].assetName;
-		expect(assetname).toEqual("FileOne");
+test('SelectAssetLink', () => {
+	return fetchDocuments('Asset').then((answer) => {
+		return expect(answer[2].assetLink).toEqual("www.random.com");
+	});
+});
+
+test('SelectAssetType', () => {
+	return fetchDocuments('Asset').then((answer) => {
+		return expect(answer[2].assetType).toEqual("File");
 	});
 });
 
