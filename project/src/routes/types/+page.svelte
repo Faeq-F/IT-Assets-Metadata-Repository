@@ -4,20 +4,28 @@
 	import { onMount } from 'svelte';
 	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+
+	let assetTypes: any = [];
+
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
+			fetchDocuments('AssetType').then((assetTypeDocuments) => {
+				assetTypes = assetTypeDocuments;
+			});
 		}
 	});
 
 	import { injectTypeDivs } from './typeDivInjection';
 	import MakeType from './MakeType.svelte';
+	import { fetchDocuments } from '../api/apiRequests';
+	import Type from './Type.svelte';
 
 	let areThereAssetTypes = false;
 
 	onMount(() => {
 		if (browser) {
-			injectTypeDivs().then((thereAre: boolean) => (areThereAssetTypes = thereAre));
+			//injectTypeDivs().then((thereAre: boolean) => (areThereAssetTypes = thereAre));
 		}
 	});
 
@@ -55,7 +63,11 @@
 	</div>
 </div>
 
-<div class="typesContainer"></div>
+<div class="typesContainer">
+	{#each assetTypes as { _id, typeName, metadataFields }}
+		<Type id={_id} {typeName} {metadataFields} />
+	{/each}
+</div>
 
 <style>
 	@import url('$lib/styles/root.css');
