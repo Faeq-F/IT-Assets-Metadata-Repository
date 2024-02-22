@@ -16,18 +16,9 @@
 		}
 	});
 
-	import { injectTypeDivs } from './typeDivInjection';
 	import MakeType from './MakeType.svelte';
 	import { fetchDocuments } from '../api/apiRequests';
 	import Type from './Type.svelte';
-
-	let areThereAssetTypes = false;
-
-	onMount(() => {
-		if (browser) {
-			//injectTypeDivs().then((thereAre: boolean) => (areThereAssetTypes = thereAre));
-		}
-	});
 
 	const makeTypePopup: PopupSettings = {
 		event: 'click',
@@ -47,7 +38,7 @@
 	<div class="Card" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				{#if areThereAssetTypes}
+				{#if assetTypes.length > 0}
 					<p id="nothingHere">Your types:</p>
 				{:else}
 					<p id="nothingHere">

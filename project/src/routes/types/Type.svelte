@@ -18,9 +18,20 @@
 	class="card variant-filled-surface z-10 w-72 p-4 shadow-xl"
 	data-popup="menuPopup"
 >
-	<button style="margin: 0 auto;" on:click={() => deleteAssetType(id)}>
-		<i class="fa-solid fa-trash text-sm"></i>
-	</button>
+	<div class="logo-cloud grid-cols-1 gap-1 lg:!grid-cols-3">
+		<button class="logo-item" style="margin: 0 auto;">
+			<span><i class="fa-solid fa-maximize"></i></span>
+			<span>Expand</span>
+		</button>
+		<button class="logo-item" style="margin: 0 auto;">
+			<span><i class="fa-solid fa-pencil"></i></span>
+			<span>Edit</span>
+		</button>
+		<button class="logo-item" style="margin: 0 auto;" on:click={() => deleteAssetType(id)}>
+			<span><i class="fa-solid fa-trash text-sm"></i></span>
+			<span>Delete</span>
+		</button>
+	</div>
 	<div class="bg-surface-100-800-token arrow" />
 </div>
 
@@ -71,7 +82,7 @@
 		right: 5px;
 	}
 	#menuPopup {
-		width: 10px;
+		width: auto;
 		padding: 10px;
 		height: 40px;
 	}
