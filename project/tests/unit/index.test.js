@@ -2,13 +2,14 @@
 // import { MongoClient } from 'mongodb';
 import { expect, test } from 'vitest';
 import { hashCode, containNumbers } from '../../src/routes/register/validate';
-import { insertDocument, fetchDocuments } from '../../src/routes/api/apiRequests'; 
+import { insertDocument, fetchDocuments } from '../../src/routes/api/apiRequests';
 
 test('adds 1 + 2 to equal 3', () => {
 	expect(1 + 2).toBe(3);
 });
 
-var URI = 'mongodb+srv://teamProject:teamProject@cluster0.hc6vpim.mongodb.net/?retryWrites=true&w=majority';
+var URI =
+	'mongodb+srv://teamProject:teamProject@cluster0.hc6vpim.mongodb.net/?retryWrites=true&w=majority';
 /*
 async function insertDB() {
 
@@ -32,19 +33,19 @@ async function insertDB() {
 */
 test('SelectAssetName', () => {
 	return fetchDocuments('Asset').then((answer) => {
-		return expect(answer[2].assetName).toEqual("FileOne");
+		return expect(answer[2].assetName).toEqual('FileOne');
 	});
 });
 
 test('SelectAssetLink', () => {
 	return fetchDocuments('Asset').then((answer) => {
-		return expect(answer[2].assetLink).toEqual("www.random.com");
+		return expect(answer[2].assetLink).toEqual('www.random.com');
 	});
 });
 
 test('SelectAssetType', () => {
 	return fetchDocuments('Asset').then((answer) => {
-		return expect(answer[2].assetType).toEqual("File");
+		return expect(answer[2].assetType).toEqual('File');
 	});
 });
 

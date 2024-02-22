@@ -99,7 +99,7 @@
 			/>
 			{#if usernameTaken}
 				<a href="/register" title="Username already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse"></i>
+					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 				</a>
 			{:else}
 				<a href="/register" title="Valid username">
