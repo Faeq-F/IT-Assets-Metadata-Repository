@@ -33,8 +33,8 @@ export const deleteDocument = (collectionName: string, documentID: string) => {
 
 //
 
-export const updateDocuments = (collectionName : string, formData:any) => {
-	return fetch('http://localhost:5038/api/update/'+collectionName,{
+export const updateDocument = (collectionName : string, id: string, formData:any) => {
+	return fetch('http://localhost:5038/api/update/collection/'+collectionName+"/document/"+id,{
 		method:'PUT',
 		body: formData
 
