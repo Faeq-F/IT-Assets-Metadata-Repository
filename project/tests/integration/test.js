@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const time = 500;
 
 test('Index page has expected h1', async ({ page }) => {
 	await page.goto('/');
@@ -13,14 +14,14 @@ test('Login as root and sign out', async ({ page }) => {
 	await page.getByLabel('Username').fill('root');
 	await page.getByLabel('Password').fill('rootroot12');
 	await page.getByRole('button', { name: 'Log in' }).click();
-	// Wait 0.5 seconds for the login to process
-	await delay(500);
+	// Wait (time) seconds for the login to process
+	await delay(time);
 	expect(page.url()).toBe('http://localhost:4173/home');
 
 	// Navigate to profile and log out
 	await page.goto('/profile');
 	await page.getByRole('button', { name: 'Logout' }).click();
-	await delay(500);
+	await delay(time);
 	expect(page.url()).toBe('http://localhost:4173/');
 });
 
@@ -32,7 +33,7 @@ test('Invalid login', async ({ page }) => {
 	await page.getByLabel('Username').fill(username);
 	await page.getByLabel('Password').fill(password);
 	await page.getByRole('button', { name: 'Log in' }).click();
-	await delay(500);
+	await delay(time);
 
 	let url = await page.url();
 	if (url == 'http://localhost:4173/home') {
@@ -55,25 +56,86 @@ test('Create a new user, login as it, delete account and attempt to log back in'
 	await page.getByPlaceholder('Enter Password...').fill(password);
 	await page.getByPlaceholder('Enter Password again...').fill(passwordCon);
 	await page.getByRole('button', { name: 'Create account' }).click();
-	// Wait 1 second for the login to process
-	await delay(500);
+	// Wait (time) seconds for the login to process
+	await delay(time);
 	expect(page.url()).toBe('http://localhost:4173/home');
 
 	// Navigate to profile and delete account
 	await page.goto('/profile');
 	await page.getByRole('button', { name: 'Delete Account' }).click();
-	await delay(500);
+	await delay(time);
 	expect(page.url()).toBe('http://localhost:4173/');
 
 	// Attempt to sign back in
 	await page.getByLabel('Username').fill(username);
 	await page.getByLabel('Password').fill(password);
 	await page.getByRole('button', { name: 'Log in' }).click();
-	await delay(500);
+	await delay(time);
 
 	let url = await page.url();
 	if (url == 'http://localhost:4173/home') {
 		// The user should not be able to log back in with the deleted account
+		test.fail();
+	}
+});
+
+test('Redirection test 1 - signed in', async ({ page }) => {
+	await page.goto('/');
+	await page.getByLabel('Username').fill('root');
+	await page.getByLabel('Password').fill('rootroot12');
+	await page.getByRole('button', { name: 'Log in' }).click();
+	// Wait (time) seconds for the login to process
+	await delay(time);
+	expect(page.url()).toBe('http://localhost:4173/home');
+
+	await page.goto('/');
+	await delay(time);
+	// Page shoudl remain the same as the user is redirected back to home
+	expect(page.url()).toBe('http://localhost:4173/home');
+
+	let url = await page.url();
+	if (url == 'http://localhost:4173/') {
+		// The user should not be able to redirect back to the login if signed in
+		test.fail();
+	}
+});
+
+test('Redirection test 2 - not signed in', async ({ page }) => {
+	await page.goto('/home');
+	// Wait (time) seconds to process redirection
+	await delay(time);
+	expect(page.url()).toBe('http://localhost:4173/');
+
+	let url = await page.url();
+	if (url == 'http://localhost:4173/home') {
+		// The user should not be able to direct to the home page if not signed in
+		test.fail();
+	}
+
+	await page.goto('/profile');
+	await delay(time);
+	expect(page.url()).toBe('http://localhost:4173/');
+
+	url = await page.url();
+	if (url == 'http://localhost:4173/profile') {
+		test.fail();
+	}
+
+	await page.goto('/assets');
+	await delay(time);
+	expect(page.url()).toBe('http://localhost:4173/');
+
+	url = await page.url();
+	if (url == 'http://localhost:4173/assets') {
+		test.fail();
+	}
+
+	await page.goto('/types');
+	await delay(time);
+	expect(page.url()).toBe('http://localhost:4173/');
+
+	url = await page.url();
+	if (url == 'http://localhost:4173/types') {
 		test.fail();
 	}
 });
