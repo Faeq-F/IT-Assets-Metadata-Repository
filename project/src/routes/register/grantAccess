@@ -1,3 +1,6 @@
+
+
+
 enum UserRole {
     Admin = "admin",
     Viewer = "viewer",
@@ -16,4 +19,9 @@ function grantAccess(role: UserRole): string {
         default:
             return "Invalid role. Please provide a valid role.";
     }
+}
+
+
+function authoriseAssignRole(userRole: UserRole): boolean {
+    return userRole === UserRole.Admin;
 }
