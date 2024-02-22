@@ -1,14 +1,11 @@
-
-
-
-enum UserRole {
+export enum UserRole {
     Admin = "admin",
     Viewer = "viewer",
     User = "user"
 }
 
 // Return statements are temporary
-function grantAccess(role: UserRole): string {
+export function grantAccess(role: UserRole): string {
     switch (role) {
         case UserRole.Admin:
             return "Admin level access granted. You can create, update, and delete assets types.";
@@ -22,6 +19,6 @@ function grantAccess(role: UserRole): string {
 }
 
 
-function authoriseAssignRole(userRole: UserRole): boolean {
+export function authoriseAssignRole(userRole: UserRole): boolean {
     return userRole === UserRole.Admin;
 }
