@@ -82,8 +82,12 @@ app.put(
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			const formData = request.body;
 			let data = JSON.parse(formData.newData);
-			database.collection(collection).replaceOne({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },data);
+			database.collection(collection).replaceOne({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },data)
+		.catch((/** @type {any} */ err) => {
+				return err;
+			});
 		};
+
 		result(request.params.name.toString(), request.params.id.toString()).then((result) => response.send(result));
 	}
 );

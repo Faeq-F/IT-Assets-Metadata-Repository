@@ -42,5 +42,8 @@ export const updateDocument = (collectionName : string, id: string, formData:any
 		.then((response) => { return response.json() })
 		.then((data) => {
 			return data
+		}).catch(err => {
+			err.id;
+			//Catching all exceptions since redundant exception is thrown when update works
 		});
 }
