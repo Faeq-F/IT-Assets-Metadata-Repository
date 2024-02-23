@@ -1,59 +1,37 @@
 <script lang="ts">
-	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { deleteAssetType } from './deleteType';
+	import { deleteDocument } from '../api/apiRequests';
 
 	export let id: string;
 	export let typeName: string;
 	export let metadataFields: any[];
-
-	const menuPopup: PopupSettings = {
-		event: 'click',
-		target: 'menuPopup',
-		placement: 'top'
-	};
 </script>
 
-<div
-	id="menuPopup"
-	class="card variant-filled-surface z-10 w-72 p-4 shadow-xl"
-	data-popup="menuPopup"
->
-	<div class="logo-cloud grid-cols-1 gap-1 lg:!grid-cols-3">
-		<button class="logo-item">
-			<span><i class="fa-solid fa-maximize"></i></span>
-			<span>Expand</span>
-		</button>
-		<button class="logo-item">
-			<span><i class="fa-solid fa-pencil"></i></span>
-			<span>Edit</span>
-		</button>
-		<button class="logo-item" on:click={() => deleteAssetType(id)}>
-			<span><i class="fa-solid fa-trash text-sm"></i></span>
-			<span>Delete</span>
-		</button>
+<div data-assettypeid={id}>
+	<div id="Type" class="">
+		<div id="ButtonActions">
+			<button type="button" class="btn btn-sm"><i class="fa-solid fa-maximize"></i></button>
+			<button type="button" class="btn btn-sm"><i class="fa-solid fa-pen"></i></button><button
+				type="button"
+				class="btn btn-sm"
+				on:click={() => deleteDocument('AssetType', id)}><i class="fa-solid fa-trash"></i></button
+			>
+		</div>
+		<div class="h3" style="margin:10px; font-weight: bold;">
+			{typeName}
+		</div>
+		<div style="margin: 10px; font-weight: 500">Fields required:</div>
+		<ul>
+			{#each metadataFields as field}
+				<li>
+					⦿ {field.field}
+					<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
+					{#if field.list}
+						<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
+					{/if}
+				</li>
+			{/each}
+		</ul>
 	</div>
-	<div class="variant-filled-surface arrow" />
-</div>
-
-<div id="Type" data-assettypeid={id} class="">
-	<div class="h3" style="margin:10px; font-weight: bold;">
-		<button id="menuButton" type="button" class="btn btn-sm"
-			><i class="fa-solid fa-ellipsis-vertical" use:popup={menuPopup}></i></button
-		>
-		{typeName}
-	</div>
-	<div style="margin: 10px; font-weight: 500">Fields required:</div>
-	<ul>
-		{#each metadataFields as field}
-			<li>
-				⦿ {field.field}
-				<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
-				{#if field.list}
-					<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
-				{/if}
-			</li>
-		{/each}
-	</ul>
 </div>
 
 <style>
@@ -76,25 +54,10 @@
 		margin-left: 5px;
 		padding: 2px 5px;
 	}
-	#menuButton {
+	#ButtonActions {
 		position: absolute;
 		top: 10px;
-		right: 5px;
-		height: 10px;
+		right: 20px;
 		width: 10px;
-	}
-	#menuPopup {
-		width: 300px;
-		padding: 3px;
-		height: 34px;
-	}
-
-	.logo-item {
-		height: 27px;
-		padding: 0;
-	}
-
-	.logo-cloud {
-		height: 27px;
 	}
 </style>

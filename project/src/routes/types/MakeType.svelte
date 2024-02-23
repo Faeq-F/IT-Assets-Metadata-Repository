@@ -3,7 +3,6 @@
 	const toastStore = getToastStore();
 
 	import { insertDocument } from '../api/apiRequests';
-	import { injectTypeDivs } from './typeDivInjection';
 
 	function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
@@ -34,8 +33,6 @@
 						timeout: 3000
 					});
 				});
-
-			injectTypeDivs();
 		}
 	}
 
@@ -99,10 +96,12 @@
 			<br />
 			<label for="metadataFields" class="formlabel">
 				<p class="inline">Metadata Fields:</p>
-				<!-- eslint-disable-line svelte/valid-compile -->
-				<p class="absolute right-4 inline cursor-pointer text-sm" on:click={removeBottom}>
+				<button
+					class="absolute right-4 inline cursor-pointer text-sm"
+					on:click|preventDefault={removeBottom}
+				>
 					remove bottom field
-				</p>
+				</button>
 				<ul class="list" id="createdMetadataFieldsList"></ul>
 			</label>
 			<br />
@@ -123,8 +122,10 @@
 					<option>Account</option>
 					<option>Asset</option>
 				</select>
-				<button id="metadataFieldAdder" class="CardButton Card" on:click={addMetadataField}
-					>➕</button
+				<button
+					id="metadataFieldAdder"
+					class="CardButton Card"
+					on:click|preventDefault={addMetadataField}>➕</button
 				>
 				<span style="margin-top: 10px;display: block;">
 					<SlideToggle name="list" bind:checked={currentFieldAddition} active="bg-primary-700"
@@ -137,8 +138,10 @@
 				</span>
 			</label>
 			<br />
-			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeType}
-				>Make Type</button
+			<button
+				class="variant-filled-primary btn w-52"
+				id="assetMaker"
+				on:click|preventDefault={makeType}>Make Type</button
 			>
 		</form>
 	</div>

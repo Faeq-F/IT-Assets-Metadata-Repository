@@ -5,20 +5,23 @@
 	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 
-	let assetTypes: any = [];
+	import MakeType from './MakeType.svelte';
+	import { fetchDocuments } from '../api/apiRequests';
+	import Type from './Type.svelte';
 
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
-			fetchDocuments('AssetType').then((assetTypeDocuments) => {
-				assetTypes = assetTypeDocuments;
-			});
 		}
 	});
 
-	import MakeType from './MakeType.svelte';
-	import { fetchDocuments } from '../api/apiRequests';
-	import Type from './Type.svelte';
+	let assetTypes: any[] = [];
+
+	onMount(async () => {
+		await fetchDocuments('AssetType').then((assetTypeDocuments) => {
+			assetTypes = [...assetTypeDocuments];
+		});
+	});
 
 	const makeTypePopup: PopupSettings = {
 		event: 'click',
@@ -55,8 +58,8 @@
 </div>
 
 <div class="typesContainer">
-	{#each assetTypes as { _id, typeName, metadataFields }}
-		<Type id={_id} {typeName} {metadataFields} />
+	{#each assetTypes as type}
+		<Type id={type._id} typeName={type.typeName} metadataFields={type.metadataFields} />
 	{/each}
 </div>
 
