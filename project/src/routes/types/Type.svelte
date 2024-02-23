@@ -19,25 +19,25 @@
 	data-popup="menuPopup"
 >
 	<div class="logo-cloud grid-cols-1 gap-1 lg:!grid-cols-3">
-		<button class="logo-item" style="margin: 0 auto;">
+		<button class="logo-item">
 			<span><i class="fa-solid fa-maximize"></i></span>
 			<span>Expand</span>
 		</button>
-		<button class="logo-item" style="margin: 0 auto;">
+		<button class="logo-item">
 			<span><i class="fa-solid fa-pencil"></i></span>
 			<span>Edit</span>
 		</button>
-		<button class="logo-item" style="margin: 0 auto;" on:click={() => deleteAssetType(id)}>
+		<button class="logo-item" on:click={() => deleteAssetType(id)}>
 			<span><i class="fa-solid fa-trash text-sm"></i></span>
 			<span>Delete</span>
 		</button>
 	</div>
-	<div class="bg-surface-100-800-token arrow" />
+	<div class="variant-filled-surface arrow" />
 </div>
 
 <div id="Type" data-assettypeid={id} class="">
 	<div class="h3" style="margin:10px; font-weight: bold;">
-		<button type="button" class="btn btn-sm"
+		<button id="menuButton" type="button" class="btn btn-sm"
 			><i class="fa-solid fa-ellipsis-vertical" use:popup={menuPopup}></i></button
 		>
 		{typeName}
@@ -76,14 +76,25 @@
 		margin-left: 5px;
 		padding: 2px 5px;
 	}
-	button {
+	#menuButton {
 		position: absolute;
 		top: 10px;
 		right: 5px;
+		height: 10px;
+		width: 10px;
 	}
 	#menuPopup {
-		width: auto;
-		padding: 10px;
-		height: 40px;
+		width: 300px;
+		padding: 3px;
+		height: 34px;
+	}
+
+	.logo-item {
+		height: 27px;
+		padding: 0;
+	}
+
+	.logo-cloud {
+		height: 27px;
 	}
 </style>
