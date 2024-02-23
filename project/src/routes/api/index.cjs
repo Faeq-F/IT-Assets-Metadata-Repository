@@ -81,14 +81,20 @@ app.put(
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			const formData = request.body;
-			let data = JSON.parse(formData.newData);
-			database.collection(collection).replaceOne({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },data)
-		.catch((/** @type {any} */ err) => {
-				return err;
-			});
+			database
+				.collection(collection)
+				.replaceOne(
+					{ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },
+					JSON.parse(formData.newData)
+				)
+				.catch((/** @type {any} */ err) => {
+					return err;
+				});
 		};
 
-		result(request.params.name.toString(), request.params.id.toString()).then((result) => response.send(result));
+		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
+			response.send(result)
+		);
 	}
 );
 

@@ -30,20 +30,16 @@ export const deleteDocument = (collectionName: string, documentID: string) => {
 	}).catch(err => { return err });
 }
 
-
-//
-
 export const updateDocument = (collectionName : string, id: string, formData:any) => {
 	return fetch('http://localhost:5038/api/update/collection/'+collectionName+"/document/"+id,{
 		method:'PUT',
 		body: formData
 
 	})
-		.then((response) => { return response.json() })
+		.then((response) => { return response })
 		.then((data) => {
 			return data
 		}).catch(err => {
-			err.id;
-			//Catching all exceptions since redundant exception is thrown when update works
+			return err
 		});
 }
