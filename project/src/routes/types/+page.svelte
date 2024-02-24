@@ -4,15 +4,13 @@
 	import { onMount } from 'svelte';
 	import {
 		AppBar,
-		popup,
 		type ModalComponent,
-		type PopupSettings,
-		type ModalSettings
+		type ModalSettings,
+		getModalStore
 	} from '@skeletonlabs/skeleton';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-
-	import MakeType from './MakeType.svelte';
 	import { fetchDocuments } from '../api/apiRequests';
+	import MakeType from './MakeType.svelte';
 	import Type from './Type.svelte';
 
 	onMount(() => {
@@ -21,22 +19,12 @@
 		}
 	});
 
-	let assetTypes: any[] = [];
+	let AssetTypes: any[] = [];
 
-	onMount(async () => {
-		await fetchDocuments('AssetType').then((assetTypeDocuments) => {
-			assetTypes = [...assetTypeDocuments];
-		});
+	onMount(() => {
+		fetchDocuments('AssetType').then((Docs) => (AssetTypes = Docs));
 	});
 
-	const makeTypePopup: PopupSettings = {
-		event: 'click',
-		target: 'makeTypePopup',
-		placement: 'bottom',
-		closeQuery: ''
-	};
-
-	import { getModalStore } from '@skeletonlabs/skeleton';
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: MakeType };
 	const modal: ModalSettings = {
@@ -55,7 +43,7 @@
 	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				{#if assetTypes.length > 0}
+				{#if AssetTypes.length > 0}
 					<p id="nothingHere">Your types:</p>
 				{:else}
 					<p id="nothingHere">
@@ -67,7 +55,7 @@
 			<svelte:fragment slot="trail">
 				<button
 					id="assetMaker"
-					class="card card-hover border-2 border-modern-500 drop-shadow-md"
+					class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
 					on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
 				>
 			</svelte:fragment>
@@ -76,7 +64,8 @@
 </div>
 
 <div class="typesContainer">
-	{#each assetTypes as type}
+	{#each AssetTypes as type}
+		<!-- can do filter logic here? -->
 		<Type id={type._id} typeName={type.typeName} metadataFields={type.metadataFields} />
 	{/each}
 </div>

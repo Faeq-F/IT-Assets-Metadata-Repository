@@ -1,18 +1,45 @@
 <script lang="ts">
-	import { deleteDocument } from '../api/apiRequests';
+	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
 
 	export let id: string;
 	export let typeName: string;
 	export let metadataFields: any[];
+
+	async function deleteAssetType() {
+		await deleteDocument('AssetType', id);
+		//await fetchDocuments('AssetType').then((Docs) => assetTypesStore.set(Docs));
+	}
+
+	let showMenu = 'none';
 </script>
 
 <div id="Type" class="card card-hover bg-modern-50 drop-shadow-md">
+	<div
+		id="menuPopup"
+		class="card card-hover p-3 drop-shadow-md"
+		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
+	>
+		<div class="">
+			<button class="variant-filled-surface btn btn-sm card-hover m-1">
+				<span><i class="fa-solid fa-maximize"></i></span>
+				<span>Expand</span>
+			</button>
+			<button class="variant-filled-surface btn btn-sm card-hover m-1">
+				<span><i class="fa-solid fa-pen"></i></span>
+				<span>Edit</span>
+			</button>
+			<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAssetType}>
+				<span><i class="fa-solid fa-trash text-sm"></i></span>
+				<span>Delete</span>
+			</button>
+		</div>
+	</div>
 	<div id="ButtonActions">
-		<button type="button" class="btn btn-sm"><i class="fa-solid fa-maximize"></i></button>
-		<button type="button" class="btn btn-sm"><i class="fa-solid fa-pen"></i></button><button
+		<button
 			type="button"
 			class="btn btn-sm"
-			on:click={() => deleteDocument('AssetType', id)}><i class="fa-solid fa-trash"></i></button
+			on:click={() => (showMenu == 'none' ? (showMenu = 'initial') : (showMenu = 'none'))}
+			><i class="fa-solid fa-ellipsis-vertical"></i></button
 		>
 	</div>
 	<div class="h3" style="margin:10px; font-weight: bold;">
@@ -37,6 +64,7 @@
 		margin: 10px;
 		padding: 10px;
 		flex-grow: 1;
+		position: relative;
 	}
 	li {
 		margin-top: 5px;

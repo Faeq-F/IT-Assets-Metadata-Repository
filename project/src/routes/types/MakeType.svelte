@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { getToastStore, SlideToggle } from '@skeletonlabs/skeleton';
-	import { insertDocument } from '../api/apiRequests';
+	import { fetchDocuments, insertDocument } from '../api/apiRequests';
+
 	const toastStore = getToastStore();
 
-	function makeType() {
+	async function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
 		if (name == '') {
 			toastStore.trigger({
@@ -15,7 +16,7 @@
 			var typeObject = { typeName: name, metadataFields: fieldsSaved };
 			const data = new FormData();
 			data.append('newData', JSON.stringify(typeObject));
-			insertDocument('AssetType', data)
+			await insertDocument('AssetType', data)
 				.then((response) => {
 					console.log(response);
 					toastStore.trigger({
@@ -32,6 +33,7 @@
 						timeout: 3000
 					});
 				});
+			//await fetchDocuments('AssetType').then((Docs) => assetTypesStore.set(Docs));
 		}
 	}
 
