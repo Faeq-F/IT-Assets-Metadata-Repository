@@ -2,7 +2,7 @@
 	import '../app.pcss';
 	//@ts-ignore
 	import { page } from '$app/stores'; //Does work
-	import { AppShell } from '@skeletonlabs/skeleton';
+	import { AppShell, Modal } from '@skeletonlabs/skeleton';
 
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
@@ -31,7 +31,8 @@
 	initializeStores();
 </script>
 
-<Toast />
+<Toast zIndex="z-[1000]" />
+<Modal />
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
 	<svelte:fragment slot="header">
 		{#if $page.url.pathname != '/' && $page.url.pathname != '/register'}

@@ -6,45 +6,37 @@
 	export let metadataFields: any[];
 </script>
 
-<div data-assettypeid={id}>
-	<div id="Type" class="">
-		<div id="ButtonActions">
-			<button type="button" class="btn btn-sm"><i class="fa-solid fa-maximize"></i></button>
-			<button type="button" class="btn btn-sm"><i class="fa-solid fa-pen"></i></button><button
-				type="button"
-				class="btn btn-sm"
-				on:click={() => deleteDocument('AssetType', id)}><i class="fa-solid fa-trash"></i></button
-			>
-		</div>
-		<div class="h3" style="margin:10px; font-weight: bold;">
-			{typeName}
-		</div>
-		<div style="margin: 10px; font-weight: 500">Fields required:</div>
-		<ul>
-			{#each metadataFields as field}
-				<li>
-					⦿ {field.field}
-					<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
-					{#if field.list}
-						<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
-					{/if}
-				</li>
-			{/each}
-		</ul>
+<div id="Type" class="card card-hover bg-modern-50 drop-shadow-md">
+	<div id="ButtonActions">
+		<button type="button" class="btn btn-sm"><i class="fa-solid fa-maximize"></i></button>
+		<button type="button" class="btn btn-sm"><i class="fa-solid fa-pen"></i></button><button
+			type="button"
+			class="btn btn-sm"
+			on:click={() => deleteDocument('AssetType', id)}><i class="fa-solid fa-trash"></i></button
+		>
 	</div>
+	<div class="h3" style="margin:10px; font-weight: bold;">
+		{typeName}
+	</div>
+	<div style="margin: 10px; font-weight: 500">Fields required:</div>
+	<ul>
+		{#each metadataFields as field}
+			<li>
+				⦿ {field.field}
+				<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
+				{#if field.list}
+					<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
+				{/if}
+			</li>
+		{/each}
+	</ul>
 </div>
 
 <style>
 	#Type {
-		position: relative;
-		padding: 10px;
-		border-radius: 5px;
-		background-color: #ffffff;
-		box-shadow:
-			rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-			rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 		margin: 10px;
-		padding: 20px;
+		padding: 10px;
+		flex-grow: 1;
 	}
 	li {
 		margin-top: 5px;

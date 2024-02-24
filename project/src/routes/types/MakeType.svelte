@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { getToastStore, SlideToggle } from '@skeletonlabs/skeleton';
-	const toastStore = getToastStore();
-
 	import { insertDocument } from '../api/apiRequests';
+	const toastStore = getToastStore();
 
 	function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
@@ -37,21 +36,11 @@
 	}
 
 	let fieldsSaved: any[] = [];
-
-	let currentFieldAddition: boolean = false;
+	let fieldListable: boolean = false;
 
 	function removeBottom(): void {
 		fieldsSaved.pop();
-		loadValuesIntoMetadataFieldsList();
-	}
-
-	function loadValuesIntoMetadataFieldsList() {
-		let list = document.getElementById('createdMetadataFieldsList') as HTMLUListElement;
-		let temp = '';
-		for (let field of fieldsSaved) {
-			temp += `<li class="variant-ghost-surface card"><span class="flex-auto">${field.field} is of type ${field.dataType} and it is ${field.list} that it can hold a list</span></li>`;
-		}
-		list.innerHTML = temp;
+		fieldsSaved = fieldsSaved; //required for reactivity
 	}
 
 	function addMetadataField() {
@@ -71,19 +60,18 @@
 				timeout: 3000
 			});
 		} else {
-			fieldsSaved.push({ field: name, dataType: type, list: currentFieldAddition });
-			loadValuesIntoMetadataFieldsList();
+			fieldsSaved = [...fieldsSaved, { field: name, dataType: type, list: fieldListable }];
 		}
 	}
 </script>
 
-<div class="makeAssets card w-72 p-4 shadow-xl" data-popup="makeTypePopup" id="makeTypePopup">
-	<div class="Card">
-		<header class="h2">Make an Asset Type</header>
+<div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
+	<div class="card h-full bg-modern-50 p-5">
+		<header class="h2 card-header text-center">Make an Asset Type</header>
 		<br /><br />
 		<form id="rootCreateTypeForm">
-			<label for="typeName" class="formlabel">
-				<p>Type Name:</p>
+			<label for="typeName" class="formlabel text-center">
+				<p class="p-1">Type Name:</p>
 				<input
 					type="text"
 					id="typeName"
@@ -94,19 +82,33 @@
 				/>
 			</label>
 			<br />
-			<label for="metadataFields" class="formlabel">
-				<p class="inline">Metadata Fields:</p>
+			<label for="metadataFields" class="formlabel text-center">
+				<p class="inline p-1">Metadata Fields:</p>
 				<button
 					class="absolute right-4 inline cursor-pointer text-sm"
 					on:click|preventDefault={removeBottom}
 				>
 					remove bottom field
 				</button>
-				<ul class="list" id="createdMetadataFieldsList"></ul>
+
+				<ul class="list" id="createdMetadataFieldsList">
+					{#each fieldsSaved as field}
+						<li class="">
+							<span class="flex-auto">
+								{field.field}
+								<span class="card variant-ghost-surface badge">{field.dataType}</span>
+								{#if field.list}
+									<span class="card variant-ghost-surface badge">Multi-value</span>
+								{/if}
+							</span>
+						</li>
+					{/each}
+				</ul>
 			</label>
 			<br />
-			<label for="addMetadata" class="formlabel">
-				<p>Add a metadata field:</p>
+
+			<label for="addMetadata" class="formlabel text-center">
+				<p class="p-1">Add a metadata field:</p>
 				<input
 					type="text"
 					id="addMetadataFieldName"
@@ -122,24 +124,25 @@
 					<option>Account</option>
 					<option>Asset</option>
 				</select>
-				<button
-					id="metadataFieldAdder"
-					class="CardButton Card"
-					on:click|preventDefault={addMetadataField}>➕</button
-				>
-				<span style="margin-top: 10px;display: block;">
-					<SlideToggle name="list" bind:checked={currentFieldAddition} active="bg-primary-700"
-						>{#if currentFieldAddition}
+				<span style="display: inline-block;">
+					<SlideToggle name="list" bind:checked={fieldListable} active="bg-primary-700"
+						>{#if fieldListable}
 							The Field holds a list
 						{:else}
 							The Field is a single value
 						{/if}
 					</SlideToggle>
 				</span>
+				<button
+					id="metadataFieldAdder"
+					class=" card card-hover border-2 border-modern-600 shadow-md"
+					on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
+				>
 			</label>
 			<br />
 			<button
 				class="variant-filled-primary btn w-52"
+				style="margin: 0 auto; display:block;"
 				id="assetMaker"
 				on:click|preventDefault={makeType}>Make Type</button
 			>
@@ -148,17 +151,19 @@
 </div>
 
 <style>
-	@import url('$lib/styles/card.css');
-	@import url('$lib/styles/makeModal.css');
-	#makeTypePopup {
-		position: absolute;
-		top: 50% !important;
-		left: 50% !important;
-		transform: translate(-50%, -50%);
-		width: 50vw;
-		height: 60vh;
-		z-index: 2;
+	/* @import url('$lib/styles/card.css'); */
+	/* @import url('$lib/styles/makeModal.css'); */
+
+	.makeAssets {
+		height: 70vh;
+		width: 70vw;
 	}
+
+	form {
+		position: relative;
+		top: initial;
+	}
+
 	#metadataFieldAdder {
 		width: 2vw;
 		height: 2vw;
@@ -166,8 +171,8 @@
 		padding: 0;
 		display: inline;
 	}
-	#rootCreateTypeForm {
+	/* #rootCreateTypeForm {
 		height: 75%;
 		overflow-y: scroll;
-	}
+	} */
 </style>
