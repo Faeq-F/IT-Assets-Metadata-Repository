@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { getToastStore, SlideToggle } from '@skeletonlabs/skeleton';
-	import { fetchDocuments, insertDocument } from '../api/apiRequests';
-
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { insertDocument } from '../api/apiRequests';
 	const toastStore = getToastStore();
 
 	async function makeType() {
@@ -155,9 +154,6 @@
 </div>
 
 <style>
-	/* @import url('$lib/styles/card.css'); */
-	/* @import url('$lib/styles/makeModal.css'); */
-
 	.makeAssets {
 		height: 70vh;
 		width: 70vw;
@@ -175,8 +171,5 @@
 		padding: 0;
 		display: inline;
 	}
-	/* #rootCreateTypeForm {
-		height: 75%;
-		overflow-y: scroll;
-	} */
+
 </style>

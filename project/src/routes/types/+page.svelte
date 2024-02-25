@@ -43,7 +43,7 @@
 <h1 class="h1">Asset types management</h1>
 <br />
 <div>
-	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
+	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AssetTypesDocuments != undefined && AssetTypesDocuments.length > 0}
@@ -58,7 +58,7 @@
 			<svelte:fragment slot="trail">
 				<button
 					id="assetMaker"
-					class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+					class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
 					on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
 				>
 			</svelte:fragment>
@@ -75,8 +75,6 @@
 </div>
 
 <style>
-	@import url('$lib/styles/root.css');
-
 	#assetMaker {
 		width: 2vw;
 		height: 2vw;

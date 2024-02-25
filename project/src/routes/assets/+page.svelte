@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import MakeAsset from './makeAsset.svelte';
+	import MakeAsset from './MakeAsset.svelte';
 	import { fetchDocuments } from '../api/apiRequests';
 	import Asset from './Asset.svelte';
 	import {
@@ -46,7 +46,7 @@
 <h1 class="h1">Assets</h1>
 <br />
 <div>
-	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
+	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
@@ -59,12 +59,12 @@
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<div class="bg-white inline max-h-8 rounded-full border-2 border-modern-500">
+				<div class="border-modern-500 inline max-h-8 rounded-full border-2 bg-white">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
 					<InputChip
 						bind:value={keywordSearchInput}
-						type="search"
+						type="text"
 						id="keyword"
 						name="keyword"
 						placeholder="Enter search terms"
@@ -78,7 +78,7 @@
 				<div>
 					<button
 						id="assetMaker"
-						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+						class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
 						on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
 					>
 				</div>
@@ -106,8 +106,6 @@
 </div>
 
 <style>
-	@import url('$lib/styles/root.css');
-
 	#assetMaker {
 		width: 2vw;
 		height: 2vw;
