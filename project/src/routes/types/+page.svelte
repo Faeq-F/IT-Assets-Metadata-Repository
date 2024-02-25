@@ -9,9 +9,10 @@
 		getModalStore
 	} from '@skeletonlabs/skeleton';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import { fetchDocuments } from '../api/apiRequests';
 	import MakeType from './MakeType.svelte';
 	import Type from './Type.svelte';
+	import { updateTypes } from './TypesSave';
+	import { fetchDocuments } from '../api/apiRequests';
 
 	onMount(() => {
 		if (browser) {
@@ -19,10 +20,12 @@
 		}
 	});
 
-	let AssetTypes: any[] = [];
+	let AssetTypesDocuments: any[];
 
-	onMount(() => {
-		fetchDocuments('AssetType').then((Docs) => (AssetTypes = Docs));
+	onMount(async () => {
+		fetchDocuments('AssetType').then((Docs) => {
+			AssetTypesDocuments = Docs;
+		});
 	});
 
 	const modalStore = getModalStore();
@@ -43,7 +46,7 @@
 	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				{#if AssetTypes.length > 0}
+				{#if AssetTypesDocuments != undefined && AssetTypesDocuments.length > 0}
 					<p id="nothingHere">Your types:</p>
 				{:else}
 					<p id="nothingHere">
@@ -64,10 +67,11 @@
 </div>
 
 <div class="typesContainer">
-	{#each AssetTypes as type}
-		<!-- can do filter logic here? -->
-		<Type id={type._id} typeName={type.typeName} metadataFields={type.metadataFields} />
-	{/each}
+	{#if AssetTypesDocuments != undefined}
+		{#each AssetTypesDocuments as type}
+			<Type id={type._id} typeName={type.typeName} metadataFields={type.metadataFields} />
+		{/each}
+	{/if}
 </div>
 
 <style>

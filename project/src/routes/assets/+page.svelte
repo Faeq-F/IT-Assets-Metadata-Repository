@@ -3,33 +3,39 @@
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	import MakeAsset from './makeAsset.svelte';
+	import { fetchDocuments } from '../api/apiRequests';
+	import Asset from './Asset.svelte';
+	import {
+		AppBar,
+		getModalStore,
+		InputChip,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
+	import { highlight, keywordFilter } from './keywordSearch';
+
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
 	});
 
-	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-
-	import { injectAssetDivs } from './assetDivInjection';
-	import MakeAsset from './makeAsset.svelte';
-	import { filterAssets } from './keywordSearch';
-
-	let areThereAssets = false;
-
-	onMount(() => {
-		if (browser) {
-			injectAssetDivs().then((thereAre: boolean) => {
-				areThereAssets = thereAre;
-			});
-		}
+	onMount(async () => {
+		fetchDocuments('Asset').then((Docs) => {
+			AssetDocuments = Docs;
+		});
 	});
 
-	const makeAssetPopup: PopupSettings = {
-		event: 'click',
-		target: 'makeAssetPopup',
-		placement: 'bottom',
-		closeQuery: ''
+	let keywordSearchInput: string[] = [];
+
+	let AssetDocuments: any[];
+
+	const modalStore = getModalStore();
+	const modalComponent: ModalComponent = { ref: MakeAsset };
+	const modal: ModalSettings = {
+		type: 'component',
+		component: modalComponent
 	};
 </script>
 
@@ -40,43 +46,67 @@
 <h1 class="h1">Assets</h1>
 <br />
 <div>
-	<div class="Card" id="assetHeader">
+	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				{#if areThereAssets}
+				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
 					<p id="nothingHere">Your assets:</p>
 				{:else}
 					<p id="nothingHere">
-						It doesn't look like you have any assets yet, click the ➕ to get started
+						It doesn't look like you have any assets yet, click the <i class="fa-solid fa-plus"></i>
+						to get started
 					</p>
 				{/if}
 			</svelte:fragment>
-
 			<svelte:fragment slot="trail">
-				<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
-					<div class="input-group-shim"><i class="fa-solid fa-search"></i></div>
-					<input
+				<div class="bg-white inline max-h-8 rounded-full border-2 border-modern-500">
+					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
+					<span class="divider-vertical inline h-20" />
+					<InputChip
+						bind:value={keywordSearchInput}
 						type="search"
 						id="keyword"
 						name="keyword"
-						placeholder="Enter search term"
-						class=""
-						on:keyup={filterAssets}
+						placeholder="Enter search terms"
+						chips="variant-filled rounded-md"
+						rounded=" rounded-none"
+						padding="p-0"
+						class="float-right mr-5 inline w-9/12 border-0"
 					/>
 				</div>
 
-				<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
-				<MakeAsset />
+				<div>
+					<button
+						id="assetMaker"
+						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+						on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
+					>
+				</div>
 			</svelte:fragment>
 		</AppBar>
 	</div>
 </div>
 <br />
-<div class="assetsContainer"></div>
+<div class="assetsContainer">
+	{#if AssetDocuments != undefined}
+		{#each AssetDocuments as asset}
+			<!-- can do filter logic here? -->
+			{#if keywordFilter(asset, keywordSearchInput)}
+				<Asset
+					id={asset._id}
+					name={highlight(asset.assetName, keywordSearchInput)}
+					link={highlight(asset.assetLink, keywordSearchInput)}
+					type={highlight(asset.assetType, keywordSearchInput)}
+					metadata={asset.metadataFields}
+					{keywordSearchInput}
+				/>
+			{/if}
+		{/each}
+	{/if}
+</div>
 
 <style>
 	@import url('$lib/styles/root.css');
-	@import url('$lib/styles/card.css');
 
 	#assetMaker {
 		width: 2vw;
@@ -93,6 +123,7 @@
 	#assetHeader {
 		height: auto;
 		padding: 0px;
+		margin: 0 auto;
 	}
 
 	#assetHeader::after {
@@ -103,15 +134,10 @@
 
 	.assetsContainer {
 		display: flex;
-		justify-content: center;
 		flex-wrap: wrap;
+		justify-content: space-around;
+		align-items: stretch;
 		width: 90%;
 		margin: 10px auto;
-	}
-
-	#keyword {
-		display: inline;
-		float: right;
-		margin-right: 20px;
 	}
 </style>

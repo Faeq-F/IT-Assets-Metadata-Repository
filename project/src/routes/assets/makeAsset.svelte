@@ -5,8 +5,6 @@
 	const toastStore = getToastStore();
 
 	import { insertDocument } from '../api/apiRequests';
-	import { injectAssetDivs } from './assetDivInjection';
-	import { filterAssets } from './keywordSearch';
 
 	function makeAsset() {
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;
@@ -78,14 +76,12 @@
 			background: 'variant-ghost-success',
 			timeout: 3000
 		});
-		injectAssetDivs();
-		filterAssets();
 	}
 
 	addTypeOptions();
 </script>
 
-<div class="makeAssets card w-72 p-4 shadow-xl" data-popup="makeAssetPopup" id="makeAssetPopup">
+<div class="makeAssets card w-72 p-4 shadow-xl" id="makeAssetPopup">
 	<div class="Card">
 		<header class="h2">Make an Asset</header>
 		<br /><br />
