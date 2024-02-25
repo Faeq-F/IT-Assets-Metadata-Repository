@@ -11,7 +11,6 @@
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import MakeType from './MakeType.svelte';
 	import Type from './Type.svelte';
-	import { updateTypes } from './TypesSave';
 	import { fetchDocuments } from '../api/apiRequests';
 
 	onMount(() => {

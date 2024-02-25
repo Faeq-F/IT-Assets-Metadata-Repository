@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { InputChip, getToastStore } from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '../api/apiRequests';
 	const toastStore = getToastStore();
 

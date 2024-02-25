@@ -59,6 +59,7 @@
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
+				<!--Search by keyword bar-->
 				<div class="border-modern-500 inline max-h-8 rounded-full border-2 bg-white">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
@@ -74,7 +75,7 @@
 						class="float-right mr-5 inline w-9/12 border-0"
 					/>
 				</div>
-
+				<!--Create asset button-->
 				<div>
 					<button
 						id="assetMaker"
@@ -87,6 +88,7 @@
 	</div>
 </div>
 <br />
+<!--Assets grid-->
 <div class="assetsContainer">
 	{#if AssetDocuments != undefined}
 		{#each AssetDocuments as asset}

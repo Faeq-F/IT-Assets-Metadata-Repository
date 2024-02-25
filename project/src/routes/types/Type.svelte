@@ -18,6 +18,7 @@
 		ref: ExpandedType,
 		props: { id: id, typeName: typeName, metadataFields: metadataFields }
 	};
+
 	const expandModal: ModalSettings = {
 		type: 'component',
 		component: expandModalComponent,
@@ -31,7 +32,6 @@
 			background: 'variant-ghost-success',
 			timeout: 3000
 		});
-		//await fetchDocuments('AssetType').then((Docs) => assetTypesStore.set(Docs));
 	}
 
 	let showMenu = 'none';

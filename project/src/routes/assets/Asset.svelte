@@ -24,6 +24,7 @@
 </script>
 
 <div id="Asset" class="card card-hover bg-modern-50 drop-shadow-md">
+	<!--Popup menu-->
 	<div
 		id="menuPopup"
 		class="card card-hover p-3 drop-shadow-md"
@@ -44,6 +45,7 @@
 			</button>
 		</div>
 	</div>
+	<!--menu button-->
 	<div id="ButtonActions">
 		<button
 			type="button"
@@ -52,11 +54,12 @@
 			><i class="fa-solid fa-ellipsis-vertical"></i></button
 		>
 	</div>
+	<!--asset details-->
 	<div class="h3" style="margin:10px; font-weight: bold; margin-bottom: 3px;">{@html name}</div>
 	<div class="m-0 mb-1 p-0">
 		<a
 			style="font-weight: 500"
-			class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
+			class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
 			href="http://{link}"
 		>
 			<span><i class="fa-solid fa-paperclip"></i></span><span>{@html link}</span></a
@@ -66,7 +69,7 @@
 	<div style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</div>
 	<hr />
 	<div class="ml-2 mt-1">
-		<!-- ( -->
+		<!-- metadata -->
 		{#each Object.entries(metadata) as [field, value]}
 			⦿ {@html highlight(field, keywordSearchInput)}:
 			{#if Array.isArray(value)}
@@ -80,18 +83,6 @@
 			<br />
 		{/each}
 	</div>
-	<!-- <div style="margin: 10px; font-weight: 500">Fields required:</div>
-	<ul>
-		{#each metadataFields as field}
-			<li>
-				⦿ {field.field}
-				<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
-				{#if field.list}
-					<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
-				{/if}
-			</li>
-		{/each}
-	</ul> -->
 </div>
 
 <style>
@@ -101,14 +92,7 @@
 		flex-grow: 1;
 		position: relative;
 	}
-	li {
-		margin-top: 5px;
-		margin-left: 20px;
-	}
-	li span {
-		margin-left: 5px;
-		padding: 2px 5px;
-	}
+
 	#ButtonActions {
 		position: absolute;
 		top: 10px;
