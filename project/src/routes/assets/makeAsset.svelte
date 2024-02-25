@@ -203,6 +203,9 @@
 					{/if}
 				{/each}
 			</form>
+			<br />
+			<hr />
+			<br />
 			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeAsset}>
 				Make Asset</button
 			>
@@ -213,18 +216,9 @@
 </div>
 
 <style>
-	#makeAssetPopup {
-		position: absolute;
-		top: 50% !important;
-		left: 50% !important;
-		transform: translate(-50%, -50%);
-		width: 50vw;
-		height: 60vh;
-	}
-
-	#metadataForm {
-		position: initial;
-		transform: initial;
+	.makeAssets {
+		height: 70vh;
+		width: 70vw;
 	}
 
 	#rootCreateAssetForm {
