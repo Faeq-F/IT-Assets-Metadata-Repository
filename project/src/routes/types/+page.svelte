@@ -30,7 +30,7 @@
 
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: MakeType };
-	const modal: ModalSettings = {
+	const makeModal: ModalSettings = {
 		type: 'component',
 		component: modalComponent
 	};
@@ -59,7 +59,7 @@
 				<button
 					id="assetMaker"
 					class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
-					on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
+					on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
 				>
 			</svelte:fragment>
 		</AppBar>

@@ -1,11 +1,28 @@
 <script lang="ts">
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
+	import {
+		getModalStore,
+		getToastStore,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
+	import ExpandedType from './ExpandedType.svelte';
+	import { deleteDocument } from '../api/apiRequests';
 	const toastStore = getToastStore();
 
 	export let id: string;
 	export let typeName: string;
 	export let metadataFields: any[];
+
+	const modalStore = getModalStore();
+	const expandModalComponent: ModalComponent = {
+		ref: ExpandedType,
+		props: { id: id, typeName: typeName, metadataFields: metadataFields }
+	};
+	const expandModal: ModalSettings = {
+		type: 'component',
+		component: expandModalComponent,
+		backdropClasses: '!p-0'
+	};
 
 	async function deleteAssetType() {
 		await deleteDocument('AssetType', id);
@@ -27,7 +44,10 @@
 		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
 	>
 		<div class="">
-			<button class="variant-filled-surface btn btn-sm card-hover m-1">
+			<button
+				class="variant-filled-surface btn btn-sm card-hover m-1"
+				on:click={() => modalStore.trigger(expandModal)}
+			>
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
