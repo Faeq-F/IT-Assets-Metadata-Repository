@@ -2,6 +2,7 @@
 	//Run 'npm install' to make sure you have all the dependencies
 	import { Modal, Content, Trigger } from 'sv-popup';
 	import FilterDrawer from './filterDrawer.svelte';
+	import { injectFilterDivs } from './typeFilterInjection';
 	import { AppBar, AppShell, Autocomplete } from '@skeletonlabs/skeleton';
 
 	function searchKeyword() {
@@ -27,24 +28,24 @@
 	function drawerOpen(): void {
 		drawerStore.open({});
 	}
-	let filters:any[] = [];
+	let filters: any[] = [];
 	function applyFilters(): void {
 		let areThereAssets = false;
-		filterAssetsTypes(filters)
-		console.log(filters)
+		filterAssetsTypes(filters);
+		console.log(filters);
 		drawerStore.close();
 	}
 
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import MakeAsset from './makeAsset.svelte';
 	import { filterAssets } from './keywordSearch';
-	import { filterAssetsTypes} from './applyFilters';
+	import { filterAssetsTypes } from './applyFilters';
 
 	let areThereAssets = false;
 
 	onMount(() => {
 		if (browser) {
-			injectAssetDivs(filters).then((thereAre: boolean) => {
+			injectAssetDivs().then((thereAre: boolean) => {
 				areThereAssets = thereAre;
 				filterAssets();
 			});
@@ -63,7 +64,10 @@
 	<title>Assets</title>
 </svelte:head>
 <Drawer>
-	<FilterDrawer activeFilters={filters}/>
+	<div>
+		<FilterDrawer activeFilters={filters} />
+	</div>
+	<div class="typeFilter"></div>
 	<div class="variant-ghost" id="applyButton">
 		<button type="button" on:click={applyFilters}> Apply Filters</button>
 	</div>
