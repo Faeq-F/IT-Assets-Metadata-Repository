@@ -92,25 +92,31 @@
 				>
 					remove bottom field
 				</button>
-
-				<ul class="list" id="createdMetadataFieldsList">
-					{#each fieldsSaved as field}
-						<li class="">
-							<span class="flex-auto">
-								{field.field}
-								<span class="card variant-ghost-surface badge">{field.dataType}</span>
-								{#if field.list}
-									<span class="card variant-ghost-surface badge">Multi-value</span>
-								{/if}
-							</span>
-						</li>
-					{/each}
-				</ul>
+				<div class=" relative h-72 overflow-y-scroll">
+					<ul class="list" id="createdMetadataFieldsList">
+						{#each fieldsSaved as field}
+							<li class="">
+								<span class="flex-auto">
+									⦿ {field.field}
+									<span class="card variant-ghost-surface badge">{field.dataType}</span>
+									{#if field.list}
+										<span class="card variant-ghost-surface badge">Multi-value</span>
+									{/if}
+								</span>
+							</li>
+						{/each}
+					</ul>
+				</div>
 			</label>
 			<br />
 
 			<label for="addMetadata" class="formlabel text-center">
 				<p class="p-1">Add a metadata field:</p>
+				<button
+					id="metadataFieldAdder"
+					class=" card card-hover h-3 w-3 border-2 border-modern-600 shadow-md"
+					on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
+				>
 				<input
 					type="text"
 					id="addMetadataFieldName"
@@ -127,20 +133,16 @@
 					<option>Asset</option>
 				</select>
 				<span style="display: inline-block;">
-					<SlideToggle name="list" bind:checked={fieldListable} active="bg-primary-700"
-						>{#if fieldListable}
-							The Field holds a list
-						{:else}
-							The Field is a single value
-						{/if}
-					</SlideToggle>
+					<input class="checkbox" type="checkbox" bind:checked={fieldListable} />
+					{#if fieldListable}
+						The Field holds a list
+					{:else}
+						The Field is a single value
+					{/if}
 				</span>
-				<button
-					id="metadataFieldAdder"
-					class=" card card-hover border-2 border-modern-600 shadow-md"
-					on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
-				>
 			</label>
+			<br />
+			<hr />
 			<br />
 			<button
 				class="variant-filled-primary btn w-52"
