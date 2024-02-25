@@ -97,6 +97,8 @@
 			background: 'variant-ghost-success',
 			timeout: 3000
 		});
+		// Refresh the page
+		location.reload();
 	}
 
 	let currentType: string;

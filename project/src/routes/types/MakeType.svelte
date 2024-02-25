@@ -32,6 +32,8 @@
 						timeout: 3000
 					});
 				});
+			// Refresh the page
+			location.reload();
 		}
 	}
 
