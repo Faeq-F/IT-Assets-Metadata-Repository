@@ -9,7 +9,7 @@
 		required,
 		email
 	} from 'svelte-use-form';
-	import { checkPasswordsMatch, containNumbers, hashCode, duplicateUsername } from './validate';
+	import { checkPasswordsMatch, containNumbers, hashCode, duplicateUsername, duplicateEmail } from './validate';
 	import { insertDocument } from '../api/apiRequests';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
@@ -19,6 +19,12 @@
 
 	const form = useForm();
 	const requiredMsg = 'This field is required';
+
+	let emailTaken = true;
+	function checkValidEmail() {
+		let email = (document.getElementById('email') as HTMLInputElement).value;
+		duplicateEmail(email).then((taken) => (emailTaken = taken));
+	}
 
 	let usernameTaken = true;
 	function checkValidUsername() {
@@ -73,8 +79,18 @@
 				placeholder="Enter email..."
 				data-focusindex="0"
 				class="input w-96"
+				on:keyup={checkValidEmail}
 				use:validators={[required, email]}
 			/>
+			{#if emailTaken}
+				<a href="/" title="Email already in use or invalid">
+					<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+				</a>
+			{:else}
+				<a href="/" title="Valid email">
+					<i class="fa-solid fa-check"></i>
+				</a>
+			{/if}
 		</div>
 	</label>
 
