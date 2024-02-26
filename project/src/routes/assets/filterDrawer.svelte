@@ -10,20 +10,22 @@
 	let typeFilters: string[] = [];
 
     onMount(async () => {
-        const assetDocuments = await fetchDocuments('Asset');
-        if (assetDocuments.length > 0) {
-            typeFilters = assetDocuments.map(asset => ({
-                assetType: asset.assetType
-            }));
-        }
-    });
+        const assetDocuments = await fetchDocuments('Asset').then((Docs) => {
+            for (let i of Docs){
+                if (!typeFilters.includes(i.assetType)){
+                typeFilters = [...typeFilters, i.assetType]
+            }
+            }
+        });
+        });
 </script>
 
 <h1 class="h1">Filters test</h1>
 <div class="card" id="filters">
     <ListBox multiple id="ListBox">
-        {#each typeFilters as item (item.assetType)}
-            <ListBoxItem bind:group={activeFilters} name="medium" value={item.assetType}>{item.assetType}</ListBoxItem>
+        
+        {#each typeFilters as item (item)}
+            <ListBoxItem bind:group={activeFilters} name="medium" value={item}>{item}</ListBoxItem>
         {/each}
     </ListBox>
 </div>

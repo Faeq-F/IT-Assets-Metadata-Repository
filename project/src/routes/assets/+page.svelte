@@ -32,7 +32,6 @@
 	function applyFilters(): void {
 		let areThereAssets = false;
 		filterAssetsTypes(filters);
-		console.log(filters);
 		drawerStore.close();
 	}
 
