@@ -1,123 +1,122 @@
 <script lang="ts">
-	//Run 'npm install' to make sure you have all the dependencies
-	import { Modal, Content, Trigger } from 'sv-popup';
-	import FilterDrawer from './filterDrawer.svelte';
-	import { injectFilterDivs } from './typeFilterInjection';
-	import { AppBar, AppShell, Autocomplete } from '@skeletonlabs/skeleton';
+	import {
+		AppBar,
+		getModalStore,
+		InputChip,
+		type ModalComponent,
+		type ModalSettings,
+		getDrawerStore
+	} from '@skeletonlabs/skeleton';
 
-	function searchKeyword() {
-		alert((document.getElementById('keyword') as HTMLInputElement).value);
-	}
-
-	import { injectAssetDivs } from './assetDivInjection';
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	import MakeAsset from './MakeAsset.svelte';
+	import { fetchDocuments } from '../api/apiRequests';
+	import Asset from './Asset.svelte';
+	import { highlight, keywordFilter } from './keywordSearch';
+	import { activeFilters } from '$lib/stores';
+
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
 	});
-	// code for the filter drawer
-	import { initializeStores, Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
 
-	initializeStores();
 	const drawerStore = getDrawerStore();
-
 	function drawerOpen(): void {
-		drawerStore.open({});
-	}
-	let filters: any[] = [];
-	function applyFilters(): void {
-		let areThereAssets = false;
-		filterAssetsTypes(filters);
-		drawerStore.close();
+		drawerStore.open({ id: 'filterAssetsDrawer' });
 	}
 
-	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import MakeAsset from './makeAsset.svelte';
-	import { filterAssets } from './keywordSearch';
-	import { filterAssetsTypes } from './applyFilters';
+	$: filters = $activeFilters;
+	let keywordSearchInput: string[] = [];
+	let AssetDocuments: any[];
 
-	let areThereAssets = false;
-
-	onMount(() => {
-		if (browser) {
-			injectAssetDivs().then((thereAre: boolean) => {
-				areThereAssets = thereAre;
-				filterAssets();
-			});
-		}
+	onMount(async () => {
+		fetchDocuments('Asset').then((Docs) => {
+			AssetDocuments = Docs;
+		});
 	});
 
-	const makeAssetPopup: PopupSettings = {
-		event: 'click',
-		target: 'makeAssetPopup',
-		placement: 'bottom',
-		closeQuery: ''
+	const modalStore = getModalStore();
+	const modalComponent: ModalComponent = { ref: MakeAsset };
+	const modal: ModalSettings = {
+		type: 'component',
+		component: modalComponent
 	};
 </script>
 
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
-<Drawer>
-	<div>
-		<FilterDrawer activeFilters={filters} />
-	</div>
-	<div class="typeFilter"></div>
-	<div class="variant-ghost" id="applyButton">
-		<button type="button" on:click={applyFilters}> Apply Filters</button>
-	</div>
-</Drawer>
-<AppShell slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64">
-	<svelte:fragment slot="header">
-		<h1 class="h1">Assets</h1>
-		<br />
-		<div>
-			<div class="Card" id="assetHeader">
-				<AppBar background="transparent">
-					<svelte:fragment slot="lead">
-						{#if areThereAssets}
-							<p id="nothingHere">Your assets:</p>
-						{:else}
-							<p id="nothingHere">
-								It doesn't look like you have any assets yet, click the ➕ to get started
-							</p>
-						{/if}
-					</svelte:fragment>
 
-					<svelte:fragment slot="trail">
-						<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
-							<div class="input-group-shim"><i class="fa-solid fa-search"></i></div>
-							<input
-								type="search"
-								id="keyword"
-								name="keyword"
-								placeholder="Enter search term"
-								class=""
-								on:keyup={filterAssets}
-							/>
-						</div>
-
-						<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
-						<MakeAsset />
-					</svelte:fragment>
-					<button id="openDrawer" class="variant-ghost" on:click={drawerOpen}> Filters</button>
-				</AppBar>
-			</div>
-		</div>
-		<br />
-	</svelte:fragment>
-</AppShell>
+<h1 class="h1">Assets</h1>
 <br />
-<div class="assetsContainer"></div>
+<div>
+	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
+		<AppBar background="transparent">
+			<svelte:fragment slot="lead">
+				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
+					<p id="nothingHere">Your assets:</p>
+				{:else}
+					<p id="nothingHere">
+						It doesn't look like you have any assets yet, click the <i class="fa-solid fa-plus"></i>
+						to get started
+					</p>
+				{/if}
+			</svelte:fragment>
+			<svelte:fragment slot="trail">
+				<!--Open Filter Drawer-->
+				<button id="openDrawer" class="variant-ghost" on:click={drawerOpen}> Filters</button>
+				<!--Search by keyword bar-->
+				<div class="border-modern-500 inline max-h-8 rounded-full border-2 bg-white">
+					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
+					<span class="divider-vertical inline h-20" />
+					<InputChip
+						bind:value={keywordSearchInput}
+						type="text"
+						id="keyword"
+						name="keyword"
+						placeholder="Enter search terms"
+						chips="variant-filled rounded-md"
+						rounded=" rounded-none"
+						padding="p-0"
+						class="float-right mr-5 inline w-9/12 border-0"
+					/>
+				</div>
+				<!--Create asset button-->
+				<div>
+					<button
+						id="assetMaker"
+						class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
+						on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
+					>
+				</div>
+			</svelte:fragment>
+		</AppBar>
+	</div>
+</div>
+<br />
+<!--Assets grid-->
+<div class="assetsContainer">
+	{#if AssetDocuments != undefined}
+		{#each AssetDocuments as asset}
+			{#if keywordFilter(asset, keywordSearchInput) && (filters.includes(asset.assetType) || filters.length == 0)}
+				<Asset
+					id={asset._id}
+					name={highlight(asset.assetName, keywordSearchInput)}
+					link={highlight(asset.assetLink, keywordSearchInput)}
+					type={highlight(asset.assetType, keywordSearchInput)}
+					metadata={asset.metadataFields}
+					{keywordSearchInput}
+				/>
+			{/if}
+		{/each}
+	{/if}
+</div>
 
 <style>
-	@import url('$lib/styles/root.css');
-	@import url('$lib/styles/card.css');
-
 	#assetMaker {
 		width: 2vw;
 		height: 2vw;
@@ -133,6 +132,7 @@
 	#assetHeader {
 		height: auto;
 		padding: 0px;
+		margin: 0 auto;
 	}
 
 	#assetHeader::after {
@@ -143,22 +143,10 @@
 
 	.assetsContainer {
 		display: flex;
-		justify-content: center;
 		flex-wrap: wrap;
+		justify-content: space-around;
+		align-items: stretch;
 		width: 90%;
 		margin: 10px auto;
-	}
-
-	#keyword {
-		display: inline;
-		float: right;
-		margin-right: 20px;
-	}
-
-	#applyButton {
-		text-align: center;
-		margin-top: 5%;
-		margin-left: 45%;
-		margin-right: 45%;
 	}
 </style>
