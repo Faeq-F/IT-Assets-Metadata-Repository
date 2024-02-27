@@ -4,7 +4,7 @@
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
-	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
+	import { deleteDocument, fetchDocuments, updateDocument } from '../api/apiRequests';
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
@@ -19,6 +19,27 @@
 						logOut();
 					});
 				}
+			}
+		});
+	}
+
+	function updateAccount(newUsername:string, newPassHash: number) {
+		fetchDocuments('User').then((Users) => {
+			for (let i of Users) {
+				if (i.username == Cookies.get('savedLogin-username')) {
+					var userObj = { username: newUsername, passwordHash: newPassHash};
+
+					const data = new FormData();
+					data.append('newData', JSON.stringify(userObj));
+
+					updateDocument('User', i._id, data)
+						.then((response) => {
+							console.log(response);
+						})
+						.catch((error) => {
+							console.error('Updating user error: ', error);
+						});
+					}
 			}
 		});
 	}
