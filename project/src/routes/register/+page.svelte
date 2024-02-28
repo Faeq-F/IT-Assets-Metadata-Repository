@@ -180,7 +180,7 @@
 		<button class="variant-filled-primary btn w-52">Back to login</button>
 	</a>
 
-	<button class="variant-filled-primary btn w-52" disabled={!$form.valid} on:click={registerUser}>
+	<button class="variant-filled-primary btn w-52" disabled={!$form.valid || emailTaken} on:click={registerUser}>
 		Create account</button
 	>
 </form>
