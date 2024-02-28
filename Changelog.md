@@ -2,29 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Sprint 2] - 2024-02-15
+## [Sprint 3] - 2024-02-29
 
 ### Added
 
-- Login Page (now functional)
-- Register Page
-- Search for Assets by Keyword
-- Delete Asset Types
-- Profile Page buttons
-  - logout account
-  - delete account
+- Asset and Asset Type counters on home page
+- Expanded view for Assets and Asset Types
 
 ### Fixed
 
-- Nothing.
+- Dark-mode on all UI components.
 
 ### Changed
 
-- Nothing.
+- Made asset links clickable
+- Search by keyword to be tokenized
+  - keywords highlighted are across all possible matches, instead of just the first
+- Moved make Asset and make Asset Type popups to modals
+- Grid layout for assets and types
+- Moved delete button for asset types to popup menu
+- Some styles
 
 ### Security
 
-- Log-in cookies expire after 70 days
+- Fixed form submissions changing page URL.
 
 ### Deprecated
 
@@ -32,7 +33,53 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
-- Old styles.
+- Some styles.
+
+## [Sprint 2] - 2024-02-15
+
+### Added
+
+- Login Page
+  - able to log in to the app
+  - can only access app through log-in
+- Register Page
+  - able to register for an account on the app
+  - username uniqueness & validity checks
+  - email validity check
+  - password strength checks
+- Search for Assets by Keyword
+  - includes keyword highlighting
+- Asset types
+  - Ability to delete asset types
+  - Specify the data type a metadata field is to hold
+- Profile Page
+  - button for logout account
+  - button for delete account
+
+### Fixed
+
+- Nothing.
+
+### Changed
+
+- Short description on home page
+- UI design with dark mode & following accessability guidelines
+- How to add metadata fields to an asset type - UI
+- Profile page to show username, log-out and delete account buttons
+
+### Security
+
+- Log-in cookies expire after 70 days.
+- All passwords are hashed before they are saved / checked.
+- URL manipulation attack mitigated.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Some styles.
 
 ## [Sprint 1] - 2024-02-01
 
@@ -41,7 +88,10 @@ All notable changes to this project will be documented in this file.
 - Login Page (non-functional)
 - Home Page (non-functional)
 - Assets Page
+  - ability to create an asset from a type
 - Asset Types Page
+  - ability to create an asset type
+  - able to specify metadata fields for a type
 - Profile Page (non-functional)
 
 ### Fixed
@@ -63,3 +113,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 - Nothing.
+
+[Sprint 1]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-1
+[Sprint 2]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-2
+[Sprint 3]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-3
