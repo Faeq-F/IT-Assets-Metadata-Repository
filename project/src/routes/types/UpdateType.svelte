@@ -17,9 +17,26 @@
 
 	function addMetadataField() {}
 
-	function removeBottom() {}
-
 	let fieldListable: boolean;
+
+	function removeField(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
+		const fieldSpan = event.currentTarget.parentElement;
+		let inputs = fieldSpan?.getElementsByTagName('input');
+		let select = fieldSpan?.getElementsByTagName('select');
+		let name = '';
+		let checkbox = false;
+		if (inputs && select) {
+			for (let i of inputs) {
+				if (i.classList.contains('checkbox')) {
+					checkbox = i.checked;
+				} else {
+					name = i.value;
+				}
+			}
+			let fieldToRemove = { field: name, dataType: select[0].value, list: checkbox };
+			NewTypeFields = NewTypeFields.filter((field) => field.field != name);
+		}
+	}
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-52">
@@ -60,7 +77,7 @@
 									<option>Asset</option>
 								</select>
 								<input class="checkbox" type="checkbox" checked={field.list} /> Multi-Value
-								<button class="btn variant-ghost btn-sm ml-4"
+								<button class="btn variant-ghost btn-sm ml-4" on:click={removeField}
 									><i class="fa-solid fa-trash text-sm"></i></button
 								>
 							</span>
@@ -76,7 +93,7 @@
 			<p class="p-1">Add a metadata field:</p>
 			<button
 				id="metadataFieldAdder"
-				class=" card card-hover border-modern-600 h-3 w-3 border-2 shadow-md"
+				class=" card card-hover border-modern-600 h-10 w-10 border-2 shadow-md"
 				on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
 			>
 			<input
