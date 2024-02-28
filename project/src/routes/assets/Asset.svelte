@@ -3,6 +3,7 @@
 	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
 	import { highlight } from './keywordSearch';
 	const toastStore = getToastStore();
+	import Cookies from 'js-cookie';
 
 	export let name: string;
 	export let id: string;
@@ -10,6 +11,8 @@
 	export let type: string;
 	export let metadata: any;
 	export let keywordSearchInput: string[] = [];
+
+	let role = Cookies.get('savedLogin-role');
 
 	async function deleteAsset() {
 		await deleteDocument('Asset', id);
@@ -37,14 +40,16 @@
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
-			<button class="variant-filled-surface btn btn-sm card-hover m-1">
-				<span><i class="fa-solid fa-pen"></i></span>
-				<span>Edit</span>
-			</button>
-			<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAsset}>
-				<span><i class="fa-solid fa-trash text-sm"></i></span>
-				<span>Delete</span>
-			</button>
+			{#if role != 'viewer'}
+				<button class="variant-filled-surface btn btn-sm card-hover m-1">
+					<span><i class="fa-solid fa-pen"></i></span>
+					<span>Edit</span>
+				</button>
+				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAsset}>
+					<span><i class="fa-solid fa-trash text-sm"></i></span>
+					<span>Delete</span>
+				</button>
+			{/if}
 		</div>
 	</div>
 	<!--menu button-->

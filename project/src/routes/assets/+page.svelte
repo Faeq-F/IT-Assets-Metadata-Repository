@@ -14,6 +14,7 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import { highlight, keywordFilter } from './keywordSearch';
+	import Cookies from 'js-cookie';
 
 	onMount(() => {
 		if (browser) {
@@ -30,6 +31,8 @@
 	let keywordSearchInput: string[] = [];
 
 	let AssetDocuments: any[];
+
+	let role = Cookies.get('savedLogin-role');
 
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: MakeAsset };
@@ -77,11 +80,13 @@
 				</div>
 				<!--Create asset button-->
 				<div>
-					<button
-						id="assetMaker"
-						class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
-						on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
-					>
+					{#if role != 'viewer'}
+						<button
+							id="assetMaker"
+							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
+							on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
+						>
+					{/if}
 				</div>
 			</svelte:fragment>
 		</AppBar>
