@@ -4,6 +4,10 @@
 	import { onMount } from 'svelte';
 	import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	import Cookies from 'js-cookie';
+	
+	let role = Cookies.get('savedLogin-role');
+
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
@@ -48,7 +52,9 @@
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<button id="assetMaker" class="CardButton Card" use:popup={makeTypePopup}>➕</button>
+				{#if role != 'viewer'}
+					<button id="assetMaker" class="CardButton Card" use:popup={makeTypePopup}>➕</button>
+				{/if}
 				<MakeType />
 			</svelte:fragment>
 		</AppBar>

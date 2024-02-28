@@ -3,6 +3,7 @@
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	import Cookies from 'js-cookie';
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
@@ -16,6 +17,9 @@
 	import { filterAssets } from './keywordSearch';
 
 	let areThereAssets = false;
+	let role = Cookies.get('savedLogin-role')
+	
+	console.log(role);
 
 	onMount(() => {
 		if (browser) {
@@ -65,8 +69,9 @@
 						on:keyup={filterAssets}
 					/>
 				</div>
-
-				<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
+				{#if role != 'viewer'}
+					<button id="assetMaker" class="CardButton Card" use:popup={makeAssetPopup}>➕</button>
+				{/if}
 				<MakeAsset />
 			</svelte:fragment>
 		</AppBar>

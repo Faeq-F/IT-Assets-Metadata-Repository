@@ -27,6 +27,7 @@
 		Cookies.remove('savedLogin-username');
 		Cookies.remove('savedLogin-email');
 		Cookies.remove('savedLogin-password');
+		Cookies.remove('savedLogin-role');
 		redirectWhenNotLoggedIn();
 	}
 </script>
