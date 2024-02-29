@@ -16,7 +16,7 @@ function grantAccess(role: UserRole): string {
         case UserRole.User:
             return "User level access granted. You can create, update, and delete specific assets.";
         default:
-            return "Invalid role. Please provide a valid role.";
+            return "Invalid";
     }
 }
 function authoriseAssignRole(userRole: UserRole): boolean {

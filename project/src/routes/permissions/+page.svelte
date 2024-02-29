@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     //@ts-ignore
     import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
@@ -19,7 +19,31 @@
     });
 
     let CurrentUsers: any[];
-</script>
+</script> -->
+
+<script lang="ts">
+    //@ts-ignore
+    import { browser } from '$app/environment';
+  
+    import { onMount } from 'svelte';
+    import { fetchDocuments } from '../api/apiRequests';
+  
+    // Define an interface for user data structure
+    interface User {
+      username: string; // Add relevant user data fields
+    }
+  
+    let users: User[] = [];
+  
+    onMount(async () => {
+      try {
+        const userDocuments = await fetchDocuments('User');
+        users = userDocuments;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    });
+  </script>
 
 <svelte:head>
     <title>Permissions</title>
