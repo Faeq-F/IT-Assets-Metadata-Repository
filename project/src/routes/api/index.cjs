@@ -49,12 +49,25 @@ app.get(
 		result(request.params.name.toString()).then((result) => response.send(result));
 	}
 );
+app.get(
+	'/api/get/collection/:name/document/:id',
+	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
+		let result = async (/** @type {string} */ collection,/** @type {string} */ id ) => {
+			let dbCollection = database.collection(collection);
+			return await dbCollection.find({ $expr: { $eq: ['$_id', { $toObjectId: id }] } });
+		};
+		result(request.params.name.toString(), request.params.id.toString()).then((result) => response.send(result));
+	}
+);
+
+
+
 
 //▰▰▰▰▰▰▰▰▰
 
 //insert a document into a collection
 app.post(
-	'/api/insert/collection/:name',
+	'/api/insert/collection/:id',
 	multer().none(),
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection) => {
