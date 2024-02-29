@@ -51,21 +51,29 @@
 <div id="profile" class="card bg-modern-50 m-7 h-1/2 w-11/12 text-center shadow-md">
 	<br />
 	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
-	<h3 class="h4 text-center">Role: {Cookies.get('savedLogin-role')}</h3>
-	<br /><br />
+	<h3 class="h4 inline text-center">Role: {Cookies.get('savedLogin-role')}</h3>
+	{#if Cookies.get('savedLogin-role') == 'admin'}
+		<a
+			class="variant-filled-primary btn btn-sm inline w-52 text-sm"
+			href="/permissions"
+			rel="noreferrer"
+		>
+			Manage user permissions
+		</a>
+	{/if}
+	<br />
+	<br />
 	<button class="variant-filled-primary btn w-52" on:click={() => modalStore.trigger(modal)}
 		>Update Account details</button
 	>
+	<br />
+	<br />
+
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
 		<br /><br />
 		<button class="variant-filled-primary btn w-52" on:click={deleteAccount}>Delete Account</button>
 		<br /><br />
-		{#if Cookies.get('savedLogin-role') == 'admin'}
-			<a class="variant-filled-primary btn w-52" href="/permissions" rel="noreferrer">
-				Manage Permissions
-			</a>
-		{/if}
 	</div>
 </div>
 
