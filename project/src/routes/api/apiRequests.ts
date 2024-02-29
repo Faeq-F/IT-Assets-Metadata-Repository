@@ -20,6 +20,14 @@ export const insertDocument = (collectionName: string, formData:any) => {
 	}).catch(err => { return err });
 }
 
+export const fetchByID = (collectionName: string, id: string) => {
+	return fetch('http://localhost:5038/api/get/collection/'+collectionName+ '/document/'+ id)
+		.then((response) => { return response.json() })
+		.then((data) => {
+			return data;
+		});
+};
+
 export const deleteDocument = (collectionName: string, documentID: string) => {
 	return fetch('http://localhost:5038/api/delete/collection/'+collectionName+"/document/"+documentID, {
 		method: 'DELETE',
