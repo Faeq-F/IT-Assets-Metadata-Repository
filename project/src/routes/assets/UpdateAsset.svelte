@@ -20,24 +20,55 @@
 	});
 
 	function updateAsset() {
-		let tempNewTypeFields = [];
-		let ul = document.getElementById('createdMetadataFieldsList')?.getElementsByTagName('li');
-		if (ul) {
-			for (let i of ul) {
-				let inputs = i.getElementsByTagName('input');
-				let select = i.getElementsByTagName('select');
-				let checkbox = false;
-				let name = '';
-				for (let i of inputs) {
-					if (i.classList.contains('checkbox')) {
-						checkbox = i.checked;
+		let metadataObject = {};
+		let inputs = document.getElementById('metadataFieldsDiv')?.getElementsByTagName('input');
+		if (inputs) {
+			let currentListName = '';
+			let currentList = [];
+			for (let i of inputs) {
+				let input = i;
+				if (input.previousSibling) {
+					if (input.previousSibling.nodeValue?.includes('⦿')) {
+						// i is an input for a list
+						if (input.previousSibling.previousSibling?.previousSibling?.nodeName == '#text') {
+							if (currentList.length > 0 && currentListName != '') {
+								metadataObject = {
+									...metadataObject,
+									[currentListName]: currentList
+								};
+								currentListName = '';
+								currentList = [];
+							}
+							//@ts-ignore
+							currentListName =
+								//@ts-ignore
+								input.previousSibling.previousSibling?.previousSibling?.previousSibling
+									.previousSibling?.previousSibling?.nodeValue;
+							currentList = [];
+							currentList.push(i.value);
+						} else {
+							currentList.push(i.value);
+						}
 					} else {
-						name = i.value;
+						if (currentList.length > 0 && currentListName != '') {
+							metadataObject = {
+								...metadataObject,
+								[currentListName]: currentList
+							};
+							currentListName = '';
+							currentList = [];
+						}
+						//The field name + its value
+						metadataObject = {
+							...metadataObject,
+							//@ts-ignore
+							[input.previousSibling.previousSibling?.nodeValue]: i.value
+						};
 					}
 				}
-				tempNewTypeFields.push({ field: name, dataType: select[0].value, list: checkbox });
 			}
 		}
+		console.log(metadataObject);
 		// var assetObject = {
 		// 	assetName: name,
 		// 	assetLink: link,
@@ -84,14 +115,21 @@
 		<div class="h3" style="margin:10px; font-weight: bold;">
 			{assetType} fields:
 		</div>
-		<div class="ml-2 mt-1 text-lg">
+		<div class="ml-2 mt-1 text-lg" id="metadataFieldsDiv">
 			<!-- metadata -->
 			{#each Object.entries(metadataFields) as [field, value]}
 				⦿ {field}:
 				{#if Array.isArray(value)}
+					<br />
 					{#each value as item}
 						<br />
-						&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {item}
+						&nbsp;&nbsp;&nbsp;&nbsp; ⦿
+						{#if typeof item === 'string'}
+							<input type="text" placeholder={item} class="input w-96" value={item} />
+						{:else}
+							<input type="text" placeholder={'' + item} class="input w-96" value={item} />
+						{/if}
+						<br />
 					{/each}
 				{:else if typeof value === 'string'}
 					<input type="text" placeholder={value} class="input w-96" {value} />
@@ -108,7 +146,7 @@
 		class="variant-filled-primary btn m-2"
 		on:click={() => {
 			updateAsset();
-			modalStore.close();
+			//modalStore.close();
 		}}>Update</button
 	>
 	<button class="variant-filled-primary btn absolute m-2" on:click={() => modalStore.close()}
