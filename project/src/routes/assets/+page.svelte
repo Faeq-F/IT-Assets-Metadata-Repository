@@ -27,7 +27,7 @@
 
 	const drawerStore = getDrawerStore();
 	function drawerOpen(): void {
-		drawerStore.open({ id: 'filterAssetsDrawer' });
+		drawerStore.open({ id: 'filterAssetsDrawer', width: 'w-[280px] md:w-[655px]' });
 	}
 
 	$: filters = $activeFilters;
@@ -68,8 +68,6 @@
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<!--Open Filter Drawer-->
-				<button id="openDrawer" class="variant-ghost" on:click={drawerOpen}> Filters</button>
 				<!--Search by keyword bar-->
 				<div class="border-modern-500 inline max-h-8 rounded-full border-2 bg-white">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
@@ -86,6 +84,13 @@
 						class="float-right mr-5 inline w-9/12 border-0"
 					/>
 				</div>
+				<!--Open Filter Drawer-->
+				<button
+					id="openDrawer"
+					class="card border-modern-500 bg-modern-50 rounded-full border-2 px-2 py-0.5 text-sm"
+					style="margin-right: 10px;"
+					on:click={drawerOpen}><i class="fa-solid fa-filter"></i></button
+				>
 				<!--Create asset button-->
 				<div>
 					<button

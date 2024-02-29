@@ -19,7 +19,7 @@
 	const drawerStore = getDrawerStore();
 </script>
 
-<h1 class="h1">Filters test</h1>
+<h1 class="h1">Filters</h1>
 <div class="card" id="filters">
 	<ListBox multiple id="ListBox">
 		{#each typeFilters as item (item)}
@@ -35,7 +35,7 @@
 		drawerStore.close();
 	}}
 >
-	Apply Filters</button
+	Close</button
 >
 
 <style>
