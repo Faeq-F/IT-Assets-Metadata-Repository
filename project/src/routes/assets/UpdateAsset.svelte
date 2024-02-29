@@ -68,20 +68,18 @@
 				}
 			}
 		}
-		console.log(metadataObject);
-		// var assetObject = {
-		// 	assetName: name,
-		// 	assetLink: link,
-		// 	assetType: assetType,
-		// 	metadataFields: metadataObject
-		// };
-		// console.log(NewTypeObject);
-		// const data = new FormData();
-		// data.append('newData', JSON.stringify(NewTypeObject));
-		// updateDocument('AssetType', id, data).then((response) => {
-		// 	console.log(response);
-		// 	location.reload();
-		// });
+		var assetObject = {
+			assetName: NewAssetName,
+			assetLink: NewAssetLink,
+			assetType: assetType,
+			metadataFields: metadataObject
+		};
+		const data = new FormData();
+		data.append('newData', JSON.stringify(assetObject));
+		updateDocument('Asset', id, data).then((response) => {
+			console.log(response);
+			location.reload();
+		});
 	}
 </script>
 
@@ -146,7 +144,7 @@
 		class="variant-filled-primary btn m-2"
 		on:click={() => {
 			updateAsset();
-			//modalStore.close();
+			modalStore.close();
 		}}>Update</button
 	>
 	<button class="variant-filled-primary btn absolute m-2" on:click={() => modalStore.close()}

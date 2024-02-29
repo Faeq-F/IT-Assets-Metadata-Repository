@@ -14,7 +14,7 @@
 	import { fetchDocuments } from '../api/apiRequests';
 	import Asset from './Asset.svelte';
 	//@ts-ignore
-	import MakeAsset from './MakeAsset.svelte';
+	import MakeAsset from './makeAsset.svelte';
 	import { highlight, keywordFilter } from './keywordSearch';
 
 	onMount(() => {
