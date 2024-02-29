@@ -3,7 +3,7 @@
 
 	export let id: string;
 	export let assetName: string;
-	export let assetLink: any[];
+	export let assetLink: string;
 	export let assetType: string;
 	export let metadataFields: any;
 
@@ -18,22 +18,37 @@
 	<div class=" ml-14">
 		<div class="h1" style="margin:10px; font-weight: bold;">
 			{assetName}
-			{assetLink}
+		</div>
+		<div class="m-0 mb-1 p-0">
+			<a
+				style="font-weight: 500"
+				class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
+				href={assetLink.startsWith('http') ? assetLink : 'http://' + assetLink}
+			>
+				<span><i class="fa-solid fa-paperclip"></i></span><span>{assetLink}</span></a
+			>
+		</div>
+		<div class="h3" style="margin:10px; font-weight: bold;">
 			{assetType}
 		</div>
-		<div style="margin: 10px; font-weight: 500" class=" text-lg">Fields required:</div>
-		<ul class="text-md">
-			{#each Object.entries(metadataFields) as field}
-				<li class="mb-1">
-					{field}
-					<!-- &nbsp;&nbsp;&nbsp;&nbsp;⦿ {field.field}
-					<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
-					{#if field.list}
-						<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
-					{/if} -->
-				</li>
+		<br />
+		<hr />
+		<br />
+		<div class="ml-2 mt-1 text-lg">
+			<!-- metadata -->
+			{#each Object.entries(metadataFields) as [field, value]}
+				⦿ {field}:
+				{#if Array.isArray(value)}
+					{#each value as item}
+						<br />
+						&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {item}
+					{/each}
+				{:else}
+					{value}
+				{/if}
+				<br />
 			{/each}
-		</ul>
+		</div>
 	</div>
 </div>
 

@@ -13,6 +13,7 @@
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { fetchDocuments } from '../api/apiRequests';
 	import Asset from './Asset.svelte';
+	//@ts-ignore
 	import MakeAsset from './MakeAsset.svelte';
 	import { highlight, keywordFilter } from './keywordSearch';
 
