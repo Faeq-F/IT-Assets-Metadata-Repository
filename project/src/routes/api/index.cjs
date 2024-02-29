@@ -67,7 +67,7 @@ app.get(
 
 //insert a document into a collection
 app.post(
-	'/api/insert/collection/:id',
+	'/api/insert/collection/:name',
 	multer().none(),
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection) => {
