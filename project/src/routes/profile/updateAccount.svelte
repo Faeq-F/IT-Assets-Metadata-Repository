@@ -8,10 +8,10 @@
 		duplicateUsername
 	} from '../register/validate';
 	import Cookies from 'js-cookie';
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	//import { getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, updateDocument } from '../api/apiRequests';
 
-	const toastStore = getToastStore();
+	//const toastStore = getToastStore();
 	//redirectWhenLoginSaved();
 
 	const form = useForm();
@@ -29,7 +29,6 @@
 
 		if (newUsername && newPass) {
 			var newPassHash = hashCode(newPass);
-			var userObj = { username: newUsername, passwordHash: newPassHash };
 
 			fetchDocuments('User').then((Users) => {
 				for (let i of Users) {
