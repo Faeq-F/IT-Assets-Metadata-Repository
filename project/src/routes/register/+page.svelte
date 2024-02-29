@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { UserRole } from "./grantAccess";
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import {
 		useForm,
@@ -30,10 +31,11 @@
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		let password = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
 		let email = (document.getElementById('email') as HTMLInputElement).value;
+		let role = UserRole.Viewer;
 
 		if (username && password && email) {
 			var passwordHash = hashCode(password);
-			var userObj = { username: username, passwordHash: passwordHash, email: email };
+			var userObj = { username: username, passwordHash: passwordHash, email: email, role: role };
 
 			const data = new FormData();
 			data.append('newData', JSON.stringify(userObj));

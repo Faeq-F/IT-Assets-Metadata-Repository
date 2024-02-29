@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { getToastStore, SlideToggle } from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { insertDocument } from '../api/apiRequests';
 	const toastStore = getToastStore();
 
-	import { insertDocument } from '../api/apiRequests';
-	import { injectTypeDivs } from './typeDivInjection';
-
-	function makeType() {
+	async function makeType() {
 		var name = (document.getElementById('typeName') as HTMLInputElement).value;
 		if (name == '') {
 			toastStore.trigger({
@@ -17,7 +15,7 @@
 			var typeObject = { typeName: name, metadataFields: fieldsSaved };
 			const data = new FormData();
 			data.append('newData', JSON.stringify(typeObject));
-			insertDocument('AssetType', data)
+			await insertDocument('AssetType', data)
 				.then((response) => {
 					console.log(response);
 					toastStore.trigger({
@@ -34,27 +32,17 @@
 						timeout: 3000
 					});
 				});
-
-			injectTypeDivs();
+			// Refresh the page
+			location.reload();
 		}
 	}
 
 	let fieldsSaved: any[] = [];
-
-	let currentFieldAddition: boolean = false;
+	let fieldListable: boolean = false;
 
 	function removeBottom(): void {
 		fieldsSaved.pop();
-		loadValuesIntoMetadataFieldsList();
-	}
-
-	function loadValuesIntoMetadataFieldsList() {
-		let list = document.getElementById('createdMetadataFieldsList') as HTMLUListElement;
-		let temp = '';
-		for (let field of fieldsSaved) {
-			temp += `<li class="variant-ghost-surface card"><span class="flex-auto">${field.field} is of type ${field.dataType} and it is ${field.list} that it can hold a list</span></li>`;
-		}
-		list.innerHTML = temp;
+		fieldsSaved = fieldsSaved; //required for reactivity
 	}
 
 	function addMetadataField() {
@@ -74,19 +62,18 @@
 				timeout: 3000
 			});
 		} else {
-			fieldsSaved.push({ field: name, dataType: type, list: currentFieldAddition });
-			loadValuesIntoMetadataFieldsList();
+			fieldsSaved = [...fieldsSaved, { field: name, dataType: type, list: fieldListable }];
 		}
 	}
 </script>
 
-<div class="makeAssets card w-72 p-4 shadow-xl" data-popup="makeTypePopup" id="makeTypePopup">
-	<div class="Card">
-		<header class="h2">Make an Asset Type</header>
+<div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
+	<div class="card bg-modern-50 h-full p-5">
+		<header class="h2 card-header text-center">Make an Asset Type</header>
 		<br /><br />
 		<form id="rootCreateTypeForm">
-			<label for="typeName" class="formlabel">
-				<p>Type Name:</p>
+			<label for="typeName" class="formlabel text-center">
+				<p class="p-1">Type Name:</p>
 				<input
 					type="text"
 					id="typeName"
@@ -97,17 +84,39 @@
 				/>
 			</label>
 			<br />
-			<label for="metadataFields" class="formlabel">
-				<p class="inline">Metadata Fields:</p>
-				<!-- eslint-disable-line svelte/valid-compile -->
-				<p class="absolute right-4 inline cursor-pointer text-sm" on:click={removeBottom}>
+			<label for="metadataFields" class="formlabel text-center">
+				<p class="inline p-1">Metadata Fields:</p>
+				<button
+					class="absolute right-4 inline cursor-pointer text-sm"
+					on:click|preventDefault={removeBottom}
+				>
 					remove bottom field
-				</p>
-				<ul class="list" id="createdMetadataFieldsList"></ul>
+				</button>
+				<div class=" relative h-72 overflow-y-scroll">
+					<ul class="list" id="createdMetadataFieldsList">
+						{#each fieldsSaved as field}
+							<li class="">
+								<span class="flex-auto">
+									⦿ {field.field}
+									<span class="card variant-ghost-surface badge">{field.dataType}</span>
+									{#if field.list}
+										<span class="card variant-ghost-surface badge">Multi-value</span>
+									{/if}
+								</span>
+							</li>
+						{/each}
+					</ul>
+				</div>
 			</label>
 			<br />
-			<label for="addMetadata" class="formlabel">
-				<p>Add a metadata field:</p>
+
+			<label for="addMetadata" class="formlabel text-center">
+				<p class="p-1">Add a metadata field:</p>
+				<button
+					id="metadataFieldAdder"
+					class=" card card-hover border-modern-600 h-3 w-3 border-2 shadow-md"
+					on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
+				>
 				<input
 					type="text"
 					id="addMetadataFieldName"
@@ -123,48 +132,44 @@
 					<option>Account</option>
 					<option>Asset</option>
 				</select>
-				<button id="metadataFieldAdder" class="CardButton Card" on:click={addMetadataField}
-					>➕</button
-				>
-				<span style="margin-top: 10px;display: block;">
-					<SlideToggle name="list" bind:checked={currentFieldAddition} active="bg-primary-700"
-						>{#if currentFieldAddition}
-							The Field holds a list
-						{:else}
-							The Field is a single value
-						{/if}
-					</SlideToggle>
+				<span style="display: inline-block;">
+					<input class="checkbox" type="checkbox" bind:checked={fieldListable} />
+					{#if fieldListable}
+						The Field holds a list
+					{:else}
+						The Field is a single value
+					{/if}
 				</span>
 			</label>
 			<br />
-			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeType}
-				>Make Type</button
+			<hr />
+			<br />
+			<button
+				class="variant-filled-primary btn w-52"
+				style="margin: 0 auto; display:block;"
+				id="assetMaker"
+				on:click|preventDefault={makeType}>Make Type</button
 			>
 		</form>
 	</div>
 </div>
 
 <style>
-	@import url('$lib/styles/card.css');
-	@import url('$lib/styles/makeModal.css');
-	#makeTypePopup {
-		position: absolute;
-		top: 50% !important;
-		left: 50% !important;
-		transform: translate(-50%, -50%);
-		width: 50vw;
-		height: 60vh;
-		z-index: 2;
+	.makeAssets {
+		height: 70vh;
+		width: 70vw;
 	}
+
+	form {
+		position: relative;
+		top: initial;
+	}
+
 	#metadataFieldAdder {
 		width: 2vw;
 		height: 2vw;
 		margin-left: 10px;
 		padding: 0;
 		display: inline;
-	}
-	#rootCreateTypeForm {
-		height: 75%;
-		overflow-y: scroll;
 	}
 </style>

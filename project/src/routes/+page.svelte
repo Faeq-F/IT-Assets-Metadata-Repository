@@ -16,6 +16,7 @@
 			if (user && user.passwordHash === password) {
 				Cookies.set('savedLogin-username', username, { expires: 70 });
 				Cookies.set('savedLogin-password', '' + user.passwordHash, { expires: 70 });
+				Cookies.set('savedLogin-role', '' + user.role, { expires: 70 });
 				window.location.href = '/home';
 			} else {
 				toastStore.trigger({

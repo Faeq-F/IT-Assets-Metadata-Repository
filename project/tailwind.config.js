@@ -1,6 +1,5 @@
 // @ts-check
 import { join } from 'path';
-
 import forms from '@tailwindcss/forms';
 
 // 1. Import the Skeleton plugin
@@ -16,7 +15,22 @@ export default {
 		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
-		extend: {}
+		extend: {},
+		colors: {
+			modern: {
+				50: '#ffffff',
+				100: '#F2F0FF',
+				200: '#E4E0FF',
+				300: '#DCD6FF',
+				400: '#CEC7FF',
+				500: '#C2B8FF',
+				600: '#7661FF',
+				700: '#2B0AFF',
+				800: '#1700AD',
+				900: '#0C0057',
+				950: '#06002E'
+			}
+		}
 	},
 	plugins: [
 		forms,

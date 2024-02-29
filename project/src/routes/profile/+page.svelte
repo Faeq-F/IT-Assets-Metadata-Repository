@@ -27,6 +27,7 @@
 		Cookies.remove('savedLogin-username');
 		Cookies.remove('savedLogin-email');
 		Cookies.remove('savedLogin-password');
+		Cookies.remove('savedLogin-role');
 		redirectWhenNotLoggedIn();
 	}
 </script>
@@ -37,19 +38,19 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="Card">
+<div id="profile" class="card bg-modern-50 m-7 h-1/2 shadow-md">
 	<br />
-	<h3 class="h3">Username: {Cookies.get('savedLogin-username')}</h3>
+	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
 		<br /><br />
 		<button class="variant-filled-primary btn w-52" on:click={deleteAccount}>Delete Account</button>
+		<br /><br />
+		<a class="variant-filled-primary btn w-52" href="/permissions" rel="noreferrer"> Manage Permissions </a>
 	</div>
 </div>
 
 <style>
-	@import url('$lib/styles/root.css');
-	@import url('$lib/styles/card.css');
 	#profile {
 		position: relative;
 	}
