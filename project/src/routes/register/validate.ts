@@ -36,3 +36,14 @@ export function duplicateUsername(username: string): Promise<boolean> {
 		return false;
 	});
 }
+
+export function duplicateEmail(email: string): Promise<boolean> {
+	return fetchDocuments('User').then((documentsReturned) => {
+		for (let i of documentsReturned) {
+			if (i.email == email) {
+				return true;
+			}
+		}
+		return false;
+	});
+}

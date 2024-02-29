@@ -12,9 +12,10 @@
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import MakeAsset from './MakeAsset.svelte';
 	import { fetchDocuments } from '../api/apiRequests';
 	import Asset from './Asset.svelte';
+	//@ts-ignore
+	import MakeAsset from './makeAsset.svelte';
 	import { highlight, keywordFilter } from './keywordSearch';
 	import { activeFilters } from '$lib/stores';
 

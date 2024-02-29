@@ -13,7 +13,7 @@
     "project/jsdoc-config.json": true,
     "project/package-lock.json": true,
     "project/playwright.config.js": true,
-    "project/svelte.config.js": true,
+    "project/svelte.config.js": false,
     "project/vite.config.js": true,
     "project/node_modules": true,
     "project/postcss.config.cjs": true,
