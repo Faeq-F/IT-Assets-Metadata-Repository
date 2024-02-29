@@ -7,6 +7,7 @@
 	} from '@skeletonlabs/skeleton';
 	import ExpandedType from './ExpandedType.svelte';
 	import { deleteDocument } from '../api/apiRequests';
+	import UpdateType from './UpdateType.svelte';
 	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
 
@@ -17,14 +18,24 @@
 	let role = Cookies.get('savedLogin-role');
 
 	const modalStore = getModalStore();
+
 	const expandModalComponent: ModalComponent = {
 		ref: ExpandedType,
 		props: { id: id, typeName: typeName, metadataFields: metadataFields }
 	};
-
 	const expandModal: ModalSettings = {
 		type: 'component',
 		component: expandModalComponent,
+		backdropClasses: '!p-0'
+	};
+
+	const updateModalComponent: ModalComponent = {
+		ref: UpdateType,
+		props: { id: id, typeName: typeName, metadataFields: metadataFields }
+	};
+	const updateModal: ModalSettings = {
+		type: 'component',
+		component: updateModalComponent,
 		backdropClasses: '!p-0'
 	};
 

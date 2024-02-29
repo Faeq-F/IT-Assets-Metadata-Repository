@@ -5,11 +5,21 @@
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
 	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
+	import UpdateAccount from './updateAccount.svelte';
+	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
 	});
+
+	const modalStore = getModalStore();
+	const modalComponent: ModalComponent = { ref: UpdateAccount };
+	const modal: ModalSettings = {
+		type: 'component',
+		component: modalComponent
+	};
 
 	function deleteAccount() {
 		fetchDocuments('User').then((Users) => {
@@ -38,10 +48,14 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card bg-modern-50 m-7 h-1/2 shadow-md">
+<div id="profile" class="card bg-modern-50 m-7 h-1/2 w-11/12 text-center shadow-md">
 	<br />
 	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
 	<h3 class="h4 text-center">Role: {Cookies.get('savedLogin-role')}</h3>
+	<br /><br />
+	<button class="variant-filled-primary btn w-52" on:click={() => modalStore.trigger(modal)}
+		>Update Account details</button
+	>
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
 		<br /><br />
@@ -58,6 +72,7 @@
 <style>
 	#profile {
 		position: relative;
+		margin: 0 auto;
 	}
 	#accountButtonGroup {
 		position: absolute;

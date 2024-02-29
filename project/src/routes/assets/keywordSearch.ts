@@ -1,3 +1,5 @@
+import { getDrawerStore } from '@skeletonlabs/skeleton';
+
 /**
  * Adds spans with a highlighted background to matching keywords
  * @param text The text to look through, & highlight, for certain keywords
@@ -5,8 +7,8 @@
  * @returns The text with the relevant keywords highlighted
  */
 export function highlight(text: any, keywordSearchInput: string[]) {
-	text = (text as string)+"";
-		keywordSearchInput.forEach((/** @type {string | RegExp} */ keyword: string | RegExp) => {
+	text = (text as string) + '';
+	keywordSearchInput.forEach((/** @type {string | RegExp} */ keyword: string | RegExp) => {
 		text = text.replace(
 			new RegExp(keyword, 'gi'),
 			`<span style="background-color: orange; border-radius:5px;">$&</span>`

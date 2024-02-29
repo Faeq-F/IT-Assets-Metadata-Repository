@@ -68,7 +68,7 @@
 </script>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
-	<div class="card bg-modern-50 h-full p-5">
+	<div class="card h-full bg-modern-50 p-5">
 		<header class="h2 card-header text-center">Make an Asset Type</header>
 		<br /><br />
 		<form id="rootCreateTypeForm">
@@ -114,7 +114,7 @@
 				<p class="p-1">Add a metadata field:</p>
 				<button
 					id="metadataFieldAdder"
-					class=" card card-hover border-modern-600 h-3 w-3 border-2 shadow-md"
+					class=" card card-hover h-3 w-3 border-2 border-modern-600 shadow-md"
 					on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
 				>
 				<input

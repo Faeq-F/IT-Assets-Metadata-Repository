@@ -1,20 +1,24 @@
 <script lang="ts">
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
-	import { onMount } from 'svelte';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import MakeAsset from './MakeAsset.svelte';
-	import { fetchDocuments } from '../api/apiRequests';
-	import Asset from './Asset.svelte';
 	import {
 		AppBar,
 		getModalStore,
 		InputChip,
 		type ModalComponent,
-		type ModalSettings
+		type ModalSettings,
+		getDrawerStore
 	} from '@skeletonlabs/skeleton';
+
+	//@ts-ignore
+	import { browser } from '$app/environment'; //Does work
+	import { onMount } from 'svelte';
+	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	import { fetchDocuments } from '../api/apiRequests';
+	import Asset from './Asset.svelte';
+	//@ts-ignore
+	import MakeAsset from './makeAsset.svelte';
 	import { highlight, keywordFilter } from './keywordSearch';
 	import Cookies from 'js-cookie';
+	import { activeFilters } from '$lib/stores';
 
 	onMount(() => {
 		if (browser) {
@@ -22,15 +26,20 @@
 		}
 	});
 
+	const drawerStore = getDrawerStore();
+	function drawerOpen(): void {
+		drawerStore.open({ id: 'filterAssetsDrawer', width: 'w-[280px] md:w-[655px]' });
+	}
+
+	$: filters = $activeFilters;
+	let keywordSearchInput: string[] = [];
+	let AssetDocuments: any[];
+
 	onMount(async () => {
 		fetchDocuments('Asset').then((Docs) => {
 			AssetDocuments = Docs;
 		});
 	});
-
-	let keywordSearchInput: string[] = [];
-
-	let AssetDocuments: any[];
 
 	let role = Cookies.get('savedLogin-role');
 
@@ -78,6 +87,13 @@
 						class="float-right mr-5 inline w-9/12 border-0"
 					/>
 				</div>
+				<!--Open Filter Drawer-->
+				<button
+					id="openDrawer"
+					class="card border-modern-500 bg-modern-50 rounded-full border-2 px-2 py-0.5 text-sm"
+					style="margin-right: 10px;"
+					on:click={drawerOpen}><i class="fa-solid fa-filter"></i></button
+				>
 				<!--Create asset button-->
 				<div>
 					{#if role != 'viewer'}
@@ -97,8 +113,7 @@
 <div class="assetsContainer">
 	{#if AssetDocuments != undefined}
 		{#each AssetDocuments as asset}
-			<!-- can do filter logic here? -->
-			{#if keywordFilter(asset, keywordSearchInput)}
+			{#if keywordFilter(asset, keywordSearchInput) && (filters.includes(asset.assetType) || filters.length == 0)}
 				<Asset
 					id={asset._id}
 					name={highlight(asset.assetName, keywordSearchInput)}
