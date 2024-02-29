@@ -45,6 +45,8 @@
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
 		<br /><br />
 		<button class="variant-filled-primary btn w-52" on:click={deleteAccount}>Delete Account</button>
+		<br /><br />
+		<a class="variant-filled-primary btn w-52" href="/permissions" rel="noreferrer"> Manage Permissions </a>
 	</div>
 </div>
 
