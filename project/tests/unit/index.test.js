@@ -1,15 +1,6 @@
-// import { response } from 'express';
-// import { MongoClient } from 'mongodb';
 import { expect, test } from 'vitest';
 import { hashCode, containNumbers } from '../../src/routes/register/validate';
-import { insertDocument, fetchDocuments } from '../../src/routes/api/apiRequests';
-
-test('adds 1 + 2 to equal 3', () => {
-	expect(1 + 2).toBe(3);
-});
-
-var URI =
-	'mongodb+srv://teamProject:teamProject@cluster0.hc6vpim.mongodb.net/?retryWrites=true&w=majority';
+import { fetchDocuments } from '../../src/routes/api/apiRequests';
 /*
 async function insertDB() {
 
@@ -29,7 +20,7 @@ async function insertDB() {
 	insertDocument('Asset', data).then((response) => {
 		console.log(response);
 	});
- }
+}
 */
 test('SelectAssetName', () => {
 	return fetchDocuments('Asset').then((answer) => {

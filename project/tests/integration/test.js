@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const time = 500;
 const site = 'http://localhost:4173/';
 

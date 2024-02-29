@@ -76,14 +76,25 @@ app.post(
 
 // update a document in a collection
 app.put(
-	'/api/update/collection/:name',
+	'/api/update/collection/:name/document/:id',
 	multer().none(),
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
-		let result = async (/** @type {string} */ collection) => {
+		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			const formData = request.body;
-			database.collection(collection).updateOne(JSON.parse(formData.newData));
+			database
+				.collection(collection)
+				.replaceOne(
+					{ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },
+					JSON.parse(formData.newData)
+				)
+				.catch((/** @type {any} */ err) => {
+					return err;
+				});
 		};
-		result(request.params.name.toString()).then((result) => response.send(result));
+
+		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
+			response.send(result)
+		);
 	}
 );
 
@@ -106,62 +117,3 @@ app.delete(
 );
 
 //▰▰▰▰▰▰▰▰▰
-
-// app.delete('/api/teamproject/DeleteAssets', (request, response) => {
-// 	const asset = request.body;
-
-// 	database.collection('Asset').deleteOne({
-// 		title: asset.name,
-// 		link: asset.link,
-// 		'MetaData.lineNum': asset.metadata[line - num],
-// 		'MetaData.programming-language': asset.metadata[programming - language]
-// 	});
-// 	response.json('Deleted');
-// });
-
-// var cors = require('cors');
-// const multer = require('multer');
-// const { request, response } = require('express');
-
-// var app = Express();
-// app.use(cors());
-
-// //DB operation functions
-
-// const insertDocument = async (/** @type {string} */ collection, /** @type {any} */ document) => {
-// 	const db = await getDbInstance({
-// 		dbUrl: envs.DB_API_URL,
-// 		dbName: envs.DB_NAME
-// 	});
-// 	db.command({
-// 		insert: collection,
-// 		documents: [document]
-// 	});
-// };
-
-// //General use of insertDocument
-// // insertDocument('AssetType', {
-// // 	typeName: 'Source Code File1',
-// // 	metadataFields: { Language: 'Text', Lines: 'Number' }
-// // }).catch((err) => {
-// // 	console.error(err);
-// // });
-
-// const readDocuments = async (/** @type {string} */ collection) => {
-// 	const db = await getDbInstance({
-// 		dbUrl: envs.DB_API_URL,
-// 		dbName: envs.DB_NAME
-// 	});
-// 	let dbCollection = db.collection(collection);
-// 	let result = await dbCollection.find();
-// 	return await result.toArray();
-// };
-
-// //General use of readDocuments
-// // readDocuments('AssetType')
-// // 	.then((result) => console.log(result))
-// // 	.catch((err) => {
-// // 		console.error(err);
-// // 	});
-
-// module.exports = { insertDocument };

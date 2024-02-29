@@ -37,9 +37,9 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="Card">
+<div id="profile" class="card m-7 h-1/2 bg-modern-50 shadow-md">
 	<br />
-	<h3 class="h3">Username: {Cookies.get('savedLogin-username')}</h3>
+	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
 		<br /><br />
@@ -48,8 +48,6 @@
 </div>
 
 <style>
-	@import url('$lib/styles/root.css');
-	@import url('$lib/styles/card.css');
 	#profile {
 		position: relative;
 	}
