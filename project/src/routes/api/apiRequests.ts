@@ -44,24 +44,38 @@ export const insertDocument = (collectionName: string, formData: any) => {
  * @returns Acknowledgment from the database, including json representing the original document that has now been removed
  */
 export const deleteDocument = (collectionName: string, documentID: string) => {
-	return fetch('http://localhost:5038/api/delete/collection/'+collectionName+"/document/"+documentID, {
-		method: 'DELETE',
-	})
-	.then((response) => { return response })
-	.then((data) => {
-		return data
-	}).catch(err => { return err });
-}
-
-export const updateDocument = (collectionName : string, id: string, formData:any) => {
-	return fetch('http://localhost:5038/api/update/collection/'+collectionName+"/document/"+id,{
-		method:'PUT',
-		body: formData
-	})
-		.then((response) => { return response })
+	return fetch(
+		'http://localhost:5038/api/delete/collection/' + collectionName + '/document/' + documentID,
+		{
+			method: 'DELETE'
+		}
+	)
+		.then((response) => {
+			return response;
+		})
 		.then((data) => {
-			return data
-		}).catch(err => {
-			return err
+			return data;
+		})
+		.catch((err) => {
+			return err;
+		});
+};
+
+export const updateDocument = (collectionName: string, id: string, formData: any) => {
+	return fetch(
+		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
+		{
+			method: 'PUT',
+			body: formData
+		}
+	)
+		.then((response) => {
+			return response;
+		})
+		.then((data) => {
+			return data;
+		})
+		.catch((err) => {
+			return err;
 		});
 };

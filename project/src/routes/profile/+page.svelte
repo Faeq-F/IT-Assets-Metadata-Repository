@@ -5,11 +5,21 @@
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
 	import { deleteDocument, fetchDocuments, updateDocument } from '../api/apiRequests';
+	import UpdateAccount from './UpdateAccount.svelte';
+	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
 	});
+
+	const modalStore = getModalStore();
+	const modalComponent: ModalComponent = { ref: UpdateAccount };
+	const modal: ModalSettings = {
+		type: 'component',
+		component: modalComponent
+	};
 
 	function deleteAccount() {
 		fetchDocuments('User').then((Users) => {
@@ -19,27 +29,6 @@
 						logOut();
 					});
 				}
-			}
-		});
-	}
-
-	function updateAccount(newUsername:string, newPassHash: number) {
-		fetchDocuments('User').then((Users) => {
-			for (let i of Users) {
-				if (i.username == Cookies.get('savedLogin-username')) {
-					var userObj = { username: newUsername, passwordHash: newPassHash};
-
-					const data = new FormData();
-					data.append('newData', JSON.stringify(userObj));
-
-					updateDocument('User', i._id, data)
-						.then((response) => {
-							console.log(response);
-						})
-						.catch((error) => {
-							console.error('Updating user error: ', error);
-						});
-					}
 			}
 		});
 	}
@@ -58,11 +47,15 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card bg-modern-50 m-7 h-1/2 shadow-md">
+<div id="profile" class="card m-7 h-1/2 bg-modern-50 shadow-md">
 	<br />
 	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
+		<br /><br />
+		<button class="variant-filled-primary btn w-52" on:click={() => modalStore.trigger(modal)}
+			>Update Account</button
+		>
 		<br /><br />
 		<button class="variant-filled-primary btn w-52" on:click={deleteAccount}>Delete Account</button>
 	</div>
