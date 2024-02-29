@@ -55,89 +55,102 @@
 <svelte:head>
 	<title>Register</title>
 </svelte:head>
-
-<form action="" class="userForm" use:focusTrap={true} use:form>
-	<form action="" class="userForm" use:focusTrap={true} use:form>
-		<label for="username" class="label">
-			<p>Choose a new Username:</p>
-			<div class="input-group input-group-divider grid-cols-[1fr_auto]">
-				<input
-					type="text"
-					id="username"
-					name="username"
-					placeholder="Enter new Username..."
-					data-focusindex="1"
-					class="input w-96"
-					on:keyup={checkValidUsername}
-					use:validators={[required, minLength(4)]}
-				/>
-				{#if usernameTaken}
-					<a href="/" title="Username already in use or invalid">
-						<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
-					</a>
-				{:else}
-					<a href="/" title="Valid username">
-						<i class="fa-solid fa-check"></i>
-					</a>
-				{/if}
-			</div>
-		</label>
-
-		<HintGroup for="username">
-			<Hint on="required">{requiredMsg}</Hint>
-			<Hint on="minLength" hideWhenRequired let:value
-				>This field must have at least {value} characters.</Hint
-			>
-		</HintGroup>
-
+<div class="card p-5 shadow-xl" id="rootDiv">
+	<div class="card h-full bg-modern-50 p-1">
 		<br />
-		<label for="password" class="label">
-			<p>Choose a new Password:</p>
-			<input
-				type="password"
-				id="password"
-				name="password"
-				data-focusindex="2"
-				class="input"
-				placeholder="Enter new Password..."
-				use:validators={[required, minLength(8), containNumbers(2)]}
-			/>
-		</label>
-
-		<HintGroup for="password">
-			<Hint on="required">{requiredMsg}</Hint>
-			<Hint on="minLength" hideWhenRequired let:value
-				>This field must have at least {value} characters.</Hint
-			>
-			<Hint on="containNumbers" hideWhen="minLength" let:value>
-				This field must contain at least {value} numbers.
-			</Hint>
-		</HintGroup>
-
+		<h2 class="h2 mt-24 text-center">Update your details</h2>
+		<br /><br />
+		<hr />
 		<br />
-		<label for="passwordConfirmation" class="label">
-			<p>Repeat Password:</p>
-			<input
-				type="password"
-				id="passwordConfirmation"
-				name="passwordConfirmation"
-				data-focusindex="3"
-				class="input"
-				placeholder="Enter Password again..."
-				use:validators={[required, checkPasswordsMatch]}
-			/>
-		</label>
+		<br />
+		<form action="" class="userForm w-6/12 text-center" use:focusTrap={true} use:form>
+			<form action="" class="userForm" use:focusTrap={true} use:form>
+				<label for="username" class="label">
+					<p>Choose a new Username:</p>
+					<div class="input-group input-group-divider grid-cols-[1fr_auto]">
+						<input
+							type="text"
+							id="username"
+							name="username"
+							placeholder="Enter new Username..."
+							data-focusindex="1"
+							class="input w-96"
+							on:keyup={checkValidUsername}
+							use:validators={[required, minLength(4)]}
+						/>
+						{#if usernameTaken}
+							<a href="/" title="Username already in use or invalid">
+								<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+							</a>
+						{:else}
+							<a href="/" title="Valid username">
+								<i class="fa-solid fa-check"></i>
+							</a>
+						{/if}
+					</div>
+				</label>
 
-		<HintGroup for="passwordConfirmation">
-			<Hint on="required">{requiredMsg}</Hint>
-			<Hint on="checkPasswordsMatch" hideWhenRequired>Passwords do not match</Hint>
-		</HintGroup><br />
+				<HintGroup for="username">
+					<Hint on="required">{requiredMsg}</Hint>
+					<Hint on="minLength" hideWhenRequired let:value
+						>This field must have at least {value} characters.</Hint
+					>
+				</HintGroup>
 
-		<button class="variant-filled-primary btn w-52" disabled={!$form.valid} on:click={makeUpdate}>
-			Update details</button
-		>
-	</form>
-</form>
+				<br />
+				<label for="password" class="label">
+					<p>Choose a new Password:</p>
+					<input
+						type="password"
+						id="password"
+						name="password"
+						data-focusindex="2"
+						class="input"
+						placeholder="Enter new Password..."
+						use:validators={[required, minLength(8), containNumbers(2)]}
+					/>
+				</label>
+
+				<HintGroup for="password">
+					<Hint on="required">{requiredMsg}</Hint>
+					<Hint on="minLength" hideWhenRequired let:value
+						>This field must have at least {value} characters.</Hint
+					>
+					<Hint on="containNumbers" hideWhen="minLength" let:value>
+						This field must contain at least {value} numbers.
+					</Hint>
+				</HintGroup>
+
+				<br />
+				<label for="passwordConfirmation" class="label">
+					<p>Repeat Password:</p>
+					<input
+						type="password"
+						id="passwordConfirmation"
+						name="passwordConfirmation"
+						data-focusindex="3"
+						class="input"
+						placeholder="Enter Password again..."
+						use:validators={[required, checkPasswordsMatch]}
+					/>
+				</label>
+
+				<HintGroup for="passwordConfirmation">
+					<Hint on="required">{requiredMsg}</Hint>
+					<Hint on="checkPasswordsMatch" hideWhenRequired>Passwords do not match</Hint>
+				</HintGroup><br />
+
+				<button
+					class="variant-filled-primary btn w-52"
+					disabled={!$form.valid}
+					on:click={makeUpdate}
+				>
+					Update details</button
+				>
+			</form>
+		</form>
+	</div>
+</div>
 
 <style>
 	:global(.touched:invalid) {
@@ -145,12 +158,12 @@
 	}
 
 	.userForm {
-		margin: 0;
+		margin: 0 auto;
 		padding: 0;
-		/** Center the form */
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+	}
+
+	#rootDiv {
+		height: 70vh;
+		width: 70vw;
 	}
 </style>
