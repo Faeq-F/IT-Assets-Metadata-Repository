@@ -19,7 +19,19 @@
 		activeTypes = assetTypeDocuments;
 	});
 
+	function emptyFieldAlert() {
+		toastStore.trigger({
+			message: 'Please fill in all of the fields',
+			background: 'variant-ghost-error',
+			timeout: 3000
+		});
+	}
+
 	function updateAsset() {
+		if (NewAssetName == '' || NewAssetLink == '') {
+			emptyFieldAlert();
+			return;
+		}
 		let metadataObject = {};
 		let inputs = document.getElementById('metadataFieldsDiv')?.getElementsByTagName('input');
 		if (inputs) {
@@ -45,8 +57,16 @@
 								input.previousSibling.previousSibling?.previousSibling?.previousSibling
 									.previousSibling?.previousSibling?.nodeValue;
 							currentList = [];
+							if (i.value == '') {
+								emptyFieldAlert();
+								return;
+							}
 							currentList.push(i.value);
 						} else {
+							if (i.value == '') {
+								emptyFieldAlert();
+								return;
+							}
 							currentList.push(i.value);
 						}
 					} else {
@@ -57,6 +77,10 @@
 							};
 							currentListName = '';
 							currentList = [];
+						}
+						if (i.value == '') {
+							emptyFieldAlert();
+							return;
 						}
 						//The field name + its value
 						metadataObject = {
@@ -79,6 +103,7 @@
 		updateDocument('Asset', id, data).then((response) => {
 			console.log(response);
 			location.reload();
+			modalStore.close();
 		});
 	}
 </script>
@@ -144,7 +169,6 @@
 		class="variant-filled-primary btn m-2"
 		on:click={() => {
 			updateAsset();
-			modalStore.close();
 		}}>Update</button
 	>
 	<button class="variant-filled-primary btn absolute m-2" on:click={() => modalStore.close()}

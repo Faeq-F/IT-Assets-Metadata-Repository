@@ -12,7 +12,19 @@
 
 	const modalStore = getModalStore();
 
+	function emptyFieldAlert() {
+		toastStore.trigger({
+			message: 'Please fill in all of the fields',
+			background: 'variant-ghost-error',
+			timeout: 3000
+		});
+	}
+
 	function updateType() {
+		if (NewTypeName == '') {
+			emptyFieldAlert();
+			return;
+		}
 		let tempNewTypeFields = [];
 		let ul = document.getElementById('createdMetadataFieldsList')?.getElementsByTagName('li');
 		if (ul) {
@@ -21,10 +33,18 @@
 				let select = i.getElementsByTagName('select');
 				let checkbox = false;
 				let name = '';
+				if (select[0].value == 'Select data type') {
+					emptyFieldAlert();
+					return;
+				}
 				for (let i of inputs) {
 					if (i.classList.contains('checkbox')) {
 						checkbox = i.checked;
 					} else {
+						if (i.value == '') {
+							emptyFieldAlert();
+							return;
+						}
 						name = i.value;
 					}
 				}
@@ -32,12 +52,12 @@
 			}
 		}
 		let NewTypeObject = { typeName: NewTypeName, metadataFields: tempNewTypeFields };
-		console.log(NewTypeObject);
 		const data = new FormData();
 		data.append('newData', JSON.stringify(NewTypeObject));
 		updateDocument('AssetType', id, data).then((response) => {
 			console.log(response);
 			location.reload();
+			modalStore.close();
 		});
 	}
 
@@ -172,7 +192,6 @@
 		class="variant-filled-primary btn m-2"
 		on:click={() => {
 			updateType();
-			modalStore.close();
 		}}>Update</button
 	>
 	<button class="variant-filled-primary btn absolute m-2" on:click={() => modalStore.close()}
