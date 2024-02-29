@@ -76,14 +76,25 @@ app.post(
 
 // update a document in a collection
 app.put(
-	'/api/update/collection/:name',
+	'/api/update/collection/:name/document/:id',
 	multer().none(),
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
-		let result = async (/** @type {string} */ collection) => {
+		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			const formData = request.body;
-			database.collection(collection).updateOne(JSON.parse(formData.newData));
+			database
+				.collection(collection)
+				.replaceOne(
+					{ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },
+					JSON.parse(formData.newData)
+				)
+				.catch((/** @type {any} */ err) => {
+					return err;
+				});
 		};
-		result(request.params.name.toString()).then((result) => response.send(result));
+
+		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
+			response.send(result)
+		);
 	}
 );
 
