@@ -1,4 +1,4 @@
-export {checkPasswordsMatch, containNumbers, duplicateUsername};
+export { checkPasswordsMatch, containNumbers, duplicateUsername };
 
 import { fetchDocuments } from '../api/apiRequests';
 import { Form } from 'svelte-use-form';

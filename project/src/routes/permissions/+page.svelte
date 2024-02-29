@@ -46,7 +46,7 @@
 				passwordHash: (i as HTMLSelectElement).dataset.passwordHash
 			};
 			console.log(newUserObject);
-			let id = (i as HTMLSelectElement).dataset.role;
+			//let id = (i as HTMLSelectElement).dataset.role;
 			//updateDocument request here
 		}
 	}
@@ -59,7 +59,7 @@
 <h1 class="h1">Manage Permissions</h1>
 <div class="usersContainer" id="usersContainer">
 	{#each users as user}
-		<div class="card card-hover bg-modern-50 m-4 p-3.5 drop-shadow-md">
+		<div class="card card-hover m-4 bg-modern-50 p-3.5 drop-shadow-md">
 			<div class="h3 font-bold">{user.username}</div>
 			<div class="h4">{user.email}</div>
 			<br />
@@ -78,7 +78,7 @@
 		</div>
 	{/each}
 </div>
-<button id="updatePermissions" class="btn variant-filled-primary" on:click={updateUserPermissions}
+<button id="updatePermissions" class="variant-filled-primary btn" on:click={updateUserPermissions}
 	>Update user permissions</button
 >
 

@@ -8,10 +8,15 @@ All notable changes to this project will be documented in this file.
 
 - Asset and Asset Type counters on home page
 - Expanded view for Assets and Asset Types
+- Ability to update Assets and Asset Types, including all metadata fields
+- Filtering assets by their type
+- Manage user permissions page for admins (though not completely functional yet)
+- Update account details modal (for updating username & password)
 
 ### Fixed
 
 - Dark-mode on all UI components.
+- Creation of a user using an email that already has an account
 
 ### Changed
 

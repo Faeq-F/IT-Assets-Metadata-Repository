@@ -48,7 +48,7 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card bg-modern-50 m-7 h-1/2 w-11/12 text-center shadow-md">
+<div id="profile" class="card m-7 h-1/2 w-11/12 bg-modern-50 text-center shadow-md">
 	<br />
 	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
 	<h3 class="h4 inline text-center">Role: {Cookies.get('savedLogin-role')}</h3>

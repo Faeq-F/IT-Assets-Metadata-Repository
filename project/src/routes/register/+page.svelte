@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { UserRole, grantAccess, authoriseAssignRole } from "./grantAccess";
+	import { UserRole } from './grantAccess';
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import {
 		useForm,

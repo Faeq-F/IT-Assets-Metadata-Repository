@@ -73,7 +73,10 @@
 				<span>Expand</span>
 			</button>
 			{#if role != 'viewer'}
-				<button class="variant-filled-surface btn btn-sm card-hover m-1">
+				<button
+					class="variant-filled-surface btn btn-sm card-hover m-1"
+					on:click={() => modalStore.trigger(updateModal)}
+				>
 					<span><i class="fa-solid fa-pen"></i></span>
 					<span>Edit</span>
 				</button>
@@ -99,7 +102,7 @@
 	<div class="m-0 mb-1 p-0">
 		<a
 			style="font-weight: 500"
-			class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
+			class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
 			href={link.startsWith('http') ? link : 'http://' + link}
 		>
 			<span><i class="fa-solid fa-paperclip"></i></span><span>{@html link}</span></a

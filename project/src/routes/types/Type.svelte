@@ -68,7 +68,10 @@
 				<span>Expand</span>
 			</button>
 			{#if role != 'viewer'}
-				<button class="variant-filled-surface btn btn-sm card-hover m-1">
+				<button
+					class="variant-filled-surface btn btn-sm card-hover m-1"
+					on:click={() => modalStore.trigger(updateModal)}
+				>
 					<span><i class="fa-solid fa-pen"></i></span>
 					<span>Edit</span>
 				</button>
