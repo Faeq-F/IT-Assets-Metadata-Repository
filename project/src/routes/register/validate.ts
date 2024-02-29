@@ -3,7 +3,7 @@ export {checkPasswordsMatch, containNumbers, duplicateUsername};
 import { fetchDocuments } from '../api/apiRequests';
 import { Form } from 'svelte-use-form';
 
-function hashCode(string: string) {
+export function hashCode(string: string) {
 	var hashVal = 0;
 	for (var i = 0; i < string.length; i++) {
 		var unicode = string.charCodeAt(i);

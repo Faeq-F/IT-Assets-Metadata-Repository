@@ -41,12 +41,17 @@
 <div id="profile" class="card bg-modern-50 m-7 h-1/2 shadow-md">
 	<br />
 	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
+	<h3 class="h4 text-center">Role: {Cookies.get('savedLogin-role')}</h3>
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
 		<br /><br />
 		<button class="variant-filled-primary btn w-52" on:click={deleteAccount}>Delete Account</button>
 		<br /><br />
-		<a class="variant-filled-primary btn w-52" href="/permissions" rel="noreferrer"> Manage Permissions </a>
+		{#if Cookies.get('savedLogin-role') == 'admin'}
+			<a class="variant-filled-primary btn w-52" href="/permissions" rel="noreferrer">
+				Manage Permissions
+			</a>
+		{/if}
 	</div>
 </div>
 
