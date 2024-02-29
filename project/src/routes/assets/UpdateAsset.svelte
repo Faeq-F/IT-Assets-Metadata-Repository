@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import { fetchDocuments, updateDocument } from '../api/apiRequests';
+	import { updateDocument } from '../api/apiRequests';
 	const toastStore = getToastStore();
 
 	export let id: string;
@@ -13,11 +13,6 @@
 	let NewAssetLink: string = assetLink;
 
 	const modalStore = getModalStore();
-
-	let activeTypes: any[] = [];
-	fetchDocuments('AssetType').then((assetTypeDocuments) => {
-		activeTypes = assetTypeDocuments;
-	});
 
 	function emptyFieldAlert() {
 		toastStore.trigger({

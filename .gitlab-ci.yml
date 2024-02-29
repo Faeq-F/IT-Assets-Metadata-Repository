@@ -20,7 +20,7 @@ test-job:
   stage: test
   script:
     - cd project
-    - node ./src/routes/api/index.cjs | npm run test:unit
+    - npm run test:unit
   artifacts:
     paths:
       - ./project/node_modules/

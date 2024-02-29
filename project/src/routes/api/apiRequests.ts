@@ -6,10 +6,9 @@
  * @returns The documents in the collection
  */
 export const fetchDocuments = (collectionName: string) => {
-	return fetch('http://localhost:5038/api/get/collection/' + collectionName)
-		.then((response) => {
-			return response.json();
-		})
+	return fetch('http://localhost:5038/api/get/collection/' + collectionName).then((response) => {
+		return response.json();
+	});
 };
 
 /**
@@ -23,9 +22,13 @@ export const insertDocument = (collectionName: string, formData: any) => {
 		method: 'POST',
 		body: formData
 	})
-	.then((response) => { return response })
-	.catch(err => { return err });
-}
+		.then((response) => {
+			return response;
+		})
+		.catch((err) => {
+			return err;
+		});
+};
 
 /**
  * Updates a document in a collection from the database
@@ -34,13 +37,16 @@ export const insertDocument = (collectionName: string, formData: any) => {
  * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed
  * @returns Acknowledgment from the database
  */
-export const updateDocument = (collectionName : string, id: string, formData:any) => {
-	return fetch('http://localhost:5038/api/update/collection/' + collectionName + "/document/" + id, {
-		method: 'PUT',
-		body: formData
-
-	})
-		.then((response) => { return response });
+export const updateDocument = (collectionName: string, id: string, formData: any) => {
+	return fetch(
+		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
+		{
+			method: 'PUT',
+			body: formData
+		}
+	).then((response) => {
+		return response;
+	});
 };
 
 /**
