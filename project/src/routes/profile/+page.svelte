@@ -37,7 +37,7 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card bg-modern-50 m-7 h-1/2 shadow-md">
+<div id="profile" class="card m-7 h-1/2 bg-modern-50 shadow-md">
 	<br />
 	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
 	<div id="accountButtonGroup">
