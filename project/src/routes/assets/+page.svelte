@@ -1,11 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
-	import { onMount } from 'svelte';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import MakeAsset from './MakeAsset.svelte';
-	import { fetchDocuments } from '../api/apiRequests';
-	import Asset from './Asset.svelte';
 	import {
 		AppBar,
 		getModalStore,
@@ -13,6 +6,14 @@
 		type ModalComponent,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
+
+	//@ts-ignore
+	import { browser } from '$app/environment'; //Does work
+	import { onMount } from 'svelte';
+	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	import { fetchDocuments } from '../api/apiRequests';
+	import Asset from './Asset.svelte';
+	import MakeAsset from './MakeAsset.svelte';
 	import { highlight, keywordFilter } from './keywordSearch';
 
 	onMount(() => {
@@ -46,7 +47,7 @@
 <h1 class="h1">Assets</h1>
 <br />
 <div>
-	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
+	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
@@ -60,7 +61,7 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<!--Search by keyword bar-->
-				<div class="bg-white inline max-h-8 rounded-full border-2 border-modern-500">
+				<div class="border-modern-500 inline max-h-8 rounded-full border-2 bg-white">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
 					<InputChip
@@ -79,7 +80,7 @@
 				<div>
 					<button
 						id="assetMaker"
-						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+						class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
 						on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
 					>
 				</div>

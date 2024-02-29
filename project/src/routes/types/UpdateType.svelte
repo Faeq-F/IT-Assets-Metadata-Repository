@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import { updateDocument } from '../api/apiRequests';
 	const toastStore = getToastStore();
 
 	export let id: string;
@@ -32,6 +33,12 @@
 		}
 		let NewTypeObject = { typeName: NewTypeName, metadataFields: tempNewTypeFields };
 		console.log(NewTypeObject);
+		const data = new FormData();
+		data.append('newData', JSON.stringify(NewTypeObject));
+		updateDocument('AssetType', id, data).then((response) => {
+			console.log(response);
+			location.reload();
+		});
 	}
 
 	function addMetadataField() {
@@ -131,7 +138,7 @@
 			<p class="p-1">Add a metadata field:</p>
 			<button
 				id="metadataFieldAdder"
-				class=" card card-hover h-10 w-10 border-2 border-modern-600 shadow-md"
+				class=" card card-hover border-modern-600 h-10 w-10 border-2 shadow-md"
 				on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
 			>
 			<input
@@ -165,7 +172,7 @@
 		class="variant-filled-primary btn m-2"
 		on:click={() => {
 			updateType();
-			// modalStore.close();
+			modalStore.close();
 		}}>Update</button
 	>
 	<button class="variant-filled-primary btn absolute m-2" on:click={() => modalStore.close()}
