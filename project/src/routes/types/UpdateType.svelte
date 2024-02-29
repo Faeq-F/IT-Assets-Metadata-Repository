@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 
 	export let id: string;
 	export let typeName: string;
@@ -11,11 +12,48 @@
 	const modalStore = getModalStore();
 
 	function updateType() {
-		let NewTypeObject = { typeName: NewTypeName, metadataFields: NewTypeFields };
+		let tempNewTypeFields = [];
+		let ul = document.getElementById('createdMetadataFieldsList')?.getElementsByTagName('li');
+		if (ul) {
+			for (let i of ul) {
+				let inputs = i.getElementsByTagName('input');
+				let select = i.getElementsByTagName('select');
+				let checkbox = false;
+				let name = '';
+				for (let i of inputs) {
+					if (i.classList.contains('checkbox')) {
+						checkbox = i.checked;
+					} else {
+						name = i.value;
+					}
+				}
+				tempNewTypeFields.push({ field: name, dataType: select[0].value, list: checkbox });
+			}
+		}
+		let NewTypeObject = { typeName: NewTypeName, metadataFields: tempNewTypeFields };
 		console.log(NewTypeObject);
 	}
 
-	function addMetadataField() {}
+	function addMetadataField() {
+		let name = (document.getElementById('addMetadataFieldName') as HTMLInputElement).value;
+		let typeList = document.getElementById('addMetadataFieldDataType') as HTMLSelectElement;
+		let type = typeList.options[typeList.selectedIndex].text;
+		if (name == '') {
+			toastStore.trigger({
+				message: 'Please give the field a name',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+		} else if (type == 'Select data type') {
+			toastStore.trigger({
+				message: 'Please choose a data type for the field',
+				background: 'variant-ghost-error',
+				timeout: 3000
+			});
+		} else {
+			NewTypeFields = [...NewTypeFields, { field: name, dataType: type, list: fieldListable }];
+		}
+	}
 
 	let fieldListable: boolean;
 
@@ -24,16 +62,16 @@
 		let inputs = fieldSpan?.getElementsByTagName('input');
 		let select = fieldSpan?.getElementsByTagName('select');
 		let name = '';
-		let checkbox = false;
+		//let checkbox = false;
 		if (inputs && select) {
 			for (let i of inputs) {
-				if (i.classList.contains('checkbox')) {
-					checkbox = i.checked;
-				} else {
-					name = i.value;
+				if (!i.classList.contains('checkbox')) {
+					// 	checkbox = i.checked;
+					// } else {
+					name = i.placeholder;
 				}
 			}
-			let fieldToRemove = { field: name, dataType: select[0].value, list: checkbox };
+			//let fieldToRemove = { field: name, dataType: select[0].value, list: checkbox };
 			NewTypeFields = NewTypeFields.filter((field) => field.field != name);
 		}
 	}
@@ -77,7 +115,7 @@
 									<option>Asset</option>
 								</select>
 								<input class="checkbox" type="checkbox" checked={field.list} /> Multi-Value
-								<button class="btn variant-ghost btn-sm ml-4" on:click={removeField}
+								<button class="variant-ghost btn btn-sm ml-4" on:click={removeField}
 									><i class="fa-solid fa-trash text-sm"></i></button
 								>
 							</span>
@@ -93,7 +131,7 @@
 			<p class="p-1">Add a metadata field:</p>
 			<button
 				id="metadataFieldAdder"
-				class=" card card-hover border-modern-600 h-10 w-10 border-2 shadow-md"
+				class=" card card-hover h-10 w-10 border-2 border-modern-600 shadow-md"
 				on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
 			>
 			<input
