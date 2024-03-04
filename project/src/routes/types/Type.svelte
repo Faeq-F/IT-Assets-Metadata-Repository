@@ -6,7 +6,7 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import ExpandedType from './ExpandedType.svelte';
-	import { deleteDocument } from '../api/apiRequests';
+	import { deleteDocument } from '$lib/apiRequests';
 	import UpdateType from './UpdateType.svelte';
 	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';

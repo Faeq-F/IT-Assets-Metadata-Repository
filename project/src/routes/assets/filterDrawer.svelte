@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ListBox, ListBoxItem, getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import { activeFilters } from '$lib/stores';
 
 	let typeFilters: string[] = [];

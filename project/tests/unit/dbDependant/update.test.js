@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-//import { updateDocument } from '../../src/routes/api/apiRequests';
+//import { updateDocument } from '$lib/apiRequests';
 
 // test('UpdateAssetType', async () => {
 // 	const data = new FormData();

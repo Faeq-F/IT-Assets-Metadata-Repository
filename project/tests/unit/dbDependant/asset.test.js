@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { fetchDocuments } from '../../src/routes/api/apiRequests';
+import { fetchDocuments } from '$lib/apiRequests';
 /*
 async function insertDB() {
 

@@ -13,6 +13,7 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
+		"test:ci": "vitest --exclude '**/dbDependant/**'",
 		"coverage": "vitest run --coverage",
 		"doc": "jsdoc -c ./jsdoc-config.json -r",
 		"start": "sirv public --no-clear"

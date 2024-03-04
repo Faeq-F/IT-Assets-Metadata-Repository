@@ -4,7 +4,7 @@
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
-	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
+	import { deleteDocument, fetchDocuments } from '$lib/apiRequests';
 	import UpdateAccount from './updateAccount.svelte';
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 

@@ -1,6 +1,6 @@
 export { checkPasswordsMatch, containNumbers, duplicateUsername };
 
-import { fetchDocuments } from '../api/apiRequests';
+import { fetchDocuments } from '$lib/apiRequests';
 import { Form } from 'svelte-use-form';
 
 export function hashCode(string: string) {

@@ -6,7 +6,7 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 
-	import { deleteDocument } from '../api/apiRequests';
+	import { deleteDocument } from '$lib/apiRequests';
 	import ExpandedAsset from './ExpandedAsset.svelte';
 	import { highlight } from './keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';

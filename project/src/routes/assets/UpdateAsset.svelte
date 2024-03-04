@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import { updateDocument } from '../api/apiRequests';
+	import { updateDocument } from '$lib/apiRequests';
 	const toastStore = getToastStore();
 
 	export let id: string;

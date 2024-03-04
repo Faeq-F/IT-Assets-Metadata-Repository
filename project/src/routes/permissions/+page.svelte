@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 
 	import { onMount } from 'svelte';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import Cookies from 'js-cookie';
 

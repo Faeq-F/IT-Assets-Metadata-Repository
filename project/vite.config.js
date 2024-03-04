@@ -14,8 +14,6 @@ export default defineConfig({
 	],
 	test: {
 		exclude: [
-			'**/updateUser.test.js',
-			'**/dbDependant.test.js',
 			'**/node_modules/**',
 			'**/dist/**',
 			'**/cypress/**',
