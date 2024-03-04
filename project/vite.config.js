@@ -14,6 +14,7 @@ export default defineConfig({
 	],
 	test: {
 		exclude: [
+			'**/integration/**',
 			'**/node_modules/**',
 			'**/dist/**',
 			'**/cypress/**',
