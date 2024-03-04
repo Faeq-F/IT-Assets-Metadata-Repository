@@ -4,8 +4,8 @@
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
-	import { deleteDocument, fetchDocuments, updateDocument } from '../api/apiRequests';
-	import UpdateAccount from './UpdateAccount.svelte';
+	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
+	import UpdateAccount from './updateAccount.svelte';
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 
 	onMount(() => {
@@ -47,15 +47,15 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card m-7 h-1/2 bg-modern-50 shadow-md">
+<div id="profile" class="card m-7 h-1/2 w-11/12 bg-modern-50 text-center shadow-md">
 	<br />
 	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
+	<br /><br />
+	<button class="variant-filled-primary btn w-52" on:click={() => modalStore.trigger(modal)}
+		>Update Account details</button
+	>
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
-		<br /><br />
-		<button class="variant-filled-primary btn w-52" on:click={() => modalStore.trigger(modal)}
-			>Update Account</button
-		>
 		<br /><br />
 		<button class="variant-filled-primary btn w-52" on:click={deleteAccount}>Delete Account</button>
 	</div>
@@ -64,6 +64,7 @@
 <style>
 	#profile {
 		position: relative;
+		margin: 0 auto;
 	}
 	#accountButtonGroup {
 		position: absolute;

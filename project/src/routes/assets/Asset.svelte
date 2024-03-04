@@ -1,7 +1,15 @@
 <script lang="ts">
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	import { deleteDocument, fetchDocuments } from '../api/apiRequests';
+	import {
+		getModalStore,
+		getToastStore,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
+
+	import { deleteDocument } from '../api/apiRequests';
+	import ExpandedAsset from './ExpandedAsset.svelte';
 	import { highlight } from './keywordSearch';
+	import UpdateAsset from './UpdateAsset.svelte';
 	const toastStore = getToastStore();
 
 	export let name: string;
@@ -10,6 +18,28 @@
 	export let type: string;
 	export let metadata: any;
 	export let keywordSearchInput: string[] = [];
+
+	const modalStore = getModalStore();
+
+	const expandModalComponent: ModalComponent = {
+		ref: ExpandedAsset,
+		props: { id: id, assetName: name, assetLink: link, assetType: type, metadataFields: metadata }
+	};
+	const expandModal: ModalSettings = {
+		type: 'component',
+		component: expandModalComponent,
+		backdropClasses: '!p-0'
+	};
+
+	const updateModalComponent: ModalComponent = {
+		ref: UpdateAsset,
+		props: { id: id, assetName: name, assetLink: link, assetType: type, metadataFields: metadata }
+	};
+	const updateModal: ModalSettings = {
+		type: 'component',
+		component: updateModalComponent,
+		backdropClasses: '!p-0'
+	};
 
 	async function deleteAsset() {
 		await deleteDocument('Asset', id);
@@ -33,11 +63,17 @@
 		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
 	>
 		<div class="">
-			<button class="variant-filled-surface btn btn-sm card-hover m-1">
+			<button
+				class="variant-filled-surface btn btn-sm card-hover m-1"
+				on:click={() => modalStore.trigger(expandModal)}
+			>
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
-			<button class="variant-filled-surface btn btn-sm card-hover m-1">
+			<button
+				class="variant-filled-surface btn btn-sm card-hover m-1"
+				on:click={() => modalStore.trigger(updateModal)}
+			>
 				<span><i class="fa-solid fa-pen"></i></span>
 				<span>Edit</span>
 			</button>
@@ -57,12 +93,13 @@
 		>
 	</div>
 	<!--asset details-->
+	<!-- eslint-disable svelte/no-at-html-tags-->
 	<div class="h3" style="margin:10px; font-weight: bold; margin-bottom: 3px;">{@html name}</div>
 	<div class="m-0 mb-1 p-0">
 		<a
 			style="font-weight: 500"
 			class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
-			href="http://{link}"
+			href={link.startsWith('http') ? link : 'http://' + link}
 		>
 			<span><i class="fa-solid fa-paperclip"></i></span><span>{@html link}</span></a
 		>
@@ -73,13 +110,16 @@
 	<div class="ml-2 mt-1">
 		<!-- metadata -->
 		{#each Object.entries(metadata) as [field, value]}
+			<!-- eslint-disable svelte/no-at-html-tags-->
 			⦿ {@html highlight(field, keywordSearchInput)}:
 			{#if Array.isArray(value)}
 				{#each value as item}
 					<br />
+					<!-- eslint-disable svelte/no-at-html-tags-->
 					&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {@html highlight(item, keywordSearchInput)}
 				{/each}
 			{:else}
+				<!-- eslint-disable svelte/no-at-html-tags-->
 				{@html highlight(value, keywordSearchInput)}
 			{/if}
 			<br />

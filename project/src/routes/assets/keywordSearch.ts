@@ -1,3 +1,5 @@
+import { getDrawerStore } from '@skeletonlabs/skeleton';
+
 /**
  * Adds spans with a highlighted background to matching keywords
  * @param text The text to look through, & highlight, for certain keywords

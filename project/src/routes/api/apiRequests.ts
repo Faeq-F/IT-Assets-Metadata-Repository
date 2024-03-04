@@ -6,13 +6,9 @@
  * @returns The documents in the collection
  */
 export const fetchDocuments = (collectionName: string) => {
-	return fetch('http://localhost:5038/api/get/collection/' + collectionName)
-		.then((response) => {
-			return response.json();
-		})
-		.then((data) => {
-			return data;
-		});
+	return fetch('http://localhost:5038/api/get/collection/' + collectionName).then((response) => {
+		return response.json();
+	});
 };
 
 /**
@@ -29,12 +25,28 @@ export const insertDocument = (collectionName: string, formData: any) => {
 		.then((response) => {
 			return response;
 		})
-		.then((data) => {
-			return data;
-		})
 		.catch((err) => {
 			return err;
 		});
+};
+
+/**
+ * Updates a document in a collection from the database
+ * @param collectionName The collection that holds the document to update
+ * @param id The id of the document to update
+ * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed
+ * @returns Acknowledgment from the database
+ */
+export const updateDocument = (collectionName: string, id: string, formData: any) => {
+	return fetch(
+		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
+		{
+			method: 'PUT',
+			body: formData
+		}
+	).then((response) => {
+		return response;
+	});
 };
 
 /**
@@ -52,28 +64,6 @@ export const deleteDocument = (collectionName: string, documentID: string) => {
 	)
 		.then((response) => {
 			return response;
-		})
-		.then((data) => {
-			return data;
-		})
-		.catch((err) => {
-			return err;
-		});
-};
-
-export const updateDocument = (collectionName: string, id: string, formData: any) => {
-	return fetch(
-		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
-		{
-			method: 'PUT',
-			body: formData
-		}
-	)
-		.then((response) => {
-			return response;
-		})
-		.then((data) => {
-			return data;
 		})
 		.catch((err) => {
 			return err;
