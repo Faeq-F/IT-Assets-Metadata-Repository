@@ -11,7 +11,10 @@
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import MakeType from './MakeType.svelte';
 	import Type from './Type.svelte';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
+	import Cookies from 'js-cookie';
+
+	let role = Cookies.get('savedLogin-role');
 
 	onMount(() => {
 		if (browser) {
@@ -42,7 +45,7 @@
 <h1 class="h1">Asset types management</h1>
 <br />
 <div>
-	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
+	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AssetTypesDocuments != undefined && AssetTypesDocuments.length > 0}
@@ -55,11 +58,13 @@
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<button
-					id="assetMaker"
-					class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
-					on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
-				>
+				{#if role != 'viewer'}
+					<button
+						id="assetMaker"
+						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+						on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
+					>
+				{/if}
 			</svelte:fragment>
 		</AppBar>
 	</div>

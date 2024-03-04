@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getToastStore } from '@skeletonlabs/skeleton';
-	import { fetchDocuments, insertDocument } from '../api/apiRequests';
+	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
@@ -105,7 +105,7 @@
 </script>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
-	<div class="card bg-modern-50 h-full p-5">
+	<div class="card h-full bg-modern-50 p-5">
 		<header class="h2 card-header text-center">Make an Asset</header>
 		<br /><br />
 		<form id="rootCreateAssetForm" class="text-center">
@@ -206,7 +206,11 @@
 			<br />
 			<hr />
 			<br />
-			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeAsset}>
+			<button
+				class="variant-filled-primary btn w-52"
+				id="assetMaker"
+				on:click|preventDefault={makeAsset}
+			>
 				Make Asset</button
 			>
 		</form>

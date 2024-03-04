@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { focusTrap } from '@skeletonlabs/skeleton';
-	import { fetchDocuments } from './api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import { hashCode } from './register/validate';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
@@ -16,6 +16,7 @@
 			if (user && user.passwordHash === password) {
 				Cookies.set('savedLogin-username', username, { expires: 70 });
 				Cookies.set('savedLogin-password', '' + user.passwordHash, { expires: 70 });
+				Cookies.set('savedLogin-role', '' + user.role, { expires: 70 });
 				window.location.href = '/home';
 			} else {
 				toastStore.trigger({

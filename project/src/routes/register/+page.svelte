@@ -9,8 +9,14 @@
 		required,
 		email
 	} from 'svelte-use-form';
-	import { checkPasswordsMatch, containNumbers, hashCode, duplicateUsername } from './validate';
-	import { insertDocument } from '../api/apiRequests';
+	import {
+		checkPasswordsMatch,
+		containNumbers,
+		hashCode,
+		duplicateUsername,
+		duplicateEmail
+	} from './validate';
+	import { insertDocument } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
@@ -19,6 +25,12 @@
 
 	const form = useForm();
 	const requiredMsg = 'This field is required';
+
+	let emailTaken = true;
+	function checkValidEmail() {
+		let email = (document.getElementById('email') as HTMLInputElement).value;
+		duplicateEmail(email).then((taken) => (emailTaken = taken));
+	}
 
 	let usernameTaken = true;
 	function checkValidUsername() {
@@ -30,10 +42,11 @@
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		let password = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
 		let email = (document.getElementById('email') as HTMLInputElement).value;
+		let role = 'viewer';
 
 		if (username && password && email) {
 			var passwordHash = hashCode(password);
-			var userObj = { username: username, passwordHash: passwordHash, email: email };
+			var userObj = { username: username, passwordHash: passwordHash, email: email, role: role };
 
 			const data = new FormData();
 			data.append('newData', JSON.stringify(userObj));
@@ -41,19 +54,20 @@
 			insertDocument('User', data)
 				.then((response) => {
 					console.log(response);
+					toastStore.trigger({
+						message: 'Account created',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+					Cookies.set('savedLogin-username', username, { expires: 70 });
+					Cookies.set('savedLogin-email', email, { expires: 70 });
+					Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
+					Cookies.set('savedLogin-role', '' + role, { expires: 70 });
+					window.location.href = '../home';
 				})
 				.catch((error) => {
 					console.error('Registering user error: ', error);
 				});
-			toastStore.trigger({
-				message: 'Account created',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			Cookies.set('savedLogin-username', username, { expires: 70 });
-			Cookies.set('savedLogin-email', email, { expires: 70 });
-			Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
-			window.location.href = '../home';
 		}
 	}
 </script>
@@ -73,8 +87,18 @@
 				placeholder="Enter email..."
 				data-focusindex="0"
 				class="input w-96"
+				on:keyup={checkValidEmail}
 				use:validators={[required, email]}
 			/>
+			{#if emailTaken}
+				<a href="/" title="Email already in use or invalid">
+					<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+				</a>
+			{:else}
+				<a href="/" title="Valid email">
+					<i class="fa-solid fa-check"></i>
+				</a>
+			{/if}
 		</div>
 	</label>
 
@@ -98,11 +122,11 @@
 				use:validators={[required, minLength(4)]}
 			/>
 			{#if usernameTaken}
-				<a href="/" title="Username already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+				<a href="/register" title="Username already in use or invalid">
+					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 				</a>
 			{:else}
-				<a href="/" title="Valid username">
+				<a href="/register" title="Valid username">
 					<i class="fa-solid fa-check"></i>
 				</a>
 			{/if}
@@ -164,7 +188,11 @@
 		<button class="variant-filled-primary btn w-52">Back to login</button>
 	</a>
 
-	<button class="variant-filled-primary btn w-52" disabled={!$form.valid} on:click={registerUser}>
+	<button
+		class="variant-filled-primary btn w-52"
+		disabled={!$form.valid || emailTaken}
+		on:click|preventDefault={registerUser}
+	>
 		Create account</button
 	>
 </form>

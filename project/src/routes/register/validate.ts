@@ -1,4 +1,6 @@
-import { fetchDocuments } from '../api/apiRequests';
+export { checkPasswordsMatch, containNumbers, duplicateUsername };
+
+import { fetchDocuments } from '$lib/apiRequests';
 import { Form } from 'svelte-use-form';
 
 export function hashCode(string: string) {
@@ -12,13 +14,13 @@ export function hashCode(string: string) {
 	return hashVal;
 }
 
-export function checkPasswordsMatch(value: string, form: Form<string>) {
+function checkPasswordsMatch(value: string, form: Form<string>) {
 	if (hashCode(value) !== hashCode(form.values.password)) {
 		return { checkPasswordsMatch: true };
 	}
 }
 
-export function containNumbers(numbers: number) {
+function containNumbers(numbers: number) {
 	return function (value: string) {
 		if (value.replace(/[^0-9]/g, '').length < numbers) {
 			return { containNumbers: numbers };
@@ -26,10 +28,21 @@ export function containNumbers(numbers: number) {
 	};
 }
 
-export function duplicateUsername(username: string): Promise<boolean> {
+function duplicateUsername(username: string): Promise<boolean> {
 	return fetchDocuments('User').then((documentsReturned) => {
 		for (let i of documentsReturned) {
 			if (i.username == username) {
+				return true;
+			}
+		}
+		return false;
+	});
+}
+
+export function duplicateEmail(email: string): Promise<boolean> {
+	return fetchDocuments('User').then((documentsReturned) => {
+		for (let i of documentsReturned) {
+			if (i.email == email) {
 				return true;
 			}
 		}
