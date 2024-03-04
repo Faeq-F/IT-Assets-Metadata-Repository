@@ -162,7 +162,7 @@
 <div class="absolute bottom-3 right-36">
 	<button
 		class="variant-filled-primary btn m-2"
-		on:click={() => {
+		on:click|preventDefault={() => {
 			updateAsset();
 		}}>Update</button
 	>

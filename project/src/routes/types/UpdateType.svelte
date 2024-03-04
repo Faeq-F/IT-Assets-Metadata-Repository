@@ -158,7 +158,7 @@
 			<p class="p-1">Add a metadata field:</p>
 			<button
 				id="metadataFieldAdder"
-				class=" card card-hover h-10 w-10 border-2 border-modern-600 shadow-md"
+				class=" card card-hover border-modern-600 h-10 w-10 border-2 shadow-md"
 				on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
 			>
 			<input
@@ -190,7 +190,7 @@
 <div class="absolute bottom-3 right-36">
 	<button
 		class="variant-filled-primary btn m-2"
-		on:click={() => {
+		on:click|preventDefault={() => {
 			updateType();
 		}}>Update</button
 	>

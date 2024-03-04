@@ -33,7 +33,12 @@
 			fetchDocuments('User').then((Users) => {
 				for (let i of Users) {
 					if (i.username == Cookies.get('savedLogin-username')) {
-						var userObj = { username: newUsername, passwordHash: newPassHash };
+						var userObj = {
+							username: newUsername,
+							passwordHash: newPassHash,
+							role: Cookies.get('savedLogin-role'),
+							email: i.email
+						};
 
 						const data = new FormData();
 						data.append('newData', JSON.stringify(userObj));
@@ -56,7 +61,7 @@
 	<title>Register</title>
 </svelte:head>
 <div class="card p-5 shadow-xl" id="rootDiv">
-	<div class="card h-full bg-modern-50 p-1">
+	<div class="card bg-modern-50 h-full p-1">
 		<br />
 		<h2 class="h2 mt-24 text-center">Update your details</h2>
 		<br /><br />
@@ -143,7 +148,7 @@
 				<button
 					class="variant-filled-primary btn w-52"
 					disabled={!$form.valid}
-					on:click={makeUpdate}
+					on:click|preventDefault={makeUpdate}
 				>
 					Update details</button
 				>

@@ -43,7 +43,7 @@
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		let password = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
 		let email = (document.getElementById('email') as HTMLInputElement).value;
-		let role = UserRole.Viewer;
+		let role = 'viewer';
 
 		if (username && password && email) {
 			var passwordHash = hashCode(password);
@@ -55,19 +55,20 @@
 			insertDocument('User', data)
 				.then((response) => {
 					console.log(response);
+					toastStore.trigger({
+						message: 'Account created',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+					Cookies.set('savedLogin-username', username, { expires: 70 });
+					Cookies.set('savedLogin-email', email, { expires: 70 });
+					Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
+					Cookies.set('savedLogin-role', '' + role, { expires: 70 });
+					window.location.href = '../home';
 				})
 				.catch((error) => {
 					console.error('Registering user error: ', error);
 				});
-			toastStore.trigger({
-				message: 'Account created',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			Cookies.set('savedLogin-username', username, { expires: 70 });
-			Cookies.set('savedLogin-email', email, { expires: 70 });
-			Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
-			window.location.href = '../home';
 		}
 	}
 </script>
@@ -123,7 +124,7 @@
 			/>
 			{#if usernameTaken}
 				<a href="/register" title="Username already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
+					<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse"></i>
 				</a>
 			{:else}
 				<a href="/register" title="Valid username">
@@ -191,7 +192,7 @@
 	<button
 		class="variant-filled-primary btn w-52"
 		disabled={!$form.valid || emailTaken}
-		on:click={registerUser}
+		on:click|preventDefault={registerUser}
 	>
 		Create account</button
 	>
