@@ -91,11 +91,11 @@
 				use:validators={[required, email]}
 			/>
 			{#if emailTaken}
-				<a href="/" title="Email already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+				<a href="/register" title="Email already in use or invalid">
+					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 				</a>
 			{:else}
-				<a href="/" title="Valid email">
+				<a href="/register" title="Valid email">
 					<i class="fa-solid fa-check"></i>
 				</a>
 			{/if}

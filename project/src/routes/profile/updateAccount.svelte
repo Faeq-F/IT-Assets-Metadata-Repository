@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { focusTrap } from '@skeletonlabs/skeleton';
+	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
 	import { useForm, Hint, HintGroup, validators, minLength, required } from 'svelte-use-form';
 	import {
 		checkPasswordsMatch,
@@ -8,12 +8,9 @@
 		duplicateUsername
 	} from '../register/validate';
 	import Cookies from 'js-cookie';
-	//import { getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
 
-	//const toastStore = getToastStore();
-	//redirectWhenLoginSaved();
-
+	const toastStore = getToastStore();
 	const form = useForm();
 	const requiredMsg = 'This field is required';
 
@@ -46,6 +43,15 @@
 						updateDocument('User', i._id, data)
 							.then((response) => {
 								console.log(response);
+
+								toastStore.trigger({
+									message: 'Account updated',
+									background: 'variant-ghost-success',
+									timeout: 3000
+								});
+
+								// Refresh the page
+								location.reload();
 							})
 							.catch((error) => {
 								console.error('Update user error: ', error);
@@ -84,11 +90,11 @@
 							use:validators={[required, minLength(4)]}
 						/>
 						{#if usernameTaken}
-							<a href="/" title="Username already in use or invalid">
-								<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+							<a href="/profile" title="Username already in use or invalid">
+								<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 							</a>
 						{:else}
-							<a href="/" title="Valid username">
+							<a href="/profile" title="Valid username">
 								<i class="fa-solid fa-check"></i>
 							</a>
 						{/if}
