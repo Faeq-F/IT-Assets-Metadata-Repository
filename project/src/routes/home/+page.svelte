@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();

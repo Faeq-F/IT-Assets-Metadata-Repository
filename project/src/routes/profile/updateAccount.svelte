@@ -9,7 +9,7 @@
 	} from '../register/validate';
 	import Cookies from 'js-cookie';
 	//import { getToastStore } from '@skeletonlabs/skeleton';
-	import { fetchDocuments, updateDocument } from '../api/apiRequests';
+	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
 
 	//const toastStore = getToastStore();
 	//redirectWhenLoginSaved();
@@ -33,7 +33,12 @@
 			fetchDocuments('User').then((Users) => {
 				for (let i of Users) {
 					if (i.username == Cookies.get('savedLogin-username')) {
-						var userObj = { username: newUsername, passwordHash: newPassHash };
+						var userObj = {
+							username: newUsername,
+							passwordHash: newPassHash,
+							role: Cookies.get('savedLogin-role'),
+							email: i.email
+						};
 
 						const data = new FormData();
 						data.append('newData', JSON.stringify(userObj));
@@ -143,7 +148,7 @@
 				<button
 					class="variant-filled-primary btn w-52"
 					disabled={!$form.valid}
-					on:click={makeUpdate}
+					on:click|preventDefault={makeUpdate}
 				>
 					Update details</button
 				>

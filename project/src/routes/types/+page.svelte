@@ -11,7 +11,10 @@
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import MakeType from './MakeType.svelte';
 	import Type from './Type.svelte';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
+	import Cookies from 'js-cookie';
+
+	let role = Cookies.get('savedLogin-role');
 
 	onMount(() => {
 		if (browser) {
@@ -55,11 +58,13 @@
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<button
-					id="assetMaker"
-					class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
-					on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
-				>
+				{#if role != 'viewer'}
+					<button
+						id="assetMaker"
+						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+						on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
+					>
+				{/if}
 			</svelte:fragment>
 		</AppBar>
 	</div>

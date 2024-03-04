@@ -16,7 +16,7 @@
 		duplicateUsername,
 		duplicateEmail
 	} from './validate';
-	import { insertDocument } from '../api/apiRequests';
+	import { insertDocument } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
@@ -42,10 +42,11 @@
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		let password = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
 		let email = (document.getElementById('email') as HTMLInputElement).value;
+		let role = 'viewer';
 
 		if (username && password && email) {
 			var passwordHash = hashCode(password);
-			var userObj = { username: username, passwordHash: passwordHash, email: email };
+			var userObj = { username: username, passwordHash: passwordHash, email: email, role: role };
 
 			const data = new FormData();
 			data.append('newData', JSON.stringify(userObj));
@@ -53,19 +54,20 @@
 			insertDocument('User', data)
 				.then((response) => {
 					console.log(response);
+					toastStore.trigger({
+						message: 'Account created',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+					Cookies.set('savedLogin-username', username, { expires: 70 });
+					Cookies.set('savedLogin-email', email, { expires: 70 });
+					Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
+					Cookies.set('savedLogin-role', '' + role, { expires: 70 });
+					window.location.href = '../home';
 				})
 				.catch((error) => {
 					console.error('Registering user error: ', error);
 				});
-			toastStore.trigger({
-				message: 'Account created',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			Cookies.set('savedLogin-username', username, { expires: 70 });
-			Cookies.set('savedLogin-email', email, { expires: 70 });
-			Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
-			window.location.href = '../home';
 		}
 	}
 </script>
@@ -189,7 +191,7 @@
 	<button
 		class="variant-filled-primary btn w-52"
 		disabled={!$form.valid || emailTaken}
-		on:click={registerUser}
+		on:click|preventDefault={registerUser}
 	>
 		Create account</button
 	>

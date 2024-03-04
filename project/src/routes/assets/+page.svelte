@@ -12,11 +12,12 @@
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import Asset from './Asset.svelte';
 	//@ts-ignore
 	import MakeAsset from './makeAsset.svelte';
 	import { highlight, keywordFilter } from './keywordSearch';
+	import Cookies from 'js-cookie';
 	import { activeFilters } from '$lib/stores';
 
 	onMount(() => {
@@ -27,7 +28,11 @@
 
 	const drawerStore = getDrawerStore();
 	function drawerOpen(): void {
-		drawerStore.open({ id: 'filterAssetsDrawer', width: 'w-[280px] md:w-[655px]' });
+		drawerStore.open({
+			id: 'filterAssetsDrawer',
+			width: 'w-[280px] md:w-[655px]',
+			position: 'right'
+		});
 	}
 
 	$: filters = $activeFilters;
@@ -39,6 +44,8 @@
 			AssetDocuments = Docs;
 		});
 	});
+
+	let role = Cookies.get('savedLogin-role');
 
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: MakeAsset };
@@ -93,11 +100,13 @@
 				>
 				<!--Create asset button-->
 				<div>
-					<button
-						id="assetMaker"
-						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
-						on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
-					>
+					{#if role != 'viewer'}
+						<button
+							id="assetMaker"
+							class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+							on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
+						>
+					{/if}
 				</div>
 			</svelte:fragment>
 		</AppBar>

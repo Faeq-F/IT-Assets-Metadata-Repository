@@ -20,7 +20,7 @@ test-job:
   stage: test
   script:
     - cd project
-    - npm run test:unit
+    - npm run test:ci
   artifacts:
     paths:
       - ./project/node_modules/

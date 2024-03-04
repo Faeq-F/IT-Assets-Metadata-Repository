@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getToastStore } from '@skeletonlabs/skeleton';
-	import { fetchDocuments, insertDocument } from '../api/apiRequests';
+	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
@@ -206,7 +206,11 @@
 			<br />
 			<hr />
 			<br />
-			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeAsset}>
+			<button
+				class="variant-filled-primary btn w-52"
+				id="assetMaker"
+				on:click|preventDefault={makeAsset}
+			>
 				Make Asset</button
 			>
 		</form>

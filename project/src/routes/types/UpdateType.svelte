@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import { updateDocument } from '../api/apiRequests';
+	import { updateDocument } from '$lib/apiRequests';
 	const toastStore = getToastStore();
 
 	export let id: string;
@@ -190,7 +190,7 @@
 <div class="absolute bottom-3 right-36">
 	<button
 		class="variant-filled-primary btn m-2"
-		on:click={() => {
+		on:click|preventDefault={() => {
 			updateType();
 		}}>Update</button
 	>

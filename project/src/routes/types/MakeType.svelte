@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getToastStore } from '@skeletonlabs/skeleton';
-	import { insertDocument } from '../api/apiRequests';
+	import { insertDocument } from '$lib/apiRequests';
 	const toastStore = getToastStore();
 
 	async function makeType() {

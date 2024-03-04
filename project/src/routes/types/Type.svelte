@@ -6,13 +6,16 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import ExpandedType from './ExpandedType.svelte';
-	import { deleteDocument } from '../api/apiRequests';
+	import { deleteDocument } from '$lib/apiRequests';
 	import UpdateType from './UpdateType.svelte';
 	const toastStore = getToastStore();
+	import Cookies from 'js-cookie';
 
 	export let id: string;
 	export let typeName: string;
 	export let metadataFields: any[];
+
+	let role = Cookies.get('savedLogin-role');
 
 	const modalStore = getModalStore();
 
@@ -64,17 +67,19 @@
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
-			<button
-				class="variant-filled-surface btn btn-sm card-hover m-1"
-				on:click={() => modalStore.trigger(updateModal)}
-			>
-				<span><i class="fa-solid fa-pen"></i></span>
-				<span>Edit</span>
-			</button>
-			<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAssetType}>
-				<span><i class="fa-solid fa-trash text-sm"></i></span>
-				<span>Delete</span>
-			</button>
+			{#if role != 'viewer'}
+				<button
+					class="variant-filled-surface btn btn-sm card-hover m-1"
+					on:click={() => modalStore.trigger(updateModal)}
+				>
+					<span><i class="fa-solid fa-pen"></i></span>
+					<span>Edit</span>
+				</button>
+				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAssetType}>
+					<span><i class="fa-solid fa-trash text-sm"></i></span>
+					<span>Delete</span>
+				</button>
+			{/if}
 		</div>
 	</div>
 	<div id="ButtonActions">
