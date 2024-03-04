@@ -1,11 +1,22 @@
 <script lang="ts">
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { Autocomplete, getToastStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
 	fetchDocuments('AssetType').then((assetTypeDocuments) => {
 		activeTypes = assetTypeDocuments;
+	});
+
+	let Assets: AutocompleteOption<string>[] = [];
+	fetchDocuments('Asset').then((assetDocuments) => {
+		for (let i of assetDocuments) {
+			Assets.push({
+				label: i.assetName,
+				value: i._id
+				//meta: { healthy: false }
+			});
+		}
 	});
 
 	function makeAsset() {
@@ -101,11 +112,15 @@
 		location.reload();
 	}
 
+	function onDocumentSelection(event: CustomEvent<AutocompleteOption<string>>): void {
+		console.log(event.detail.label, event.detail.value);
+	}
+
 	let currentType: string;
 </script>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
-	<div class="card h-full bg-modern-50 p-5">
+	<div class="card bg-modern-50 h-full p-5">
 		<header class="h2 card-header text-center">Make an Asset</header>
 		<br /><br />
 		<form id="rootCreateAssetForm" class="text-center">
@@ -194,7 +209,7 @@
 								{/if}
 							{:else if field.dataType == 'Asset'}
 								{#if field.list == true}
-									The application cannot associate assets yet - coming soon!<br /><br />
+									<Autocomplete options={Assets} on:selection={onDocumentSelection} /><br /><br />
 								{:else}
 									The application cannot associate assets yet - coming soon!<br /><br />
 								{/if}
