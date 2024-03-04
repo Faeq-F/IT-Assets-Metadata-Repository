@@ -113,7 +113,20 @@
 	}
 
 	function onDocumentSelection(event: CustomEvent<AutocompleteOption<string>>): void {
-		console.log(event.detail.label, event.detail.value);
+		console.log(event.detail.label, event.detail.value, event.detail.meta);
+	}
+
+	function AddFieldToMetadata(
+		documents: AutocompleteOption<string>[],
+		fieldName: string
+	): AutocompleteOption<string>[] {
+		let temp = documents;
+		for (let i of temp) {
+			i['meta'] = {
+				field: fieldName
+			};
+		}
+		return temp;
 	}
 
 	let currentType: string;
@@ -209,7 +222,10 @@
 								{/if}
 							{:else if field.dataType == 'Asset'}
 								{#if field.list == true}
-									<Autocomplete options={Assets} on:selection={onDocumentSelection} /><br /><br />
+									<Autocomplete
+										options={AddFieldToMetadata(Assets, field.field)}
+										on:selection={onDocumentSelection}
+									/><br /><br />
 								{:else}
 									The application cannot associate assets yet - coming soon!<br /><br />
 								{/if}
