@@ -1,22 +1,12 @@
 <script lang="ts">
-	import { Autocomplete, getToastStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
+	import { getToastStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
+	import InputAssociation from './InputAssociation.svelte';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
 	fetchDocuments('AssetType').then((assetTypeDocuments) => {
 		activeTypes = assetTypeDocuments;
-	});
-
-	let Assets: AutocompleteOption<string>[] = [];
-	fetchDocuments('Asset').then((assetDocuments) => {
-		for (let i of assetDocuments) {
-			Assets.push({
-				label: i.assetName,
-				value: i._id
-				//meta: { healthy: false }
-			});
-		}
 	});
 
 	function makeAsset() {
@@ -112,21 +102,8 @@
 		location.reload();
 	}
 
-	function onDocumentSelection(event: CustomEvent<AutocompleteOption<string>>): void {
-		console.log(event.detail.label, event.detail.value, event.detail.meta);
-	}
-
-	function AddFieldToMetadata(
-		documents: AutocompleteOption<string>[],
-		fieldName: string
-	): AutocompleteOption<string>[] {
-		let temp = documents;
-		for (let i of temp) {
-			i['meta'] = {
-				field: fieldName
-			};
-		}
-		return temp;
+	function onDocumentSelection(event: any): void {
+		console.log(event.detail.detail.label, event.detail.detail.value, event.detail.detail.field);
 	}
 
 	let currentType: string;
@@ -222,10 +199,12 @@
 								{/if}
 							{:else if field.dataType == 'Asset'}
 								{#if field.list == true}
-									<Autocomplete
-										options={AddFieldToMetadata(Assets, field.field)}
-										on:selection={onDocumentSelection}
-									/><br /><br />
+									<InputAssociation
+										fieldName={field.field}
+										associationType={'Asset'}
+										on:message={onDocumentSelection}
+									/>
+									<br /><br />
 								{:else}
 									The application cannot associate assets yet - coming soon!<br /><br />
 								{/if}
