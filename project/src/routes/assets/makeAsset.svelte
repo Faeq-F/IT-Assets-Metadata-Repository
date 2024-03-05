@@ -2,6 +2,7 @@
 	import { getToastStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	import InputAssociation from './InputAssociation.svelte';
+	import Asset from './Asset.svelte';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
@@ -40,15 +41,16 @@
 		//then get the inputs for all metadata fields
 		var metadataForm = document.getElementById('metadataForm') as HTMLFormElement;
 		let metadataInputs = metadataForm.getElementsByTagName('input');
+		console.log(metadataInputs);
 		var metadataObject = {};
 		for (let i of metadataInputs) {
-			let key = i.id;
+			let key = i.id.replace('-association', '');
 			let value;
 			//check if the field is a list
 			if (i.placeholder.includes('multiple')) {
 				//if so, seperate the values
 				value = i.value.split(', ');
-				let newArr: number[] = [];
+				let newArr: any[] = [];
 				// check if cast required for numbers
 				if (i.placeholder.includes('number')) {
 					for (let i in value) {
@@ -62,8 +64,16 @@
 						}
 						newArr[i] = parseFloat(value[i]);
 					}
-					value = newArr;
+				} else if (i.placeholder.includes('text')) {
+					for (let i in value) {
+						newArr[i] = value[i];
+					}
+				} else {
+					console.log(i);
+					console.log(i.id.replace('-association', ''));
+					value = "sad;'#'";
 				}
+				value = newArr;
 			} else {
 				if (i.placeholder.includes('number')) {
 					if (Number.isNaN(parseFloat(i.value))) {
@@ -75,8 +85,12 @@
 						return;
 					}
 					value = parseFloat(i.value);
+				} else if (i.placeholder.includes('text')) {
+					value = i.value;
+				} else if (i.placeholder.includes('Search for a')) {
+					value = "sadfghjkl;'#'";
+					console.log(document.getElementById(key + '-associationCollector'));
 				}
-				value = i.value;
 			}
 			metadataObject = { ...metadataObject, [key]: value };
 		}
@@ -87,11 +101,12 @@
 			assetType: type,
 			metadataFields: metadataObject
 		};
-		const data = new FormData();
-		data.append('newData', JSON.stringify(assetObject));
-		insertDocument('Asset', data).then((response) => {
-			console.log(response);
-		});
+		console.log(assetObject);
+		// const data = new FormData();
+		// data.append('newData', JSON.stringify(assetObject));
+		// insertDocument('Asset', data).then((response) => {
+		// 	console.log(response);
+		// });
 
 		toastStore.trigger({
 			message: 'Asset created',
@@ -99,11 +114,16 @@
 			timeout: 3000
 		});
 		// Refresh the page
-		location.reload();
+		//location.reload();
 	}
 
 	function onDocumentSelection(event: any): void {
-		console.log(event.detail.detail.label, event.detail.detail.value, event.detail.detail.field);
+		console.log(
+			event.detail.detail.label,
+			event.detail.detail.value,
+			event.detail.detail.field,
+			event.detail.detail.listable
+		);
 	}
 
 	let currentType: string;
@@ -192,22 +212,21 @@
 									/><br /><br />
 								{/if}
 							{:else if field.dataType == 'Account'}
-								{#if field.list == true}
-									The application cannot associate accounts yet - coming soon!<br /><br />
-								{:else}
-									The application cannot associate accounts yet - coming soon!<br /><br />
-								{/if}
+								<InputAssociation
+									fieldName={field.field}
+									list={field.list}
+									associationType={'User'}
+									on:message={onDocumentSelection}
+								/>
+								<br /><br />
 							{:else if field.dataType == 'Asset'}
-								{#if field.list == true}
-									<InputAssociation
-										fieldName={field.field}
-										associationType={'Asset'}
-										on:message={onDocumentSelection}
-									/>
-									<br /><br />
-								{:else}
-									The application cannot associate assets yet - coming soon!<br /><br />
-								{/if}
+								<InputAssociation
+									fieldName={field.field}
+									list={field.list}
+									associationType={'Asset'}
+									on:message={onDocumentSelection}
+								/>
+								<br /><br />
 							{/if}
 						{/each}
 					{/if}
