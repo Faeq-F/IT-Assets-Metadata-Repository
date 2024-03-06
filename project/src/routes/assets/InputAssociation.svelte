@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchDocuments } from '$lib/apiRequests';
-	import { Autocomplete, popup } from '@skeletonlabs/skeleton';
+	import { Autocomplete, type AutocompleteOption } from '@skeletonlabs/skeleton';
 	export let list: boolean;
 	export let fieldName: string;
 	export let associationType: string;
@@ -12,10 +12,14 @@
 				let temp: AutocompleteOption<string>[] = [];
 				for (let i of documents) {
 					temp.push({
-						label: i.assetName,
+						label: i.assetName + ' (' + i.assetType + ')',
 						value: i._id,
-						field: fieldName,
-						listable: list
+						meta: {
+							name: i.assetName,
+							extraDetail: i.assetType,
+							field: fieldName,
+							listable: list
+						}
 					});
 				}
 				return temp;
@@ -25,10 +29,14 @@
 				let temp: AutocompleteOption<string>[] = [];
 				for (let i of documents) {
 					temp.push({
-						label: i.username,
+						label: i.username + ' (' + i.email + ')',
 						value: i._id,
-						field: fieldName,
-						listable: list
+						meta: {
+							name: i.username,
+							extraDetail: i.email,
+							field: fieldName,
+							listable: list
+						}
 					});
 				}
 				return temp;
@@ -36,14 +44,14 @@
 		}
 	}
 
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+	//import { createEventDispatcher } from 'svelte';
+	//const dispatch = createEventDispatcher();
 	function onDocumentSelection(event: CustomEvent<AutocompleteOption<string>>): void {
 		//dispatch('message', event);
 		if (list) {
-			savedAssociation = [...savedAssociation, event.detail.value];
+			savedAssociation = [...savedAssociation, event.detail];
 		} else {
-			savedAssociation = event.detail.value;
+			savedAssociation = event.detail;
 		}
 	}
 
@@ -62,16 +70,18 @@
 			{#if savedAssociation.length == 0}
 				Nothing saved (This field is Multi-Value)
 			{:else}
-				{#each savedAssociation as associationSaved}
-					<div>{associationSaved}</div>
-				{/each}
+				<ul>
+					{#each savedAssociation as associationSaved}
+						<li>{associationSaved.label}</li>
+					{/each}
+				</ul>
 			{/if}
 		{:else}
 			<div>
 				{#if savedAssociation == undefined}
 					Nothing saved (This field only allows a single value)
 				{:else}
-					{savedAssociation}
+					<span>{savedAssociation.label}</span>
 				{/if}
 			</div>
 		{/if}
