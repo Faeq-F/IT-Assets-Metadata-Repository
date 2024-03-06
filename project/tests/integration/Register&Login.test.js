@@ -3,12 +3,6 @@ const delay = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(
 const time = 500;
 const site = 'http://localhost:4173/';
 
-test('Index page has expected h1', async ({ page }) => {
-	await page.goto('/');
-	//Demo assertion
-	//await expect(page.getByRole('heading', { name: 'Team Project' })).toBeVisible();
-});
-
 // Note: database must be running for the tests below to run as expected
 test('Login as root and sign out', async ({ page }) => {
 	await page.goto('/');
@@ -49,13 +43,12 @@ test('Create a new user, login as it, delete account and attempt to log back in'
 	const email = 'test@mail.com';
 	const username = 'testUser';
 	const password = 'testPass123';
-	const passwordCon = 'testPass123';
 
 	await page.goto('/register');
 	await page.getByLabel('email').fill(email);
 	await page.getByLabel('username').fill(username);
 	await page.getByPlaceholder('Enter Password...').fill(password);
-	await page.getByPlaceholder('Enter Password again...').fill(passwordCon);
+	await page.getByPlaceholder('Enter Password again...').fill(password);
 	await page.getByRole('button', { name: 'Create account' }).click();
 	// Wait (time) seconds for the login to process
 	await delay(time);

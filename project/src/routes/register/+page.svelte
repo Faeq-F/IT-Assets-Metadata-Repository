@@ -190,7 +190,7 @@
 
 	<button
 		class="variant-filled-primary btn w-52"
-		disabled={!$form.valid || emailTaken}
+		disabled={!$form.valid || emailTaken || usernameTaken}
 		on:click|preventDefault={registerUser}
 	>
 		Create account</button

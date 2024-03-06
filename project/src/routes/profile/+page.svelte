@@ -50,8 +50,8 @@
 <br /><br />
 <div id="profile" class="card m-7 h-1/2 w-11/12 bg-modern-50 text-center shadow-md">
 	<br />
-	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
-	<h3 class="h4 inline text-center">Role: {Cookies.get('savedLogin-role')}</h3>
+	<h3 title="Username" class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
+	<h3 title="Role" class="h4 inline text-center">Role: {Cookies.get('savedLogin-role')}</h3>
 	{#if Cookies.get('savedLogin-role') == 'admin'}
 		<a
 			class="variant-filled-primary btn btn-sm inline w-52 text-sm"
