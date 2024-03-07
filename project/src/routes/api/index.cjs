@@ -15,6 +15,7 @@ var Express = require('express');
 var MongoClient = require('mongodb').MongoClient;
 const app = Express();
 const cors = require('cors');
+const multer = require('multer'); // used for accessing form data
 app.use(cors());
 app.set('case sensitive routing', true); //required to pass the correct names of collections, etc.
 
@@ -33,9 +34,8 @@ app.listen(5038, () => {
 });
 
 //▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
-
-const multer = require('multer'); // used for accessing form data
 //Define db routes
+//▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 
 //get documents from a collection
 app.get(
@@ -47,6 +47,23 @@ app.get(
 			return await result.toArray();
 		};
 		result(request.params.name.toString()).then((result) => response.send(result));
+	}
+);
+
+//▰▰▰▰▰▰▰▰▰
+
+app.get(
+	'/api/get/document/:id',
+	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
+		let result = async (/** @type {string} */ id) => {
+			database.getCollectionNames().forEach(function (/** @type {string} */ collName) {
+				var doc = database
+					.getCollection(collName)
+					.findOne({ $expr: { $eq: ['$_id', { $toObjectId: id }] } });
+				if (doc != null) return doc.json();
+			});
+		};
+		result(request.params.id.toString()).then((result) => response.send(result));
 	}
 );
 
