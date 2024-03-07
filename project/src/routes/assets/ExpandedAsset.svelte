@@ -1,5 +1,10 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import '../node_modules/@joint/plus/joint-plus.css';
+	import { onMount } from 'svelte';
+	import { dia, ui, shapes } from '@joint/plus/joint-plus.js';
+
+
 
 	export let id: string;
 	export let assetName: string;
