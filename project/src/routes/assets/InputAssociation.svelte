@@ -55,6 +55,12 @@
 		}
 	}
 
+	function removeFromList(association: any) {
+		savedAssociation = savedAssociation.filter(
+			(associationSaved: any) => associationSaved.value != association.value
+		);
+	}
+
 	let savedAssociation: any;
 	if (list) {
 		savedAssociation = [];
@@ -67,21 +73,47 @@
 {:then documentOptions}
 	<div id={fieldName + '-associationCollector'}>
 		{#if list}
+			<p>Saved (This field is Multi-Value):</p>
 			{#if savedAssociation.length == 0}
-				Nothing saved (This field is Multi-Value)
+				Nothing saved
 			{:else}
 				<ul>
 					{#each savedAssociation as associationSaved}
-						<li>{associationSaved.label}</li>
+						<li
+							class="card w-6/12 shadow-md"
+							style="margin: 5px auto;"
+							data-associatedObject={JSON.stringify(associationSaved)}
+						>
+							{associationSaved.label}
+							<button
+								class="btn"
+								on:click|preventDefault={() => {
+									removeFromList(associationSaved);
+								}}><i class="fa-trash fa-solid"></i></button
+							>
+						</li>
 					{/each}
 				</ul>
 			{/if}
 		{:else}
 			<div>
+				<p>Saved (This field only allows a single value):</p>
 				{#if savedAssociation == undefined}
-					Nothing saved (This field only allows a single value)
+					Nothing saved
 				{:else}
-					<span>{savedAssociation.label}</span>
+					<li
+						class="card block w-6/12 shadow-md"
+						style="margin: 5px auto;"
+						data-associatedObject={JSON.stringify(savedAssociation)}
+					>
+						{savedAssociation.label}
+						<button
+							class="btn"
+							on:click|preventDefault={() => {
+								savedAssociation = undefined;
+							}}><i class="fa-trash fa-solid"></i></button
+						>
+					</li>
 				{/if}
 			</div>
 		{/if}
