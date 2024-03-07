@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getToastStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
+	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	import InputAssociation from './InputAssociation.svelte';
 	import Asset from './Asset.svelte';
@@ -41,19 +41,21 @@
 		//then get the inputs for all metadata fields
 		var metadataForm = document.getElementById('metadataForm') as HTMLFormElement;
 		let metadataInputs = metadataForm.getElementsByTagName('input');
-		console.log(metadataInputs);
 		var metadataObject = {};
 		for (let i of metadataInputs) {
 			let key = i.id.replace('-association', '');
 			let value;
 			//check if the field is a list
 			if (i.placeholder.includes('multiple')) {
-				//if so, seperate the values
+				//if so, separate the values
 				value = i.value.split(', ');
 				let newArr: any[] = [];
 				// check if cast required for numbers
 				if (i.placeholder.includes('number')) {
 					for (let i in value) {
+						if (value[i] == '') {
+							break;
+						}
 						if (Number.isNaN(parseFloat(value[i]))) {
 							toastStore.trigger({
 								message: 'You tried submitting text as a number!',
@@ -69,27 +71,40 @@
 						newArr[i] = value[i];
 					}
 				} else {
-					console.log(i);
-					console.log(i.id.replace('-association', ''));
-					value = "sad;'#'";
+					let item = document
+						.getElementById(key + '-associationCollector')
+						?.getElementsByTagName('LI');
+					if (item) {
+						for (let i of item) {
+							let object = (i as HTMLElement).dataset.associatedobject;
+							if (object) newArr.push('DOCUMENT-ID: ' + JSON.parse(object).value);
+						}
+					}
 				}
 				value = newArr;
 			} else {
 				if (i.placeholder.includes('number')) {
-					if (Number.isNaN(parseFloat(i.value))) {
-						toastStore.trigger({
-							message: 'You tried submitting text as a number!',
-							background: 'variant-ghost-error',
-							timeout: 3000
-						});
-						return;
+					if (!(i.value == '')) {
+						if (Number.isNaN(parseFloat(i.value))) {
+							toastStore.trigger({
+								message: 'You tried submitting text as a number!',
+								background: 'variant-ghost-error',
+								timeout: 3000
+							});
+							return;
+						}
+						value = parseFloat(i.value);
 					}
-					value = parseFloat(i.value);
 				} else if (i.placeholder.includes('text')) {
 					value = i.value;
 				} else if (i.placeholder.includes('Search for a')) {
-					value = "sadfghjkl;'#'";
-					console.log(document.getElementById(key + '-associationCollector'));
+					let item = document
+						.getElementById(key + '-associationCollector')
+						?.getElementsByTagName('LI');
+					if (!(item == undefined || item.length == 0)) {
+						let liItem = (item[0] as HTMLElement).dataset.associatedobject;
+						if (liItem) value = 'DOCUMENT-ID: ' + JSON.parse(liItem).value;
+					}
 				}
 			}
 			metadataObject = { ...metadataObject, [key]: value };
@@ -126,8 +141,19 @@
 		);
 	}
 
+	const requiredField: PopupSettings = {
+		event: 'hover',
+		target: 'requiredField',
+		placement: 'top'
+	};
+
 	let currentType: string;
 </script>
+
+<div class="card bg-initial p-4" data-popup="requiredField">
+	<p>Required Field</p>
+	<div class="arrow bg-initial" />
+</div>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
 	<div class="card bg-modern-50 h-full p-5">
@@ -135,7 +161,9 @@
 		<br /><br />
 		<form id="rootCreateAssetForm" class="text-center">
 			<label for="assetName" class="formlabel">
-				<p class="p-4 text-center">Asset Name:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Name:
+				</p>
 				<input
 					type="text"
 					id="assetName"
@@ -147,7 +175,9 @@
 			</label><br />
 
 			<label for="assetLink" class="formlabel">
-				<p class="p-4 text-center">Asset Link:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Link:
+				</p>
 				<input
 					type="text"
 					id="assetLink"
@@ -159,7 +189,9 @@
 			</label><br />
 
 			<label for="assetType" class="formlabel">
-				<p class="p-4 text-center">Asset Type:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Type:
+				</p>
 
 				<select id="assetType" class="select w-96" bind:value={currentType}>
 					<option>Select type</option>
