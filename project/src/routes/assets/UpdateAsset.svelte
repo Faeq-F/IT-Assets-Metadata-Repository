@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import { updateDocument } from '$lib/apiRequests';
+	import { updateDocument, fetchDocuments, insertDocument } from '$lib/apiRequests';
+	import Page from '../+page.svelte';
 	const toastStore = getToastStore();
 
 	export let id: string;
@@ -22,7 +23,7 @@
 		});
 	}
 
-	function updateAsset() {
+	async function updateAsset() {
 		if (NewAssetName == '' || NewAssetLink == '') {
 			emptyFieldAlert();
 			return;
@@ -95,11 +96,50 @@
 		};
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
+		console.log(assetObject);
 		updateDocument('Asset', id, data).then((response) => {
 			console.log(response);
 			location.reload();
 			modalStore.close();
 		});
+
+		let diffs: any[] = [];
+		
+		var auditData = {
+			assetReference: id,
+			originalAsset: {
+				assetName: assetName,
+				assetLink: assetLink,
+				metadataFields: metadataFields
+			},
+			diffs: diffs
+		}
+		
+		const audit = new FormData();
+		audit.append('newData', JSON.stringify(auditData));
+		
+		auditExists(id).then((exists) => {
+			if (exists) {
+				// TODO: update existingAudits to append newdata into diffs
+				console.log("exists");
+			} else {
+				insertDocument('diff', audit).then((response) => {
+					console.log(response);
+				}).catch((err) => {
+					console.log(err);
+				});
+			}
+		})
+		
+		async function auditExists(id: string) {
+			const auditDocuments = await fetchDocuments('diff');
+			for (let i of auditDocuments) {
+				if (i.assetReference == id) {
+					return true; // Return true immediately if match found
+				}
+			}
+			return false; // Return false if no match found after checking all documents
+		}		
 	}
 </script>
 
