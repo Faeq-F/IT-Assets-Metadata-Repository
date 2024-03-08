@@ -12,6 +12,7 @@
 	import UpdateAsset from './UpdateAsset.svelte';
 	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
+	import AssociationCard from './AssociationCard.svelte';
 
 	export let name: string;
 	export let id: string;
@@ -120,10 +121,11 @@
 				{#each value as item}
 					<br />
 					{#if (item + '').startsWith('DOCUMENT-ID: ')}
-						{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}d
+						{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}
 							&nbsp;&nbsp;&nbsp;&nbsp; ⦿ <span>Loading association</span>
 						{:then document}
-							&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {JSON.stringify(document)}
+							&nbsp;&nbsp;&nbsp;&nbsp; ⦿
+							<AssociationCard {document} />
 						{/await}
 					{:else}
 						<!-- eslint-disable svelte/no-at-html-tags-->
@@ -134,7 +136,7 @@
 				{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
 					<span>Loading association</span>
 				{:then document}
-					{JSON.stringify(document)}
+					<AssociationCard {document} {keywordSearchInput} />
 				{/await}
 			{:else}
 				<!-- eslint-disable svelte/no-at-html-tags-->

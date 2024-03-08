@@ -5,7 +5,11 @@
 		InputChip,
 		type ModalComponent,
 		type ModalSettings,
-		getDrawerStore
+		getDrawerStore,
+		RadioGroup,
+		RadioItem,
+		type PopupSettings,
+		popup
 	} from '@skeletonlabs/skeleton';
 
 	//@ts-ignore
@@ -53,11 +57,25 @@
 		type: 'component',
 		component: modalComponent
 	};
+
+	const association: PopupSettings = {
+		event: 'hover',
+		target: 'association',
+		placement: 'top'
+	};
+
+	let viewType: number = 0;
 </script>
 
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
+
+<div class="card z-[9999] p-4" data-popup="association">
+	An item annotated with <i class="fa-solid fa-bars-staggered"></i> refers to Users & Assets on the
+	system
+	<div class="arrow card" />
+</div>
 
 <h1 class="h1">Assets</h1>
 <br />
@@ -65,10 +83,18 @@
 	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
+				<RadioGroup background="bg-modern-50 border-modern-500 border-2 text-sm" class="h-8">
+					<RadioItem bind:group={viewType} name="grid" class="h-4" value={0}
+						><i class="fa-solid fa-grip fa-xs m-0 -mt-8 p-0"></i></RadioItem
+					>
+					<RadioItem bind:group={viewType} name="list" class="h-4" value={1}
+						><i class="fa-solid fa-list-ul fa-xs"></i></RadioItem
+					>
+				</RadioGroup>
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
-					<p id="nothingHere">Your assets:</p>
+					<p id="nothingHere" class="ml-2" use:popup={association}>Your assets:</p>
 				{:else}
-					<p id="nothingHere">
+					<p id="nothingHere" class="ml-2">
 						It doesn't look like you have any assets yet, click the <i class="fa-solid fa-plus"></i>
 						to get started
 					</p>
