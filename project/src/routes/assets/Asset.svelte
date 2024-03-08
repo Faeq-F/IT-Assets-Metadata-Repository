@@ -6,7 +6,7 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 
-	import { deleteDocument } from '$lib/apiRequests';
+	import { deleteDocument, fetchDocumentByID } from '$lib/apiRequests';
 	import ExpandedAsset from './ExpandedAsset.svelte';
 	import { highlight } from './keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';
@@ -102,7 +102,7 @@
 	<div class="m-0 mb-1 p-0">
 		<a
 			style="font-weight: 500"
-			class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
+			class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
 			href={link.startsWith('http') ? link : 'http://' + link}
 		>
 			<span><i class="fa-solid fa-paperclip"></i></span><span>{@html link}</span></a
@@ -119,9 +119,23 @@
 			{#if Array.isArray(value)}
 				{#each value as item}
 					<br />
-					<!-- eslint-disable svelte/no-at-html-tags-->
-					&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {@html highlight(item, keywordSearchInput)}
+					{#if (item + '').startsWith('DOCUMENT-ID: ')}
+						{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}d
+							&nbsp;&nbsp;&nbsp;&nbsp; ⦿ <span>Loading association</span>
+						{:then document}
+							&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {JSON.stringify(document)}
+						{/await}
+					{:else}
+						<!-- eslint-disable svelte/no-at-html-tags-->
+						&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {@html highlight(item, keywordSearchInput)}
+					{/if}
 				{/each}
+			{:else if (value + '').startsWith('DOCUMENT-ID: ')}
+				{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
+					<span>Loading association</span>
+				{:then document}
+					{JSON.stringify(document)}
+				{/await}
 			{:else}
 				<!-- eslint-disable svelte/no-at-html-tags-->
 				{@html highlight(value, keywordSearchInput)}

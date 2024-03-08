@@ -116,20 +116,20 @@
 			assetType: type,
 			metadataFields: metadataObject
 		};
-		console.log(assetObject);
-		// const data = new FormData();
-		// data.append('newData', JSON.stringify(assetObject));
-		// insertDocument('Asset', data).then((response) => {
-		// 	console.log(response);
-		// });
+
+		const data = new FormData();
+		data.append('newData', JSON.stringify(assetObject));
+		insertDocument('Asset', data).then((response) => {
+			console.log(response);
+		});
 
 		toastStore.trigger({
 			message: 'Asset created',
 			background: 'variant-ghost-success',
 			timeout: 3000
 		});
-		// Refresh the page
-		//location.reload();
+		//Refresh the page
+		location.reload();
 	}
 
 	function onDocumentSelection(event: any): void {

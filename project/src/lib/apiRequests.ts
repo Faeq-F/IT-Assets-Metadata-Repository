@@ -17,12 +17,8 @@ export const fetchDocuments = (collectionName: string) => {
  * @returns The fetched document
  */
 export const fetchDocumentByID = (id: string) => {
-
-	return fetch('http://localhost:5038/api/get/collection/'+collectionName+ '/document/'+ id)
+	return fetch('http://localhost:5038/api/get/document/'+ id)
 		.then((response) => { return response.json() })
-		.then((data) => {
-			return data;
-		});
 };
 
 /**

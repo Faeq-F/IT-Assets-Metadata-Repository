@@ -52,16 +52,20 @@ app.get(
 
 //▰▰▰▰▰▰▰▰▰
 
+//get a single document
 app.get(
 	'/api/get/document/:id',
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ id) => {
-			database.getCollectionNames().forEach(function (/** @type {string} */ collName) {
-				var doc = database
-					.getCollection(collName)
+			let collections = await database.listCollections().toArray();
+			for (let i of collections) {
+				let document = await database
+					.collection(i.name)
 					.findOne({ $expr: { $eq: ['$_id', { $toObjectId: id }] } });
-				if (doc != null) return doc.json();
-			});
+				if (document != null) {
+					return await document;
+				}
+			}
 		};
 		result(request.params.id.toString()).then((result) => response.send(result));
 	}
