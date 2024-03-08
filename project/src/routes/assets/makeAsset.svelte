@@ -8,7 +8,7 @@
 		activeTypes = assetTypeDocuments;
 	});
 
-	function makeAsset() {
+	async function makeAsset() {
 		//start by checking if the required fields are filled in
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;
 		var link = (document.getElementById('assetLink') as HTMLInputElement).value;
@@ -91,6 +91,37 @@
 		insertDocument('Asset', data).then((response) => {
 			console.log(response);
 		});
+
+		// fetching id of created asset from new Asset
+		var id;
+		const assets = await fetchDocuments('Asset');
+		for (let i of assets) {
+			if (i.assetName == name) {
+				id = i._id;
+			}
+		}
+
+		let diffs: any[] = [];
+		// constructing audit object
+		var auditObject = {
+			assetReference: id,
+			originalAsset: {
+				assetName: name,
+				assetLink: link,
+				assetType: type,
+				metadataFields: metadataObject
+			},
+			diffs: diffs
+		}
+		// sending new asset into diff
+		const audit = new FormData();
+		audit.append('newData', JSON.stringify(auditObject));
+
+		insertDocument('diff', audit).then((response) => {
+					console.log(response);
+				}).catch((err) => {
+					console.log(err);
+				});
 
 		toastStore.trigger({
 			message: 'Asset created',

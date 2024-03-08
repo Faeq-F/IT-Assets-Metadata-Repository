@@ -122,12 +122,6 @@
 			if (exists) {
 				// TODO: update existingAudits to append newdata into diffs
 				console.log("exists");
-			} else {
-				insertDocument('diff', audit).then((response) => {
-					console.log(response);
-				}).catch((err) => {
-					console.log(err);
-				});
 			}
 		})
 		
