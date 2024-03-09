@@ -4,7 +4,10 @@
 	export let list: boolean;
 	export let fieldName: string;
 	export let associationType: string;
+	export let presavedAssociation: any;
 	let addOptions = addAutocompleteOptions();
+
+	console.log(presavedAssociation);
 
 	async function addAutocompleteOptions() {
 		if (associationType == 'Asset') {
@@ -16,9 +19,7 @@
 						value: i._id,
 						meta: {
 							name: i.assetName,
-							extraDetail: i.assetType,
-							field: fieldName,
-							listable: list
+							extraDetail: i.assetType
 						}
 					});
 				}
@@ -33,9 +34,7 @@
 						value: i._id,
 						meta: {
 							name: i.username,
-							extraDetail: i.email,
-							field: fieldName,
-							listable: list
+							extraDetail: i.email
 						}
 					});
 				}
@@ -44,10 +43,7 @@
 		}
 	}
 
-	//import { createEventDispatcher } from 'svelte';
-	//const dispatch = createEventDispatcher();
 	function onDocumentSelection(event: CustomEvent<AutocompleteOption<string>>): void {
-		//dispatch('message', event);
 		if (list) {
 			savedAssociation = [...savedAssociation, event.detail];
 		} else {
@@ -61,8 +57,8 @@
 		);
 	}
 
-	let savedAssociation: any;
-	if (list) {
+	let savedAssociation: any = presavedAssociation;
+	if (list && presavedAssociation == undefined) {
 		savedAssociation = [];
 	}
 	let searchInput = '';
@@ -75,13 +71,18 @@
 		{#if list}
 			<p>Saved (This field is Multi-Value):</p>
 			{#if savedAssociation.length == 0}
-				Nothing saved
+				Nothing saved <button
+					on:click|preventDefault={() => {
+						savedAssociation = savedAssociation;
+					}}>(Refresh)</button
+				>
 			{:else}
 				<ul>
 					{#each savedAssociation as associationSaved}
 						<li
-							class="card w-6/12 shadow-md"
-							style="margin: 5px auto;"
+							class="card w-6/12 p-2 shadow-md"
+							style="margin: 5px;"
+							{...$$restProps}
 							data-associatedObject={JSON.stringify(associationSaved)}
 						>
 							{associationSaved.label}
@@ -102,8 +103,9 @@
 					Nothing saved
 				{:else}
 					<li
-						class="card block w-6/12 shadow-md"
-						style="margin: 5px auto;"
+						class="card block w-6/12 p-2 shadow-md"
+						style="margin: 5px;"
+						{...$$restProps}
 						data-associatedObject={JSON.stringify(savedAssociation)}
 					>
 						{savedAssociation.label}
@@ -130,7 +132,7 @@
 			: 'Search for an ' + associationType + ' to add'}
 	/>
 
-	<div class="card h-64 w-6/12 overflow-y-auto p-4" tabindex="-1" style="margin: 0 auto;">
+	<div class="card h-64 w-6/12 overflow-y-auto p-4" tabindex="-1" {...$$restProps}>
 		<Autocomplete
 			bind:input={searchInput}
 			options={documentOptions}

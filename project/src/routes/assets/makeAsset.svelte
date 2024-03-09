@@ -132,15 +132,6 @@
 		location.reload();
 	}
 
-	function onDocumentSelection(event: any): void {
-		console.log(
-			event.detail.detail.label,
-			event.detail.detail.value,
-			event.detail.detail.field,
-			event.detail.detail.listable
-		);
-	}
-
 	const requiredField: PopupSettings = {
 		event: 'hover',
 		target: 'requiredField',
@@ -248,7 +239,8 @@
 									fieldName={field.field}
 									list={field.list}
 									associationType={'User'}
-									on:message={onDocumentSelection}
+									presavedAssociation={undefined}
+									style="margin: 5px auto;"
 								/>
 								<br /><br />
 							{:else if field.dataType == 'Asset'}
@@ -256,7 +248,8 @@
 									fieldName={field.field}
 									list={field.list}
 									associationType={'Asset'}
-									on:message={onDocumentSelection}
+									presavedAssociation={undefined}
+									style="margin: 5px auto;"
 								/>
 								<br /><br />
 							{/if}
