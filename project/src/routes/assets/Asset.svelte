@@ -116,16 +116,21 @@
 		<!-- metadata -->
 		{#each Object.entries(metadata) as [field, value]}
 			<!-- eslint-disable svelte/no-at-html-tags-->
-			⦿ {@html highlight(field, keywordSearchInput)}:
 			{#if Array.isArray(value)}
+				⦿ {@html highlight(field, keywordSearchInput)}:
 				{#each value as item}
 					<br />
 					{#if (item + '').startsWith('DOCUMENT-ID: ')}
 						{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}
-							&nbsp;&nbsp;&nbsp;&nbsp; ⦿ <span>Loading association</span>
+							&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+							<span>Loading association</span>
 						{:then document}
-							&nbsp;&nbsp;&nbsp;&nbsp; ⦿
-							<AssociationCard {document} />
+							&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+							{#if Object.keys(document).length == 0}
+								<span style="color: red; font-weight: bold;">Deleted item</span>
+							{:else}
+								<AssociationCard {document} />
+							{/if}
 						{/await}
 					{:else}
 						<!-- eslint-disable svelte/no-at-html-tags-->
@@ -133,12 +138,19 @@
 					{/if}
 				{/each}
 			{:else if (value + '').startsWith('DOCUMENT-ID: ')}
+				<i class="fa-solid fa-stroopwafel"></i>
+				{@html highlight(field, keywordSearchInput)}:
 				{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
 					<span>Loading association</span>
 				{:then document}
-					<AssociationCard {document} {keywordSearchInput} />
+					{#if Object.keys(document).length == 0}
+						<span style="color: red; font-weight: bold;">Deleted item</span>
+					{:else}
+						<AssociationCard {document} {keywordSearchInput} />
+					{/if}
 				{/await}
 			{:else}
+				⦿ {@html highlight(field, keywordSearchInput)}:
 				<!-- eslint-disable svelte/no-at-html-tags-->
 				{@html highlight(value, keywordSearchInput)}
 			{/if}

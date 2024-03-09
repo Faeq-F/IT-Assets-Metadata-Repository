@@ -66,6 +66,7 @@ app.get(
 					return await document;
 				}
 			}
+			return {};
 		};
 		result(request.params.id.toString()).then((result) => response.send(result));
 	}

@@ -72,26 +72,38 @@
 </svelte:head>
 
 <div class="card z-[9999] p-4" data-popup="association">
-	An item annotated with <i class="fa-solid fa-bars-staggered"></i> refers to Users & Assets on the
+	An item annotated with <i class="fa-solid fa-stroopwafel"></i> refers to Users & Assets on the
 	system
 	<div class="arrow card" />
 </div>
 
-<h1 class="h1">Assets</h1>
+<h1 class="h1" use:popup={association}>Assets</h1>
 <br />
 <div>
 	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				<RadioGroup background="bg-modern-50 border-modern-500 border-2 text-sm" class="h-8">
-					<RadioItem bind:group={viewType} name="grid" class="h-4" value={0}
-						><i class="fa-solid fa-grip fa-xs m-0 -mt-8 p-0"></i></RadioItem
-					>
-					<RadioItem bind:group={viewType} name="list" class="h-4" value={1}
-						><i class="fa-solid fa-list-ul fa-xs"></i></RadioItem
-					>
-				</RadioGroup>
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
+					<RadioGroup
+						background="transparent"
+						class="text-token max-h-8  text-sm"
+						active="variant-soft"
+						hover="hover:variant-soft-primary"
+						border="border-2 border-modern-500"
+					>
+						<RadioItem bind:group={viewType} name="grid" value={0} class="h-4"
+							><i
+								class="fa-solid fa-grip fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+						<RadioItem bind:group={viewType} name="list" value={1} class="h-4"
+							><i
+								class="fa-solid fa-list-ul fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+					</RadioGroup>
 					<p id="nothingHere" class="ml-2" use:popup={association}>Your assets:</p>
 				{:else}
 					<p id="nothingHere" class="ml-2">
@@ -102,12 +114,11 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<!--Search by keyword bar-->
-				<div class="border-modern-500 inline max-h-8 rounded-full border-2 bg-white">
+				<div class="border-modern-500 inline max-h-8 rounded-full border-2">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
 					<InputChip
 						bind:value={keywordSearchInput}
-						type="text"
 						id="keyword"
 						name="keyword"
 						placeholder="Enter search terms"
