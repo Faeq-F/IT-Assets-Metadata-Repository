@@ -3,6 +3,7 @@
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	import InputAssociation from './InputAssociation.svelte';
 	import Asset from './Asset.svelte';
+	import InputList from './InputList.svelte';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
@@ -117,11 +118,13 @@
 			metadataFields: metadataObject
 		};
 
-		const data = new FormData();
-		data.append('newData', JSON.stringify(assetObject));
-		insertDocument('Asset', data).then((response) => {
-			console.log(response);
-		});
+		console.log(assetObject);
+
+		// const data = new FormData();
+		// data.append('newData', JSON.stringify(assetObject));
+		// insertDocument('Asset', data).then((response) => {
+		// 	console.log(response);
+		// });
 
 		toastStore.trigger({
 			message: 'Asset created',
@@ -129,7 +132,7 @@
 			timeout: 3000
 		});
 		//Refresh the page
-		location.reload();
+		//location.reload();
 	}
 
 	const requiredField: PopupSettings = {
@@ -200,13 +203,13 @@
 							<div class="p-4 text-center">{field.field}</div>
 							{#if field.dataType == 'Text'}
 								{#if field.list == true}
-									<input
-										type="text"
-										placeholder="Enter multiple bits of text, separate them with commas (', ')"
-										class="input w-96"
-										id={field.field}
-										name={field.field}
-									/><br /><br />
+									<InputList
+										fieldName={field.field}
+										dataType="text"
+										presavedValues={undefined}
+										style="margin: 5px auto;"
+									/>
+									<br /><br />
 								{:else}
 									<input
 										type="text"
@@ -218,12 +221,11 @@
 								{/if}
 							{:else if field.dataType == 'Number'}
 								{#if field.list == true}
-									<input
-										type="text"
-										placeholder="Enter multiple numbers, separate them with commas (', ')"
-										class="input w-96"
-										id={field.field}
-										name={field.field}
+									<InputList
+										fieldName={field.field}
+										dataType="number"
+										presavedValues={undefined}
+										style="margin: 5px auto;"
 									/><br /><br />
 								{:else}
 									<input

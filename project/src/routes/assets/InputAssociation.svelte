@@ -7,8 +7,6 @@
 	export let presavedAssociation: any;
 	let addOptions = addAutocompleteOptions();
 
-	console.log(presavedAssociation);
-
 	async function addAutocompleteOptions() {
 		if (associationType == 'Asset') {
 			return await fetchDocuments('Asset').then((documents) => {
@@ -125,7 +123,6 @@
 		id={fieldName + '-association'}
 		class="input w-6/12"
 		type="search"
-		name="demo"
 		bind:value={searchInput}
 		placeholder={list
 			? 'Search for multiple ' + associationType + 's to add'
