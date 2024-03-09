@@ -2,7 +2,6 @@
 	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	import InputAssociation from './InputAssociation.svelte';
-	import Asset from './Asset.svelte';
 	import InputList from './InputList.svelte';
 	const toastStore = getToastStore();
 
@@ -44,45 +43,36 @@
 		let metadataInputs = metadataForm.getElementsByTagName('input');
 		var metadataObject = {};
 		for (let i of metadataInputs) {
-			let key = i.id.replace('-association', '');
+			let key = i.id.replace('-association', '').replace('-InputList', '');
 			let value;
-			//check if the field is a list
-			if (i.placeholder.includes('multiple')) {
-				//if so, separate the values
-				value = i.value.split(', ');
-				let newArr: any[] = [];
-				// check if cast required for numbers
-				if (i.placeholder.includes('number')) {
-					for (let i in value) {
-						if (value[i] == '') {
-							break;
-						}
-						if (Number.isNaN(parseFloat(value[i]))) {
-							toastStore.trigger({
-								message: 'You tried submitting text as a number!',
-								background: 'variant-ghost-error',
-								timeout: 3000
-							});
-							return;
-						}
-						newArr[i] = parseFloat(value[i]);
+			//check if the field is a list of numbers or text
+			if (i.id.includes('InputList')) {
+				//if so, get the elements with the values
+				let collection = document
+					.getElementById(key + '-ListInputCollector')
+					?.getElementsByTagName('li');
+				if (collection) {
+					let newArr: any[] = [];
+					for (let j of collection) {
+						let iVal: any = (j as HTMLLIElement).innerHTML;
+						if (!i.placeholder.includes('strings of text')) iVal = parseFloat(iVal);
+						newArr.push(iVal);
 					}
-				} else if (i.placeholder.includes('text')) {
-					for (let i in value) {
-						newArr[i] = value[i];
-					}
-				} else {
-					let item = document
-						.getElementById(key + '-associationCollector')
-						?.getElementsByTagName('LI');
-					if (item) {
-						for (let i of item) {
-							let object = (i as HTMLElement).dataset.associatedobject;
-							if (object) newArr.push('DOCUMENT-ID: ' + JSON.parse(object).value);
-						}
-					}
+					value = newArr;
 				}
-				value = newArr;
+			} else if (i.placeholder.includes('Search for multiple')) {
+				//the input is for a list of associations
+				let item = document
+					.getElementById(key + '-associationCollector')
+					?.getElementsByTagName('LI');
+				if (item) {
+					let newArr = [];
+					for (let j of item) {
+						let object = (j as HTMLElement).dataset.associatedobject;
+						if (object) newArr.push('DOCUMENT-ID: ' + JSON.parse(object).value);
+					}
+					value = newArr;
+				}
 			} else {
 				if (i.placeholder.includes('number')) {
 					if (!(i.value == '')) {
@@ -118,13 +108,11 @@
 			metadataFields: metadataObject
 		};
 
-		console.log(assetObject);
-
-		// const data = new FormData();
-		// data.append('newData', JSON.stringify(assetObject));
-		// insertDocument('Asset', data).then((response) => {
-		// 	console.log(response);
-		// });
+		const data = new FormData();
+		data.append('newData', JSON.stringify(assetObject));
+		insertDocument('Asset', data).then((response) => {
+			console.log(response);
+		});
 
 		toastStore.trigger({
 			message: 'Asset created',
@@ -132,7 +120,7 @@
 			timeout: 3000
 		});
 		//Refresh the page
-		//location.reload();
+		location.reload();
 	}
 
 	const requiredField: PopupSettings = {
