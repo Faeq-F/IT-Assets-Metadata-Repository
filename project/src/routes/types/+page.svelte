@@ -13,6 +13,7 @@
 	import Type from './Type.svelte';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
+	import Placeholder from '$lib/components/placeholder.svelte';
 
 	let role = Cookies.get('savedLogin-role');
 
@@ -71,11 +72,19 @@
 </div>
 
 <div class="typesContainer">
-	{#if AssetTypesDocuments != undefined}
+	{#await fetchDocuments('AssetType')}
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+	{:then AssetTypesDocuments}
 		{#each AssetTypesDocuments as type}
 			<Type id={type._id} typeName={type.typeName} metadataFields={type.metadataFields} />
 		{/each}
-	{/if}
+	{/await}
 </div>
 
 <style>
