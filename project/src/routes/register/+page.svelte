@@ -26,13 +26,13 @@
 	const form = useForm();
 	const requiredMsg = 'This field is required';
 
-	let emailTaken = true;
+	let emailTaken = false;
 	function checkValidEmail() {
 		let email = (document.getElementById('email') as HTMLInputElement).value;
 		duplicateEmail(email).then((taken) => (emailTaken = taken));
 	}
 
-	let usernameTaken = true;
+	let usernameTaken = false;
 	function checkValidUsername() {
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		duplicateUsername(username).then((taken) => (usernameTaken = taken));
