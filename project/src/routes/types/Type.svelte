@@ -1,4 +1,6 @@
 <script lang="ts">
+	//@ts-ignore
+	import { page } from '$app/stores'; //Does work
 	import {
 		getModalStore,
 		getToastStore,
@@ -60,6 +62,20 @@
 		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
 	>
 		<div class="">
+			<button
+				class="variant-filled-surface btn btn-sm card-hover m-1"
+				on:click={() => {
+					navigator.clipboard.writeText($page.url.origin + '/shared?type=' + id);
+					toastStore.trigger({
+						message: 'Copied link',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+				}}
+			>
+				<span><i class="fa-solid fa-share-nodes"></i></span>
+				<span>Share</span>
+			</button>
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
 				on:click={() => modalStore.trigger(expandModal)}

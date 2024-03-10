@@ -1,13 +1,21 @@
 <script lang="ts">
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
+	//@ts-ignore
+	import { page } from '$app/stores'; //Does work
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
 	import { deleteDocument, fetchDocuments } from '$lib/apiRequests';
 	import UpdateAccount from './updateAccount.svelte';
-	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import {
+		getModalStore,
+		getToastStore,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
 	import ExpandedUser from './ExpandedUser.svelte';
+	const toastStore = getToastStore();
 
 	let userDoc: any;
 	let expandedUser: ModalComponent;
@@ -72,6 +80,19 @@
 <h1 class="h1">Your account</h1>
 <br /><br />
 <div id="profile" class="card bg-modern-50 m-7 h-1/2 w-11/12 text-center shadow-md">
+	<button
+		class="variant-filled-surface btn btn-sm card-hover absolute right-2 top-2 m-1"
+		on:click={() => {
+			navigator.clipboard.writeText($page.url.origin + '/shared?user=' + userDoc._id);
+			toastStore.trigger({
+				message: 'Copied link',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
+		}}
+	>
+		<span><i class="fa-solid fa-share-nodes"></i></span>
+	</button>
 	<br />
 	<h3 class="h3 text-center">
 		Username: <button on:click={() => modalStore.trigger(expandUser)}
