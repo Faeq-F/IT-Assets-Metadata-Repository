@@ -2,8 +2,13 @@
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import InputAssociation from './InputAssociation.svelte';
-
+	import InputList from './InputList.svelte';
 	const toastStore = getToastStore();
+	toastStore.trigger({
+		message: 'You may have to refresh association lists',
+		background: 'variant-ghost-warning',
+		timeout: 3000
+	});
 
 	export let id: string;
 	export let assetName: string;
@@ -32,74 +37,95 @@
 		let metadataObject = {};
 		let inputs = document.getElementById('metadataFieldsDiv')?.getElementsByTagName('input');
 		if (inputs) {
-			let currentListName = '';
-			let currentList = [];
-			for (let i of inputs) {
-				let input = i;
-				if (input.previousSibling) {
-					if (input.previousSibling.nodeValue?.includes('⦿')) {
-						// i is an input for a list
-						if (input.previousSibling.previousSibling?.previousSibling?.nodeName == '#text') {
-							if (currentList.length > 0 && currentListName != '') {
-								metadataObject = {
-									...metadataObject,
-									[currentListName]: currentList
-								};
-								currentListName = '';
-								currentList = [];
-							}
-							//@ts-ignore
-							currentListName =
-								//@ts-ignore
-								input.previousSibling.previousSibling?.previousSibling?.previousSibling
-									.previousSibling?.previousSibling?.nodeValue;
-							currentList = [];
-							if (i.value == '') {
-								emptyFieldAlert();
-								return;
-							}
-							currentList.push(i.value);
-						} else {
-							if (i.value == '') {
-								emptyFieldAlert();
-								return;
-							}
-							currentList.push(i.value);
+			for (let input of inputs) {
+				//input is for a list of text or numbers
+				if (input.id.endsWith('-InputList')) {
+					//get the elements with the values of the list
+					let collection = document
+						.getElementById(input.id.replace('-InputList', '') + '-ListInputCollector')
+						?.getElementsByTagName('li');
+					if (collection) {
+						// save each value in an array
+						let listArr: any[] = [];
+						for (let j of collection) {
+							//get the value from the element
+							let iVal: any = (j as HTMLLIElement).innerHTML;
+							//parse it as a number, if needed
+							if (input.type != 'text') iVal = parseFloat(iVal);
+							//save to array
+							listArr.push(iVal);
 						}
-					} else {
-						if (currentList.length > 0 && currentListName != '') {
-							metadataObject = {
-								...metadataObject,
-								[currentListName]: currentList
-							};
-							currentListName = '';
-							currentList = [];
-						}
-						if (i.value == '') {
-							emptyFieldAlert();
-							return;
-						}
-						//The field name + its value
+						//save the list of values as the value for the field
 						metadataObject = {
 							...metadataObject,
-							//@ts-ignore
-							[input.previousSibling.previousSibling?.nodeValue]: i.value
+							[input.id.replace('-InputList', '')]: listArr
 						};
+					}
+				} else if (input.id.endsWith('-association')) {
+					if (input.placeholder.includes('multiple')) {
+						// The input is for a list of associations
+						let items = document
+							.getElementById(input.id.replace('-association', '') + '-associationCollector')
+							?.getElementsByTagName('LI');
+						//items is a list of saved associations from the custom input
+						if (items) {
+							let associationArr = [];
+							for (let j of items) {
+								//save each association in a list
+								let object = (j as HTMLElement).dataset.associatedobject;
+								if (object) associationArr.push('DOCUMENT-ID: ' + JSON.parse(object).value);
+							}
+							//save the list of associations as the value for the field
+							metadataObject = {
+								...metadataObject,
+								[input.id.replace('-association', '')]: associationArr
+							};
+						}
+					} else {
+						// The input is for a single association
+						let item = document
+							.getElementById(input.id.replace('-association', '') + '-associationCollector')
+							?.getElementsByTagName('LI');
+						//item is the saved association from the custom input
+						if (!(item == undefined || item.length == 0)) {
+							let liItem = (item[0] as HTMLElement).dataset.associatedobject;
+							//save the association
+							if (liItem)
+								metadataObject = {
+									...metadataObject,
+									[input.id.replace('-association', '')]: 'DOCUMENT-ID: ' + JSON.parse(liItem).value
+								};
+						}
+					}
+				} else {
+					if (input.type == 'text') {
+						// The input is a normal field for a single string of text
+						metadataObject = { ...metadataObject, [input.id]: input.value };
+					} else {
+						// The input is a normal field for a single number
+						metadataObject = { ...metadataObject, [input.id]: parseFloat(input.value) };
 					}
 				}
 			}
 		}
+
 		var assetObject = {
 			assetName: NewAssetName,
 			assetLink: NewAssetLink,
 			assetType: assetType,
 			metadataFields: metadataObject
 		};
+
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
 		updateDocument('Asset', id, data).then((response) => {
-			console.log(response);
 			location.reload();
+			console.log(response);
+			toastStore.trigger({
+				message: 'Asset updated',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
 			modalStore.close();
 		});
 	}
@@ -205,17 +231,10 @@
 										/>
 									{/if}
 								{/await}
+							{:else if typeof value[0] === 'string'}
+								<InputList fieldName={field} dataType="text" presavedValues={value} />
 							{:else}
-								{#each value as item}
-									<br />
-									&nbsp;&nbsp;&nbsp;&nbsp; ⦿
-									{#if typeof item === 'string'}
-										<input type="text" placeholder={item} class="input w-96" value={item} />
-									{:else}
-										<input type="number" placeholder={'' + item} class="input w-96" value={item} />
-									{/if}
-									<br />
-								{/each}
+								<InputList fieldName={field} dataType="number" presavedValues={value} />
 							{/if}
 						{/if}
 					{:else if typeof value === 'string'}
@@ -258,10 +277,10 @@
 								{/if}
 							{/await}
 						{:else}
-							<input type="text" placeholder={value} class="input w-96" {value} />
+							<input id={field} type="text" placeholder={value} class="input w-96" {value} />
 						{/if}
 					{:else}
-						<input type="number" placeholder={'' + value} class="input w-96" {value} />
+						<input id={field} type="number" placeholder={'' + value} class="input w-96" {value} />
 					{/if}
 					<br />
 				{/each}
@@ -277,6 +296,6 @@
 		}}>Update</button
 	>
 	<button class="variant-filled-primary btn absolute m-2" on:click={() => modalStore.close()}
-		>Close</button
+		>Cancel</button
 	>
 </div>
