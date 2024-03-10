@@ -2,7 +2,6 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import AssociationCard from './AssociationCard.svelte';
-	import { highlight } from './keywordSearch';
 
 	export let id: string;
 	export let assetName: string;
@@ -87,6 +86,7 @@
 </div>
 
 <button
+	{...$$restProps}
 	class="variant-filled-primary btn absolute bottom-3 right-3"
 	on:click={() => modalStore.close()}>Close</button
 >

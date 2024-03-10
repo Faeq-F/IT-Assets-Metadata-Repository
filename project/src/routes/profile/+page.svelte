@@ -7,6 +7,11 @@
 	import { deleteDocument, fetchDocuments } from '$lib/apiRequests';
 	import UpdateAccount from './updateAccount.svelte';
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import ExpandedUser from './ExpandedUser.svelte';
+
+	let userDoc: any;
+	let expandedUser: ModalComponent;
+	let expandUser: ModalSettings;
 
 	onMount(() => {
 		if (browser) {
@@ -14,22 +19,40 @@
 		}
 	});
 
+	onMount(async () => {
+		await fetchDocuments('User').then((Users) => {
+			for (let i of Users) {
+				if (i.username == Cookies.get('savedLogin-username')) {
+					userDoc = i;
+				}
+			}
+		});
+		expandedUser = {
+			ref: ExpandedUser,
+			props: {
+				id: userDoc._id,
+				username: userDoc.username,
+				email: userDoc.email,
+				role: userDoc.role
+			}
+		};
+		expandUser = {
+			type: 'component',
+			component: expandedUser,
+			backdropClasses: '!p-0'
+		};
+	});
+
 	const modalStore = getModalStore();
-	const modalComponent: ModalComponent = { ref: UpdateAccount };
-	const modal: ModalSettings = {
+	const updateComponent: ModalComponent = { ref: UpdateAccount };
+	const updateModal: ModalSettings = {
 		type: 'component',
-		component: modalComponent
+		component: updateComponent
 	};
 
 	function deleteAccount() {
-		fetchDocuments('User').then((Users) => {
-			for (let i of Users) {
-				if (i.username == Cookies.get('savedLogin-username')) {
-					deleteDocument('User', i._id).then(() => {
-						logOut();
-					});
-				}
-			}
+		deleteDocument('User', userDoc._id).then(() => {
+			logOut();
 		});
 	}
 
@@ -48,9 +71,13 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card m-7 h-1/2 w-11/12 bg-modern-50 text-center shadow-md">
+<div id="profile" class="card bg-modern-50 m-7 h-1/2 w-11/12 text-center shadow-md">
 	<br />
-	<h3 class="h3 text-center">Username: {Cookies.get('savedLogin-username')}</h3>
+	<h3 class="h3 text-center">
+		Username: <button on:click={() => modalStore.trigger(expandUser)}
+			>{Cookies.get('savedLogin-username')}</button
+		>
+	</h3>
 	<h3 class="h4 inline text-center">Role: {Cookies.get('savedLogin-role')}</h3>
 	{#if Cookies.get('savedLogin-role') == 'admin'}
 		<a
@@ -63,7 +90,7 @@
 	{/if}
 	<br />
 	<br />
-	<button class="variant-filled-primary btn w-52" on:click={() => modalStore.trigger(modal)}
+	<button class="variant-filled-primary btn w-52" on:click={() => modalStore.trigger(updateModal)}
 		>Update Account details</button
 	>
 	<br />
