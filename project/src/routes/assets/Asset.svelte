@@ -6,13 +6,15 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 
-	import { deleteDocument, fetchDocumentByID } from '$lib/apiRequests';
+	import { deleteDocument, fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import ExpandedAsset from './ExpandedAsset.svelte';
 	import { highlight } from './keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';
 	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
 	import AssociationCard from './AssociationCard.svelte';
+	import ExpandedType from '../types/ExpandedType.svelte';
+	import { onMount } from 'svelte';
 
 	export let name: string;
 	export let id: string;
@@ -20,6 +22,31 @@
 	export let type: string;
 	export let metadata: any;
 	export let keywordSearchInput: string[] = [];
+
+	let expandTypeModalComponent: ModalComponent;
+	let expandType: ModalSettings;
+
+	onMount(async () => {
+		fetchDocuments('AssetType').then((docs) => {
+			for (let i of docs) {
+				if (i.typeName == type) {
+					expandTypeModalComponent = {
+						ref: ExpandedType,
+						props: {
+							id: i._id,
+							typeName: i.typeName,
+							metadataFields: i.metadataFields
+						}
+					};
+					expandType = {
+						type: 'component',
+						component: expandTypeModalComponent,
+						backdropClasses: '!p-0'
+					};
+				}
+			}
+		});
+	});
 
 	let role = Cookies.get('savedLogin-role');
 	const modalStore = getModalStore();
@@ -110,7 +137,10 @@
 		>
 	</div>
 
-	<div style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</div>
+	<button
+		on:click={() => modalStore.trigger(expandType)}
+		style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</button
+	>
 	<hr />
 	<div class="ml-2 mt-1">
 		<!-- metadata -->
