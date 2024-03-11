@@ -11,11 +11,11 @@
 	import ExpandedAsset from './ExpandedAsset.svelte';
 	import { highlight } from '../../lib/scripts/keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';
-	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
 	import AssociationCard from '../../lib/components/AssociationCard.svelte';
 	import ExpandedType from '../types/ExpandedType.svelte';
 	import { onMount } from 'svelte';
+	const toastStore = getToastStore();
 
 	export let name: string;
 	export let id: string;
@@ -23,6 +23,7 @@
 	export let type: string;
 	export let metadata: any;
 	export let keywordSearchInput: string[] = [];
+	export let viewType: number;
 
 	let expandTypeModalComponent: ModalComponent;
 	let expandType: ModalSettings;
@@ -86,7 +87,11 @@
 	let showMenu = 'none';
 </script>
 
-<div id="Asset" class="card card-hover bg-modern-50 drop-shadow-md">
+<div
+	id="Asset"
+	class="card card-hover bg-modern-50 drop-shadow-md"
+	style={viewType != 0 ? 'width: 100%;' : ''}
+>
 	<!--Popup menu-->
 	<div
 		id="menuPopup"
@@ -156,52 +161,54 @@
 		on:click={() => modalStore.trigger(expandType)}
 		style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</button
 	>
-	<hr />
-	<div class="ml-2 mt-1">
-		<!-- metadata -->
-		{#each Object.entries(metadata) as [field, value]}
-			<!-- eslint-disable svelte/no-at-html-tags-->
-			{#if Array.isArray(value)}
-				⦿ {@html highlight(field, keywordSearchInput)}:
-				{#each value as item}
-					<br />
-					{#if (item + '').startsWith('DOCUMENT-ID: ')}
-						{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}
-							&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
-							<span>Loading association</span>
-						{:then document}
-							&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
-							{#if Object.keys(document).length == 0}
-								<span style="color: red; font-weight: bold;">Deleted item</span>
-							{:else}
-								<AssociationCard {document} />
-							{/if}
-						{/await}
-					{:else}
-						<!-- eslint-disable svelte/no-at-html-tags-->
-						&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {@html highlight(item, keywordSearchInput)}
-					{/if}
-				{/each}
-			{:else if (value + '').startsWith('DOCUMENT-ID: ')}
-				<i class="fa-solid fa-stroopwafel"></i>
-				{@html highlight(field, keywordSearchInput)}:
-				{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
-					<span>Loading association</span>
-				{:then document}
-					{#if Object.keys(document).length == 0}
-						<span style="color: red; font-weight: bold;">Deleted item</span>
-					{:else}
-						<AssociationCard {document} {keywordSearchInput} />
-					{/if}
-				{/await}
-			{:else}
-				⦿ {@html highlight(field, keywordSearchInput)}:
+	{#if viewType == 0}
+		<hr />
+		<div class="ml-2 mt-1">
+			<!-- metadata -->
+			{#each Object.entries(metadata) as [field, value]}
 				<!-- eslint-disable svelte/no-at-html-tags-->
-				{@html highlight(value, keywordSearchInput)}
-			{/if}
-			<br />
-		{/each}
-	</div>
+				{#if Array.isArray(value)}
+					⦿ {@html highlight(field, keywordSearchInput)}:
+					{#each value as item}
+						<br />
+						{#if (item + '').startsWith('DOCUMENT-ID: ')}
+							{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}
+								&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+								<span>Loading association</span>
+							{:then document}
+								&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+								{#if Object.keys(document).length == 0}
+									<span style="color: red; font-weight: bold;">Deleted item</span>
+								{:else}
+									<AssociationCard {document} />
+								{/if}
+							{/await}
+						{:else}
+							<!-- eslint-disable svelte/no-at-html-tags-->
+							&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {@html highlight(item, keywordSearchInput)}
+						{/if}
+					{/each}
+				{:else if (value + '').startsWith('DOCUMENT-ID: ')}
+					<i class="fa-solid fa-stroopwafel"></i>
+					{@html highlight(field, keywordSearchInput)}:
+					{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
+						<span>Loading association</span>
+					{:then document}
+						{#if Object.keys(document).length == 0}
+							<span style="color: red; font-weight: bold;">Deleted item</span>
+						{:else}
+							<AssociationCard {document} {keywordSearchInput} />
+						{/if}
+					{/await}
+				{:else}
+					⦿ {@html highlight(field, keywordSearchInput)}:
+					<!-- eslint-disable svelte/no-at-html-tags-->
+					{@html highlight(value, keywordSearchInput)}
+				{/if}
+				<br />
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>

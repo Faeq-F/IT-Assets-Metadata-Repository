@@ -17,6 +17,7 @@
 	export let id: string;
 	export let typeName: string;
 	export let metadataFields: any[];
+	export let viewType: number;
 
 	let role = Cookies.get('savedLogin-role');
 
@@ -40,7 +41,6 @@
 		backdropClasses: '!p-0'
 	};
 
-
 	async function deleteAssetType() {
 		await deleteDocument('AssetType', id);
 		toastStore.trigger({
@@ -55,7 +55,11 @@
 	let showMenu = 'none';
 </script>
 
-<div id="Type" class="card card-hover bg-modern-50 drop-shadow-md">
+<div
+	id="Type"
+	class="card card-hover bg-modern-50 drop-shadow-md"
+	style={viewType != 0 ? 'width: 100%;' : ''}
+>
 	<div
 		id="menuPopup"
 		class="card card-hover p-3 drop-shadow-md"
@@ -109,18 +113,20 @@
 	<div class="h3" style="margin:10px; font-weight: bold;">
 		{typeName}
 	</div>
-	<div style="margin: 10px; font-weight: 500">Fields required:</div>
-	<ul>
-		{#each metadataFields as field}
-			<li>
-				⦿ {field.field}
-				<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
-				{#if field.list}
-					<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
-				{/if}
-			</li>
-		{/each}
-	</ul>
+	{#if viewType == 0}
+		<div style="margin: 10px; font-weight: 500">Fields required:</div>
+		<ul>
+			{#each metadataFields as field}
+				<li>
+					⦿ {field.field}
+					<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
+					{#if field.list}
+						<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
+					{/if}
+				</li>
+			{/each}
+		</ul>
+	{/if}
 </div>
 
 <style>

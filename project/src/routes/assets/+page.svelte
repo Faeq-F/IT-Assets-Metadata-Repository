@@ -168,6 +168,7 @@
 			{:then shouldShow}
 				{#if shouldShow && (filters.includes(asset.assetType) || filters.length == 0)}
 					<Asset
+						{viewType}
 						id={asset._id}
 						name={highlight(asset.assetName, keywordSearchInput)}
 						link={highlight(asset.assetLink, keywordSearchInput)}
