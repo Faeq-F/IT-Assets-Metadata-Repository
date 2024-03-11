@@ -2,8 +2,9 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 
 	export let id: string;
-	export let typeName: string;
-	export let metadataFields: any[];
+	export let username: string;
+	export let email: string;
+	export let role: string;
 
 	const modalStore = getModalStore();
 </script>
@@ -14,22 +15,12 @@
 			<i style="font-size: 1.7em;" class=" fa-solid fa-fingerprint inline"></i>
 			<p class="h3 mt-1 inline">{id}</p>
 		</div>
-		<div class=" ml-14">
+		<div class="ml-14">
 			<div class="h1" style="margin:10px; font-weight: bold;">
-				{typeName}
+				{username}
 			</div>
-			<div style="margin: 10px; font-weight: 500" class=" text-lg">Fields required:</div>
-			<ul class="text-md">
-				{#each metadataFields as field}
-					<li class="mb-1">
-						&nbsp;&nbsp;&nbsp;&nbsp;⦿ {field.field}
-						<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
-						{#if field.list}
-							<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
-						{/if}
-					</li>
-				{/each}
-			</ul>
+			<div style="margin: 10px; font-weight: 500" class=" text-lg">{email}</div>
+			<div style="margin: 10px; font-weight: 500" class=" text-md">{role}</div>
 		</div>
 	</div>
 </div>
