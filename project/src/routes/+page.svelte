@@ -63,7 +63,8 @@
 		/>
 	</label>
 	<br />
-	<button class="variant-filled-primary btn w-52" on:click={loginUser}>Log in</button>
+	<button class="variant-filled-primary btn w-52" on:click|preventDefault={loginUser}>Log in</button
+	>
 	<a href="/register">
 		<button class="variant-filled-primary btn w-52">Sign up</button>
 	</a>
