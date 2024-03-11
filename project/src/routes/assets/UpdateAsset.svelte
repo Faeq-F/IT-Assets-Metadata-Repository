@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
-	import InputAssociation from './InputAssociation.svelte';
-	import InputList from './InputList.svelte';
+	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
+	import InputList from '../../lib/components/customInputs/InputList.svelte';
 	const toastStore = getToastStore();
 	toastStore.trigger({
 		message: 'You may have to refresh association lists',

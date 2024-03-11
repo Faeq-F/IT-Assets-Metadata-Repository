@@ -10,16 +10,15 @@
 	import ExpandedType from './ExpandedType.svelte';
 	import { deleteDocument } from '$lib/apiRequests';
 	import UpdateType from './UpdateType.svelte';
-	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
+	const toastStore = getToastStore();
+	const modalStore = getModalStore();
 
 	export let id: string;
 	export let typeName: string;
 	export let metadataFields: any[];
 
 	let role = Cookies.get('savedLogin-role');
-
-	const modalStore = getModalStore();
 
 	const expandModalComponent: ModalComponent = {
 		ref: ExpandedType,
@@ -40,6 +39,7 @@
 		component: updateModalComponent,
 		backdropClasses: '!p-0'
 	};
+
 
 	async function deleteAssetType() {
 		await deleteDocument('AssetType', id);

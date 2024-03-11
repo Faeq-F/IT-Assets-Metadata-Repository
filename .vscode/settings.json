@@ -21,5 +21,5 @@
     "project/tsconfig.json": true,
     "project/rollup.config.js": true
   },
-  "cSpell.words": ["Mongoclient", "skeletonlabs", "Teamproject"]
+  "cSpell.words": ["Mongoclient", "pcss", "skeletonlabs", "Teamproject"]
 }

@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import { fetchDocuments } from '$lib/apiRequests';
-	import { hashCode } from './register/validate';
+	import { hashCode } from '../lib/scripts/validate';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 	import { redirectWhenLoginSaved } from '$lib/scripts/loginSaved';
 	redirectWhenLoginSaved();
 
+	/**
+	 *
+	 */
 	function loginUser() {
 		fetchDocuments('User').then((userDocuments) => {
 			let username = (document.getElementById('username') as HTMLInputElement).value;

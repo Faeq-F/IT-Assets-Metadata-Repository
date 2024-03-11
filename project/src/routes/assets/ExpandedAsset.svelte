@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { fetchDocumentByID } from '$lib/apiRequests';
-	import AssociationCard from './AssociationCard.svelte';
+	import AssociationCard from '../../lib/components/AssociationCard.svelte';
 
 	export let id: string;
 	export let assetName: string;

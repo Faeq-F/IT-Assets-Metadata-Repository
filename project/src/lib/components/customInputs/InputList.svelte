@@ -39,7 +39,7 @@
 		<ul>
 			{#each listOfValues as item}
 				<li
-					class="card w-6/12 p-2 shadow-md"
+					class="card variant-ringed w-6/12 p-2 shadow-md"
 					style="margin: 5px;"
 					{...$$restProps}
 					data-itemSaved={item}

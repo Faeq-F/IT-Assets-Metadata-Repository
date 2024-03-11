@@ -6,7 +6,7 @@
 		containNumbers,
 		hashCode,
 		duplicateUsername
-	} from '../register/validate';
+	} from '../../lib/scripts/validate';
 	import Cookies from 'js-cookie';
 	//import { getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';

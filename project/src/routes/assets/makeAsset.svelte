@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
-	import InputAssociation from './InputAssociation.svelte';
-	import InputList from './InputList.svelte';
+	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
+	import InputList from '../../lib/components/customInputs/InputList.svelte';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];

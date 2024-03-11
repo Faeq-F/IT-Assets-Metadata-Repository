@@ -78,7 +78,7 @@
 				<ul>
 					{#each savedAssociation as associationSaved}
 						<li
-							class="card w-6/12 p-2 shadow-md"
+							class="card variant-ringed w-6/12 p-2 shadow-md"
 							style="margin: 5px;"
 							{...$$restProps}
 							data-associatedObject={JSON.stringify(associationSaved)}
@@ -101,7 +101,7 @@
 					Nothing saved
 				{:else}
 					<li
-						class="card block w-6/12 p-2 shadow-md"
+						class="card variant-ringed block w-6/12 p-2 shadow-md"
 						style="margin: 5px;"
 						{...$$restProps}
 						data-associatedObject={JSON.stringify(savedAssociation)}

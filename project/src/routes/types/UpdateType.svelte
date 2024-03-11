@@ -2,6 +2,7 @@
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { updateDocument } from '$lib/apiRequests';
 	const toastStore = getToastStore();
+	const modalStore = getModalStore();
 
 	export let id: string;
 	export let typeName: string;
@@ -10,9 +11,13 @@
 	let NewTypeName: string = typeName;
 	let NewTypeFields: any[] = metadataFields;
 
-	const modalStore = getModalStore();
-
-	function emptyFieldAlert() {
+	/**
+	 * Creates an error toast with the message "Please fill in all of the fields"
+	 * @author Faeq Faisal
+	 * @email faeqfaisal@hotmail.co.uk
+	 * @email zlac318@live.rhul.ac.uk
+	 */
+	function emptyFieldAlert(): void {
 		toastStore.trigger({
 			message: 'Please fill in all of the fields',
 			background: 'variant-ghost-error',
@@ -20,7 +25,13 @@
 		});
 	}
 
-	function updateType() {
+	/**
+	 * Constructs the type object, sends it to the database, and reloads the page for viewing
+	 * @author Faeq Faisal
+	 * @email faeqfaisal@hotmail.co.uk
+	 * @email zlac318@live.rhul.ac.uk
+	 */
+	function updateType(): void {
 		if (NewTypeName == '') {
 			emptyFieldAlert();
 			return;
@@ -39,8 +50,10 @@
 				}
 				for (let i of inputs) {
 					if (i.classList.contains('checkbox')) {
+						//the input is a checkbox for if the field is multi-value or not
 						checkbox = i.checked;
 					} else {
+						//the input is a standard text field
 						if (i.value == '') {
 							emptyFieldAlert();
 							return;
@@ -52,6 +65,7 @@
 			}
 		}
 		let NewTypeObject = { typeName: NewTypeName, metadataFields: tempNewTypeFields };
+		//send to db
 		const data = new FormData();
 		data.append('newData', JSON.stringify(NewTypeObject));
 		updateDocument('AssetType', id, data).then((response) => {
@@ -61,7 +75,13 @@
 		});
 	}
 
-	function addMetadataField() {
+	/**
+	 * Adds a metadata field to the array of metadata fields for the new Type object
+	 * @author Faeq Faisal
+	 * @email faeqfaisal@hotmail.co.uk
+	 * @email zlac318@live.rhul.ac.uk
+	 */
+	function addMetadataField(): void {
 		let name = (document.getElementById('addMetadataFieldName') as HTMLInputElement).value;
 		let typeList = document.getElementById('addMetadataFieldDataType') as HTMLSelectElement;
 		let type = typeList.options[typeList.selectedIndex].text;
@@ -82,26 +102,31 @@
 		}
 	}
 
-	let fieldListable: boolean;
-
-	function removeField(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
+	/**
+	 * Removes a metadata field to the array of metadata fields for the new Type object
+	 * @author Faeq Faisal
+	 * @param event The event from the button (currentTarget) of the field that needs to be removed
+	 * @email faeqfaisal@hotmail.co.uk
+	 * @email zlac318@live.rhul.ac.uk
+	 */
+	function removeField(
+		event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }
+	): void {
 		const fieldSpan = event.currentTarget.parentElement;
 		let inputs = fieldSpan?.getElementsByTagName('input');
 		let select = fieldSpan?.getElementsByTagName('select');
 		let name = '';
-		//let checkbox = false;
 		if (inputs && select) {
 			for (let i of inputs) {
 				if (!i.classList.contains('checkbox')) {
-					// 	checkbox = i.checked;
-					// } else {
 					name = i.placeholder;
 				}
 			}
-			//let fieldToRemove = { field: name, dataType: select[0].value, list: checkbox };
 			NewTypeFields = NewTypeFields.filter((field) => field.field != name);
 		}
 	}
+
+	let fieldListable: boolean;
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">

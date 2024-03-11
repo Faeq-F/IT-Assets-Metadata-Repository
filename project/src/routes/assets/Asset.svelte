@@ -9,11 +9,11 @@
 	import { page } from '$app/stores'; //Does work
 	import { deleteDocument, fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import ExpandedAsset from './ExpandedAsset.svelte';
-	import { highlight } from './keywordSearch';
+	import { highlight } from '../../lib/scripts/keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';
 	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
-	import AssociationCard from './AssociationCard.svelte';
+	import AssociationCard from '../../lib/components/AssociationCard.svelte';
 	import ExpandedType from '../types/ExpandedType.svelte';
 	import { onMount } from 'svelte';
 

@@ -7,20 +7,31 @@
 	import ExpandedType from '../types/ExpandedType.svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import ExpandedUser from '../profile/ExpandedUser.svelte';
+
 	let assetParam: string | null;
 	let typeParam: string | null;
 	let userParam: string | null;
 
+	/**
+	 * Gets the relevant shared document id from the url
+	 * @author Faeq Faisal
+	 * @email faeqfaisal@hotmail.co.uk
+	 * @email zlac318@live.rhul.ac.uk
+	 */
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
 		const urlParams = new URLSearchParams(window.location.search);
-		assetParam = urlParams.get('asset');
-		typeParam = urlParams.get('type');
-		userParam = urlParams.get('user');
+		assetParam = urlParams.get('asset'); // if the shared document is an asset
+		typeParam = urlParams.get('type'); // if the shared document is an asset type
+		userParam = urlParams.get('user'); // if the shared document is a user
 	});
 </script>
+
+<!--The style prop applies to the close button on the component.
+	The Expanded-view component is normally used as a modal,
+	but in this case, we want it as page content -->
 
 {#if assetParam != null}
 	{#await fetchDocumentByID(assetParam)}
