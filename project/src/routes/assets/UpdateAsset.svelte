@@ -3,6 +3,7 @@
 	import { fetchDocumentByID, fetchDocuments, updateDocument } from '$lib/apiRequests';
 	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
 	import InputList from '../../lib/components/customInputs/InputList.svelte';
+	import { diff } from 'json-diff-ts';
 	const toastStore = getToastStore();
 	toastStore.trigger({
 		message: 'You may have to refresh association lists',
@@ -118,29 +119,29 @@
 
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
-		console.log(assetObject);
-		updateDocument('Asset', id, data).then((response) => {
-			console.log(response);
-			// location.reload();
-			toastStore.trigger({
-				message: 'Asset updated',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			modalStore.close();
-		});
+		// updateDocument('Asset', id, data).then((response) => {
+		// 	console.log(response);
+		// 	location.reload();
+		// 	toastStore.trigger({
+		// 		message: 'Asset updated',
+		// 		background: 'variant-ghost-success',
+		// 		timeout: 3000
+		// 	});
+		// 	modalStore.close();
+		// });
 
 		let diffs: any[] = [];
 
 		var originalAsset = {
 			assetName: assetName,
 			assetLink: assetLink,
+			assetType: assetType,
 			metadataFields: metadataFields
 		};
 
 		var auditData = {
-			assetReference: id,
-			originalAsset: originalAsset,
+			reference: id,
+			original: originalAsset,
 			diffs: diffs
 		};
 
@@ -164,65 +165,67 @@
 			return false; // Return false if no match found after checking all documents
 		}
 
-		var test1 = {
-			_id: '65dc7fc269720c71a664f879',
-			assetName: 'Testing12',
-			assetLink: 'testing12.co.uk',
-			assetType: 'Class',
-			metadataFields: {
-				'Line count': '20',
-				'Documentation site': 'testst',
-				Language: 'java',
-				'FPA Points': '33'
-			}
-		};
+		// var testObj1 = {
+		// 	_id: '65dc7fc269720c71a664f879',
+		// 	assetName: 'Testing12',
+		// 	assetLink: 'testing12.co.uk',
+		// 	assetType: 'Class',
+		// 	metadataFields: {
+		// 		'Line count': '20',
+		// 		'Documentation site': 'testst',
+		// 		Language: 'java',
+		// 		'FPA Points': '33'
+		// 	}
+		// };
 
-		var test2 = {
-			_id: '65dc7fc269720c71a664f879',
-			assetName: 'test',
-			assetLink: 'testing12.com',
-			assetType: 'Class',
-			metadataFields: {
-				'Line count': '20',
-				'Documentation site': 'testst',
-				Language: 'Python',
-				'FPA Points': '40'
-			}
-		};
+		// var testObj2 = {
+		// 	_id: '65dc7fc269720c71a664f879',
+		// 	assetName: 'test',
+		// 	assetLink: 'testing12.com',
+		// 	assetType: 'Class',
+		// 	metadataFields: {
+		// 		'Line count': '20',
+		// 		'Documentation site': 'testst',
+		// 		Language: 'Python',
+		// 		Test: 'hi'
+		// 	}
+		// };
+
+		// console.log(diff(testObj1, testObj2));
 
 		// defining that keys are strings same with the keys nested in key i.e. metaDataFields
-		interface Difference {
-			[key: string]: string | Difference;
-		}
+		// interface Difference {
+		// 	[key: string]: string | Difference;
+		// }
 
-		function diff(originalAsset: any, newAsset: any) {
-			const differences: Difference = {};
-			// Go over each key in the asset
-			for (const key in originalAsset) {
-				// Checks if the names of the keys are the same
-				if (originalAsset.hasOwnProperty(key) && newAsset.hasOwnProperty(key)) {
-					// Checks if the type of the value is an object (covers metadataFields)
-					if (typeof originalAsset[key] === 'object') {
-						const nestedDifferences = diff(originalAsset[key], newAsset[key]);
-						// Checks if there are any differences in recursive call
-						if (Object.keys(nestedDifferences).length > 0) {
-							// if true then add them as new values
-							differences[key] = nestedDifferences;
-						}
-					} else if (originalAsset[key] !== newAsset[key]) {
-						// Checks difference between values for specific keys then adds new value for the corresponding key
-						differences[key] = newAsset[key];
-					}
-				}
-			}
-			return differences;
-		}
+		// function diff(originalAsset: any, newAsset: any) {
+		// 	const differences: Difference = {};
+		// 	// Go over each key in the asset
+		// 	for (const key in originalAsset) {
+		// 		// Checks if the names of the keys are the same
+		// 		if (originalAsset.hasOwnProperty(key) && newAsset.hasOwnProperty(key)) {
+		// 			// Checks if the type of the value is an object (covers metadataFields)
+		// 			if (typeof originalAsset[key] === 'object') {
+		// 				const nestedDifferences = diff(originalAsset[key], newAsset[key]);
+		// 				// Checks if there are any differences in recursive call
+		// 				if (Object.keys(nestedDifferences).length > 0) {
+		// 					// if true then add them as new values
+		// 					differences[key] = nestedDifferences;
+		// 				}
+		// 			} else if (originalAsset[key] !== newAsset[key]) {
+		// 				// Checks difference between values for specific keys then adds new value for the corresponding key
+		// 				differences[key] = newAsset[key];
+		// 			}
+		// 		}
+		// 	}
+		// 	return differences;
+		// }
 
-		const differences = diff(test1, test2);
-		console.log(differences);
+		//const differences = diff(test1, test2);
+		// console.log(differences);
 
-		const otherdifference = diff(originalAsset, assetObject);
-		console.log(otherdifference);
+		// const otherdifference = diff(originalAsset, assetObject);
+		// console.log(otherdifference);
 	}
 
 	function generatePreSavedAssociations(value: any, associationType: string) {
