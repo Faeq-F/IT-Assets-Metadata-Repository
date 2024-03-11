@@ -10,6 +10,62 @@
 	export let metadataFields: any;
 
 	const modalStore = getModalStore();
+	const diff = [
+		{
+			"type": "UPDATE",
+			"key": "assetName",
+			"value": "test",
+			"oldValue": "Testing12"
+		},
+		{
+			"type": "UPDATE",
+			"key": "assetLink",
+			"value": "testing12.com",
+			"oldValue": "testing12.co.uk"
+		},
+		{
+			"type": "UPDATE",
+			"key": "metadataFields",
+			"changes": [
+				{
+					"type": "UPDATE",
+					"key": "Language",
+					"value": "Python",
+					"oldValue": "java"
+				},
+				{
+					"type": "ADD",
+					"key": "Test",
+					"value": "hi"
+				},
+				{
+					"type": "REMOVE",
+					"key": "FPA Points",
+					"value": "33"
+				}
+			]
+		}
+	];
+
+	function parseDiff(diff: any) {
+		for (const item of diff) {
+			if (item.changes && Array.isArray(item.changes)) {
+				parseChanges(item.changes);
+			} else {
+				console.log(`Type: ${item.type}, Key: ${item.key}, Value: ${item.value}, Old Value: ${item.oldValue}`);
+			}
+		}
+	}
+
+	function parseChanges(changes: any) {
+		for (const change of changes) {
+			if (change.changes && Array.isArray(change.changes)) {
+				parseChanges(change.changes);
+			} else {
+				console.log(`Type: ${change.type}, Key: ${change.key}, Value: ${change.value}, Old Value: ${change.oldValue}`);
+			}
+		}
+	}
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">
