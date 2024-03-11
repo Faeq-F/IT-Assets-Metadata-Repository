@@ -20,10 +20,9 @@
 		const graph = new dia.Graph({}, { cellNamespace: namespace });
 
 		const paper = new dia.Paper({
-			el: document.getElementById('myholder'),
+			el: document.getElementById('associationsGraph'),
 			model: graph,
-			width: 600,
-			height: 100,
+
 			gridSize: 1,
 			cellViewNamespace: namespace
 		});
@@ -54,77 +53,89 @@
 	});
 </script>
 
-<div class="bg-surface-100-800-token h-screen w-screen p-52">
-	<div class="m-9">
-		<i style="font-size: 1.7em;" class="fa-solid fa-fingerprint inline"></i>
-		<p class="h3 mt-1 inline">{id}</p>
-	</div>
-	<div>
-		<div class="ml-14">
-			<div class="h1" style="margin:10px; font-weight: bold;">
-				{assetName}
-			</div>
-			<div class="m-0 mb-1 p-0">
-				<a
-					style="font-weight: 500"
-					class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
-					href={assetLink.startsWith('http') ? assetLink : 'http://' + assetLink}
-				>
-					<span><i class="fa-solid fa-paperclip"></i></span><span>{assetLink}</span></a
-				>
-			</div>
-			<div class="h3" style="margin:10px; font-weight: bold;">
-				{assetType}
-			</div>
-			<br />
-			<hr />
-			<br />
-			<div class="ml-2 mt-1 text-lg">
-				<!-- metadata -->
-				{#each Object.entries(metadataFields) as [field, value]}
-					{#if Array.isArray(value)}
-						⦿ {field}:
-						{#each value as item}
-							<br />
-							{#if (item + '').startsWith('DOCUMENT-ID: ')}
-								{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}
-									&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
-									<span>Loading association</span>
-								{:then document}
-									&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
-									{#if Object.keys(document).length == 0}
-										<span style="color: red; font-weight: bold;">Deleted item</span>
+<div class=" bg-surface-100-800-token h-screen w-screen p-24">
+	<div class="h-full overflow-y-scroll">
+		<div class="m-auto grid grid-cols-2 grid-rows-2 gap-4">
+			<div class="">
+				<!--Asset details-->
+				<div class=" m-9">
+					<i style="font-size: 1.7em;" class=" fa-solid fa-fingerprint inline"></i>
+					<p class="h3 mt-1 inline">{id}</p>
+				</div>
+				<div class=" ml-14">
+					<div class="h1" style="margin:10px; font-weight: bold;">
+						{assetName}
+					</div>
+					<div class="m-0 mb-1 p-0">
+						<a
+							style="font-weight: 500"
+							class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
+							href={assetLink.startsWith('http') ? assetLink : 'http://' + assetLink}
+						>
+							<span><i class="fa-solid fa-paperclip"></i></span><span>{assetLink}</span></a
+						>
+					</div>
+					<div class="h3" style="margin:10px; font-weight: bold;">
+						{assetType}
+					</div>
+					<br />
+					<hr />
+					<br />
+					<div class="ml-2 mt-1 text-lg">
+						<!-- metadata -->
+						{#each Object.entries(metadataFields) as [field, value]}
+							{#if Array.isArray(value)}
+								⦿ {field}:
+								{#each value as item}
+									<br />
+									{#if (item + '').startsWith('DOCUMENT-ID: ')}
+										{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}
+											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+											<span>Loading association</span>
+										{:then document}
+											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+											{#if Object.keys(document).length == 0}
+												<span style="color: red; font-weight: bold;">Deleted item</span>
+											{:else}
+												<AssociationCard {document} />
+											{/if}
+										{/await}
 									{:else}
+										<!-- eslint-disable svelte/no-at-html-tags-->
+										&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {item}
+									{/if}
+								{/each}
+							{:else if (value + '').startsWith('DOCUMENT-ID: ')}
+								{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
+									<i class="fa-solid fa-stroopwafel"></i> {field}: <span>Loading association</span>
+								{:then document}
+									{#if Object.keys(document).length == 0}
+										<i class="fa-solid fa-stroopwafel"></i>
+										{field}: <span style="color: red; font-weight: bold;">Deleted item</span>
+									{:else}
+										<i class="fa-solid fa-stroopwafel"></i>
+										{field}:
 										<AssociationCard {document} />
 									{/if}
 								{/await}
 							{:else}
 								<!-- eslint-disable svelte/no-at-html-tags-->
-								&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {item}
+								⦿ {field}: {value}
 							{/if}
+							<br />
 						{/each}
-					{:else if (value + '').startsWith('DOCUMENT-ID: ')}
-						{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
-							<i class="fa-solid fa-stroopwafel"></i> {field}: <span>Loading association</span>
-						{:then document}
-							{#if Object.keys(document).length == 0}
-								<i class="fa-solid fa-stroopwafel"></i>
-								{field}: <span style="color: red; font-weight: bold;">Deleted item</span>
-							{:else}
-								<i class="fa-solid fa-stroopwafel"></i>
-								{field}:
-								<AssociationCard {document} />
-							{/if}
-						{/await}
-					{:else}
-						<!-- eslint-disable svelte/no-at-html-tags-->
-						⦿ {field}: {value}
-					{/if}
-					<br />
-				{/each}
+					</div>
+				</div>
+			</div>
+			<div class="card variant-ringed col-span-2 col-start-2 mr-4">
+				<!--Audit trail-->
+				<p style="">Audit trail here</p>
+			</div>
+			<div class="card variant-ringed col-span-2 row-start-2">
+				<!--Associations graph-->
+				<div id="associationsGraph" class="h-full w-full"></div>
 			</div>
 		</div>
-		<div id="myholder"></div>
 	</div>
 </div>
 
