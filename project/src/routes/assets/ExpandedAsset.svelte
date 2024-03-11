@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import '../node_modules/@joint/plus/joint-plus.css';
 	import { onMount } from 'svelte';
-	import { dia, ui, shapes } from '@joint/plus/joint-plus.js';
-
-
+	import { dia, shapes } from '@joint/core/joint.mjs';
 
 	export let id: string;
 	export let assetName: string;
@@ -13,14 +10,53 @@
 	export let metadataFields: any;
 
 	const modalStore = getModalStore();
+
+	onMount(() => {
+		const namespace = shapes;
+
+		const graph = new dia.Graph({}, { cellNamespace: namespace });
+
+		const paper = new dia.Paper({
+			el: document.getElementById('myholder'),
+			model: graph,
+			width: 600,
+			height: 100,
+			gridSize: 1,
+			cellViewNamespace: namespace
+		});
+
+		const rect = new shapes.standard.Rectangle();
+		rect.position(100, 30);
+		rect.resize(100, 40);
+		rect.attr({
+			body: {
+				fill: 'blue'
+			},
+			label: {
+				text: 'Hello',
+				fill: 'white'
+			}
+		});
+		rect.addTo(graph);
+
+		const rect2 = rect.clone();
+		rect2.translate(300, 0);
+		rect2.attr('label/text', 'World!');
+		rect2.addTo(graph);
+
+		const link = new shapes.standard.Link();
+		link.source(rect);
+		link.target(rect2);
+		link.addTo(graph);
+	});
 </script>
 
-<div class=" bg-surface-100-800-token h-screen w-screen p-52">
-	<div class=" m-9">
-		<i style="font-size: 1.7em;" class=" fa-solid fa-fingerprint inline"></i>
+<div class="bg-surface-100-800-token h-screen w-screen p-52">
+	<div class="m-9">
+		<i style="font-size: 1.7em;" class="fa-solid fa-fingerprint inline"></i>
 		<p class="h3 mt-1 inline">{id}</p>
 	</div>
-	<div class=" ml-14">
+	<div class="ml-14">
 		<div class="h1" style="margin:10px; font-weight: bold;">
 			{assetName}
 		</div>
@@ -54,10 +90,10 @@
 				<br />
 			{/each}
 		</div>
+		<div id="myholder"></div>
 	</div>
 </div>
 
 <button
 	class="variant-filled-primary btn absolute bottom-3 right-3"
-	on:click={() => modalStore.close()}>Close</button
->
+	on:click={() => modalStore.close()}>Close</button>
