@@ -126,7 +126,8 @@
 						chips="variant-filled rounded-md"
 						rounded=" rounded-none"
 						padding="p-0"
-						class="float-right mr-2 inline w-9/12 border-0"
+						class="bg-modern-50 float-right mr-2 inline w-9/12 border-0"
+						style="background-color: transparent !important"
 					/>
 				</div>
 				<!--Open Filter Drawer-->
