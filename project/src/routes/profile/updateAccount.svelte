@@ -6,7 +6,7 @@
 		containNumbers,
 		hashCode,
 		duplicateUsername
-	} from '../register/validate';
+	} from '../../lib/scripts/validate';
 	import Cookies from 'js-cookie';
 	//import { getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
@@ -61,9 +61,9 @@
 	<title>Register</title>
 </svelte:head>
 <div class="card p-5 shadow-xl" id="rootDiv">
-	<div class="card h-full bg-modern-50 p-1">
+	<div class="card bg-modern-50 h-full overflow-y-scroll p-1">
 		<br />
-		<h2 class="h2 mt-24 text-center">Update your details</h2>
+		<h2 class="h2 mt-2 text-center">Update your details</h2>
 		<br /><br />
 		<hr />
 		<br />

@@ -12,6 +12,16 @@ export const fetchDocuments = (collectionName: string) => {
 };
 
 /**
+ * Gets a document from the database & returns it in json form
+ * @param id The id of the document to fetch
+ * @returns The fetched document, {} if it doesn't exist
+ */
+export const fetchDocumentByID = (id: string) => {
+	return fetch('http://localhost:5038/api/get/document/'+ id)
+		.then((response) => {return response.json()})
+};
+
+/**
  * Inserts a document into a collection in the database
  * @param collectionName The collection to insert a document into
  * @param formData The FormData object that holds the document to insert in the 'newData' key
