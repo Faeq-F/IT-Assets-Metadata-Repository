@@ -3,6 +3,7 @@
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
 	import Update from '$lib/components/cards/auditTrail/Update.svelte';
+	import User from '$lib/components/cards/auditTrail/User.svelte';
 
 	export let id: string;
 	export let assetName: string;
@@ -151,6 +152,7 @@
 			<div class="card variant-ringed col-span-2 col-start-2 mr-4 overflow-y-scroll">
 				<!--Audit trail-->
 				<p class="h3 mt-1 text-center font-bold">Audit Trail</p>
+				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
