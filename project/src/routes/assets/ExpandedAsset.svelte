@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { fetchDocumentByID } from '$lib/apiRequests';
-	import AssociationCard from '../../lib/components/AssociationCard.svelte';
+	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
+	import Update from '$lib/components/cards/auditTrail/Update.svelte';
 
 	export let id: string;
 	export let assetName: string;
@@ -12,36 +13,36 @@
 	const modalStore = getModalStore();
 	const diff = [
 		{
-			"type": "UPDATE",
-			"key": "assetName",
-			"value": "test",
-			"oldValue": "Testing12"
+			type: 'UPDATE',
+			key: 'assetName',
+			value: 'test',
+			oldValue: 'Testing12'
 		},
 		{
-			"type": "UPDATE",
-			"key": "assetLink",
-			"value": "testing12.com",
-			"oldValue": "testing12.co.uk"
+			type: 'UPDATE',
+			key: 'assetLink',
+			value: 'testing12.com',
+			oldValue: 'testing12.co.uk'
 		},
 		{
-			"type": "UPDATE",
-			"key": "metadataFields",
-			"changes": [
+			type: 'UPDATE',
+			key: 'metadataFields',
+			changes: [
 				{
-					"type": "UPDATE",
-					"key": "Language",
-					"value": "Python",
-					"oldValue": "java"
+					type: 'UPDATE',
+					key: 'Language',
+					value: 'Python',
+					oldValue: 'java'
 				},
 				{
-					"type": "ADD",
-					"key": "Test",
-					"value": "hi"
+					type: 'ADD',
+					key: 'Test',
+					value: 'hi'
 				},
 				{
-					"type": "REMOVE",
-					"key": "FPA Points",
-					"value": "33"
+					type: 'REMOVE',
+					key: 'FPA Points',
+					value: '33'
 				}
 			]
 		}
@@ -52,7 +53,9 @@
 			if (item.changes && Array.isArray(item.changes)) {
 				parseChanges(item.changes);
 			} else {
-				console.log(`Type: ${item.type}, Key: ${item.key}, Value: ${item.value}, Old Value: ${item.oldValue}`);
+				console.log(
+					`Type: ${item.type}, Key: ${item.key}, Value: ${item.value}, Old Value: ${item.oldValue}`
+				);
 			}
 		}
 	}
@@ -62,14 +65,17 @@
 			if (change.changes && Array.isArray(change.changes)) {
 				parseChanges(change.changes);
 			} else {
-				console.log(`Type: ${change.type}, Key: ${change.key}, Value: ${change.value}, Old Value: ${change.oldValue}`);
+				console.log(
+					`Type: ${change.type}, Key: ${change.key}, Value: ${change.value}, Old Value: ${change.oldValue}`
+				);
 			}
 		}
 	}
+	parseDiff(diff);
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">
-	<div class="h-full overflow-y-scroll">
+	<div class="h-full max-h-full overflow-y-scroll">
 		<div class="m-auto grid grid-cols-2 grid-rows-2 gap-4">
 			<div class="">
 				<!--Asset details-->
@@ -142,9 +148,14 @@
 					</div>
 				</div>
 			</div>
-			<div class="card variant-ringed col-span-2 col-start-2 mr-4">
+			<div class="card variant-ringed col-span-2 col-start-2 mr-4 overflow-y-scroll">
 				<!--Audit trail-->
-				<p style="">Audit trail here</p>
+				<p class="h3 mt-1 text-center font-bold">Audit Trail</p>
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
 			</div>
 			<div class="card variant-ringed col-span-2 row-start-2">
 				<!--Associations graph-->
