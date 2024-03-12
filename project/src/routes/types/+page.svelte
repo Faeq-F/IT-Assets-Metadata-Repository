@@ -6,6 +6,8 @@
 		AppBar,
 		type ModalComponent,
 		type ModalSettings,
+		RadioGroup,
+		RadioItem,
 		getModalStore
 	} from '@skeletonlabs/skeleton';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
@@ -13,6 +15,7 @@
 	import Type from './Type.svelte';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
+	import Placeholder from '$lib/components/placeholder.svelte';
 
 	let role = Cookies.get('savedLogin-role');
 
@@ -36,6 +39,8 @@
 		type: 'component',
 		component: modalComponent
 	};
+
+	let viewType: number = 0;
 </script>
 
 <svelte:head>
@@ -45,13 +50,33 @@
 <h1 class="h1">Asset types management</h1>
 <br />
 <div>
-	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
+	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AssetTypesDocuments != undefined && AssetTypesDocuments.length > 0}
-					<p id="nothingHere">Your types:</p>
+					<RadioGroup
+						background="transparent"
+						class="text-token max-h-8  text-sm"
+						active="variant-soft"
+						hover="hover:variant-soft-primary"
+						border="border-2 border-modern-500"
+					>
+						<RadioItem bind:group={viewType} name="grid" value={0} class="h-4"
+							><i
+								class="fa-solid fa-grip fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+						<RadioItem bind:group={viewType} name="list" value={1} class="h-4"
+							><i
+								class="fa-solid fa-list-ul fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+					</RadioGroup>
+					<p id="nothingHere" class="ml-2">Your types:</p>
 				{:else}
-					<p id="nothingHere">
+					<p id="nothingHere" class="ml-2">
 						It doesn't look like you have any types yet, click the <i class="fa-solid fa-plus"></i> to
 						get started
 					</p>
@@ -61,7 +86,7 @@
 				{#if role != 'viewer'}
 					<button
 						id="assetMaker"
-						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+						class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
 						on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
 					>
 				{/if}
@@ -71,11 +96,24 @@
 </div>
 
 <div class="typesContainer">
-	{#if AssetTypesDocuments != undefined}
+	{#await fetchDocuments('AssetType')}
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+	{:then AssetTypesDocuments}
 		{#each AssetTypesDocuments as type}
-			<Type id={type._id} typeName={type.typeName} metadataFields={type.metadataFields} />
+			<Type
+				id={type._id}
+				typeName={type.typeName}
+				metadataFields={type.metadataFields}
+				{viewType}
+			/>
 		{/each}
-	{/if}
+	{/await}
 </div>
 
 <style>

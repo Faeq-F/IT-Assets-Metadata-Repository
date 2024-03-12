@@ -5,7 +5,11 @@
 		InputChip,
 		type ModalComponent,
 		type ModalSettings,
-		getDrawerStore
+		getDrawerStore,
+		RadioGroup,
+		RadioItem,
+		type PopupSettings,
+		popup
 	} from '@skeletonlabs/skeleton';
 
 	//@ts-ignore
@@ -16,9 +20,10 @@
 	import Asset from './Asset.svelte';
 	//@ts-ignore
 	import MakeAsset from './makeAsset.svelte';
-	import { highlight, keywordFilter } from './keywordSearch';
+	import { highlight, keywordFilter } from '../../lib/scripts/keywordSearch';
 	import Cookies from 'js-cookie';
 	import { activeFilters } from '$lib/stores';
+	import Placeholder from '$lib/components/placeholder.svelte';
 
 	onMount(() => {
 		if (browser) {
@@ -53,22 +58,56 @@
 		type: 'component',
 		component: modalComponent
 	};
+
+	const association: PopupSettings = {
+		event: 'hover',
+		target: 'association',
+		placement: 'top'
+	};
+
+	let viewType: number = 0;
 </script>
 
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
 
-<h1 class="h1">Assets</h1>
+<div class="card z-[9999] p-4" data-popup="association">
+	An item annotated with <i class="fa-solid fa-stroopwafel"></i> refers to Users & Assets on the
+	system
+	<div class="arrow card" />
+</div>
+
+<h1 class="h1" use:popup={association}>Assets</h1>
 <br />
 <div>
-	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
+	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
-					<p id="nothingHere">Your assets:</p>
+					<RadioGroup
+						background="transparent"
+						class="text-token max-h-8  text-sm"
+						active="variant-soft"
+						hover="hover:variant-soft-primary"
+						border="border-2 border-modern-500"
+					>
+						<RadioItem bind:group={viewType} name="grid" value={0} class="h-4"
+							><i
+								class="fa-solid fa-grip fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+						<RadioItem bind:group={viewType} name="list" value={1} class="h-4"
+							><i
+								class="fa-solid fa-list-ul fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+					</RadioGroup>
+					<p id="nothingHere" class="ml-2" use:popup={association}>Your assets:</p>
 				{:else}
-					<p id="nothingHere">
+					<p id="nothingHere" class="ml-2">
 						It doesn't look like you have any assets yet, click the <i class="fa-solid fa-plus"></i>
 						to get started
 					</p>
@@ -76,25 +115,25 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<!--Search by keyword bar-->
-				<div class="bg-white inline max-h-8 rounded-full border-2 border-modern-500">
+				<div class="border-modern-500 inline max-h-8 rounded-full border-2">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
 					<InputChip
 						bind:value={keywordSearchInput}
-						type="text"
 						id="keyword"
 						name="keyword"
 						placeholder="Enter search terms"
 						chips="variant-filled rounded-md"
 						rounded=" rounded-none"
 						padding="p-0"
-						class="float-right mr-5 inline w-9/12 border-0"
+						class="bg-modern-50 float-right mr-2 inline w-9/12 border-0"
+						style="background-color: transparent !important"
 					/>
 				</div>
 				<!--Open Filter Drawer-->
 				<button
 					id="openDrawer"
-					class="card rounded-full border-2 border-modern-500 bg-modern-50 px-2 py-0.5 text-sm"
+					class="card border-modern-500 bg-modern-50 rounded-full border-2 px-2 py-0.5 text-sm"
 					style="margin-right: 10px;"
 					on:click={drawerOpen}><i class="fa-solid fa-filter"></i></button
 				>
@@ -103,7 +142,7 @@
 					{#if role != 'viewer'}
 						<button
 							id="assetMaker"
-							class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
+							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
 							on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
 						>
 					{/if}
@@ -115,20 +154,33 @@
 <br />
 <!--Assets grid-->
 <div class="assetsContainer">
-	{#if AssetDocuments != undefined}
+	{#await fetchDocuments('Asset')}
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+	{:then AssetDocuments}
 		{#each AssetDocuments as asset}
-			{#if keywordFilter(asset, keywordSearchInput) && (filters.includes(asset.assetType) || filters.length == 0)}
-				<Asset
-					id={asset._id}
-					name={highlight(asset.assetName, keywordSearchInput)}
-					link={highlight(asset.assetLink, keywordSearchInput)}
-					type={highlight(asset.assetType, keywordSearchInput)}
-					metadata={asset.metadataFields}
-					{keywordSearchInput}
-				/>
-			{/if}
+			{#await keywordFilter(asset, keywordSearchInput)}
+				<Placeholder />
+			{:then shouldShow}
+				{#if shouldShow && (filters.includes(asset.assetType) || filters.length == 0)}
+					<Asset
+						{viewType}
+						id={asset._id}
+						name={highlight(asset.assetName, keywordSearchInput)}
+						link={highlight(asset.assetLink, keywordSearchInput)}
+						type={highlight(asset.assetType, keywordSearchInput)}
+						metadata={asset.metadataFields}
+						{keywordSearchInput}
+					/>
+				{/if}
+			{/await}
 		{/each}
-	{/if}
+	{/await}
 </div>
 
 <style>

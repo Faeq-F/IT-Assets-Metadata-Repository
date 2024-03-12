@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
+	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
+	import InputList from '../../lib/components/customInputs/InputList.svelte';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
@@ -41,17 +43,40 @@
 		let metadataInputs = metadataForm.getElementsByTagName('input');
 		var metadataObject = {};
 		for (let i of metadataInputs) {
-			let key = i.id;
+			let key = i.id.replace('-association', '').replace('-InputList', '');
 			let value;
-			//check if the field is a list
-			if (i.placeholder.includes('multiple')) {
-				//if so, seperate the values
-				value = i.value.split(', ');
-				let newArr: number[] = [];
-				// check if cast required for numbers
+			//check if the field is a list of numbers or text
+			if (i.id.includes('InputList')) {
+				//if so, get the elements with the values
+				let collection = document
+					.getElementById(key + '-ListInputCollector')
+					?.getElementsByTagName('li');
+				if (collection) {
+					let newArr: any[] = [];
+					for (let j of collection) {
+						let iVal: any = (j as HTMLLIElement).innerHTML;
+						if (!i.placeholder.includes('strings of text')) iVal = parseFloat(iVal);
+						newArr.push(iVal);
+					}
+					value = newArr;
+				}
+			} else if (i.placeholder.includes('Search for multiple')) {
+				//the input is for a list of associations
+				let item = document
+					.getElementById(key + '-associationCollector')
+					?.getElementsByTagName('LI');
+				if (item) {
+					let newArr = [];
+					for (let j of item) {
+						let object = (j as HTMLElement).dataset.associatedobject;
+						if (object) newArr.push('DOCUMENT-ID: ' + JSON.parse(object).value);
+					}
+					value = newArr;
+				}
+			} else {
 				if (i.placeholder.includes('number')) {
-					for (let i in value) {
-						if (Number.isNaN(parseFloat(value[i]))) {
+					if (!(i.value == '')) {
+						if (Number.isNaN(parseFloat(i.value))) {
 							toastStore.trigger({
 								message: 'You tried submitting text as a number!',
 								background: 'variant-ghost-error',
@@ -59,23 +84,19 @@
 							});
 							return;
 						}
-						newArr[i] = parseFloat(value[i]);
+						value = parseFloat(i.value);
 					}
-					value = newArr;
-				}
-			} else {
-				if (i.placeholder.includes('number')) {
-					if (Number.isNaN(parseFloat(i.value))) {
-						toastStore.trigger({
-							message: 'You tried submitting text as a number!',
-							background: 'variant-ghost-error',
-							timeout: 3000
-						});
-						return;
+				} else if (i.placeholder.includes('text')) {
+					value = i.value;
+				} else if (i.placeholder.includes('Search for a')) {
+					let item = document
+						.getElementById(key + '-associationCollector')
+						?.getElementsByTagName('LI');
+					if (!(item == undefined || item.length == 0)) {
+						let liItem = (item[0] as HTMLElement).dataset.associatedobject;
+						if (liItem) value = 'DOCUMENT-ID: ' + JSON.parse(liItem).value;
 					}
-					value = parseFloat(i.value);
 				}
-				value = i.value;
 			}
 			metadataObject = { ...metadataObject, [key]: value };
 		}
@@ -86,6 +107,7 @@
 			assetType: type,
 			metadataFields: metadataObject
 		};
+
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
 		insertDocument('Asset', data).then((response) => {
@@ -97,20 +119,33 @@
 			background: 'variant-ghost-success',
 			timeout: 3000
 		});
-		// Refresh the page
+		//Refresh the page
 		location.reload();
 	}
+
+	const requiredField: PopupSettings = {
+		event: 'hover',
+		target: 'requiredField',
+		placement: 'top'
+	};
 
 	let currentType: string;
 </script>
 
+<div class="card bg-initial p-4" data-popup="requiredField">
+	<p>Required Field</p>
+	<div class="arrow bg-initial" />
+</div>
+
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
-	<div class="card h-full bg-modern-50 p-5">
+	<div class="card bg-modern-50 h-full p-5">
 		<header class="h2 card-header text-center">Make an Asset</header>
 		<br /><br />
 		<form id="rootCreateAssetForm" class="text-center">
 			<label for="assetName" class="formlabel">
-				<p class="p-4 text-center">Asset Name:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Name:
+				</p>
 				<input
 					type="text"
 					id="assetName"
@@ -122,7 +157,9 @@
 			</label><br />
 
 			<label for="assetLink" class="formlabel">
-				<p class="p-4 text-center">Asset Link:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Link:
+				</p>
 				<input
 					type="text"
 					id="assetLink"
@@ -134,7 +171,9 @@
 			</label><br />
 
 			<label for="assetType" class="formlabel">
-				<p class="p-4 text-center">Asset Type:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Type:
+				</p>
 
 				<select id="assetType" class="select w-96" bind:value={currentType}>
 					<option>Select type</option>
@@ -152,13 +191,13 @@
 							<div class="p-4 text-center">{field.field}</div>
 							{#if field.dataType == 'Text'}
 								{#if field.list == true}
-									<input
-										type="text"
-										placeholder="Enter multiple bits of text, separate them with commas (', ')"
-										class="input w-96"
-										id={field.field}
-										name={field.field}
-									/><br /><br />
+									<InputList
+										fieldName={field.field}
+										dataType="text"
+										presavedValues={undefined}
+										style="margin: 5px auto;"
+									/>
+									<br /><br />
 								{:else}
 									<input
 										type="text"
@@ -170,12 +209,11 @@
 								{/if}
 							{:else if field.dataType == 'Number'}
 								{#if field.list == true}
-									<input
-										type="text"
-										placeholder="Enter multiple numbers, separate them with commas (', ')"
-										class="input w-96"
-										id={field.field}
-										name={field.field}
+									<InputList
+										fieldName={field.field}
+										dataType="number"
+										presavedValues={undefined}
+										style="margin: 5px auto;"
 									/><br /><br />
 								{:else}
 									<input
@@ -187,17 +225,23 @@
 									/><br /><br />
 								{/if}
 							{:else if field.dataType == 'Account'}
-								{#if field.list == true}
-									The application cannot associate accounts yet - coming soon!<br /><br />
-								{:else}
-									The application cannot associate accounts yet - coming soon!<br /><br />
-								{/if}
+								<InputAssociation
+									fieldName={field.field}
+									list={field.list}
+									associationType={'User'}
+									presavedAssociation={undefined}
+									style="margin: 5px auto;"
+								/>
+								<br /><br />
 							{:else if field.dataType == 'Asset'}
-								{#if field.list == true}
-									The application cannot associate assets yet - coming soon!<br /><br />
-								{:else}
-									The application cannot associate assets yet - coming soon!<br /><br />
-								{/if}
+								<InputAssociation
+									fieldName={field.field}
+									list={field.list}
+									associationType={'Asset'}
+									presavedAssociation={undefined}
+									style="margin: 5px auto;"
+								/>
+								<br /><br />
 							{/if}
 						{/each}
 					{/if}
