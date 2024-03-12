@@ -104,12 +104,14 @@
 			}
 		}
 	});
+
+	let expandedGraph = false;
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">
-	<div class="h-full overflow-y-scroll">
+	<div class="h-full" style={expandedGraph ? 'overflow-y:hidden' : 'overflow-y:scroll'}>
 		<div class="m-auto grid grid-cols-2 grid-rows-2 gap-4">
-			<div class="">
+			<div class="" style={expandedGraph ? 'display: none;' : ''}>
 				<!--Asset details-->
 				<div class=" m-9">
 					<i style="font-size: 1.7em;" class=" fa-solid fa-fingerprint inline"></i>
@@ -180,11 +182,25 @@
 					</div>
 				</div>
 			</div>
-			<div class="card variant-ringed col-span-2 col-start-2 mr-4">
+			<div
+				class="card variant-ringed col-span-2 col-start-2 mr-4"
+				style={expandedGraph ? 'display: none;' : ''}
+			>
 				<!--Audit trail-->
 				<p style="">Audit trail here</p>
 			</div>
-			<div class="card variant-ringed col-span-2 row-start-2" id="GraphContainer">
+			<div
+				class="card variant-ringed col-span-2 row-start-2"
+				id="GraphContainer"
+				style={expandedGraph
+					? 'position:absolute; height: 100vh; width:100vw; z-index:20; padding: 0; margin: 0;left:0; top:0;'
+					: ''}
+			>
+				<button
+					class="btn relative left-10 top-10 z-[20]"
+					on:click|preventDefault={() => (expandedGraph = !expandedGraph)}
+					><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button
+				>
 				<!--Associations graph-->
 				<div id="associationsGraph" class="h-full w-full"></div>
 			</div>
