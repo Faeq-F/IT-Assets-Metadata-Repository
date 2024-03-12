@@ -2,9 +2,9 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	//@ts-ignore
-	import { dia, shapes, util } from '@joint/core/joint.mjs';
+	import { dia, shapes } from '@joint/core/joint.mjs';
 	import { fetchDocumentByID } from '$lib/apiRequests';
-	import AssociationCard from '../../lib/components/AssociationCard.svelte';
+	import AssociationCard from '$lib/components/AssociationCard.svelte';
 
 	export let id: string;
 	export let assetName: string;
@@ -15,21 +15,64 @@
 	const modalStore = getModalStore();
 
 	onMount(() => {
-		const namespace = shapes;
-		const graph = new dia.Graph({}, { cellNamespace: namespace });
-
+		//graph setup
+		const graph = new dia.Graph({}, { cellNamespace: shapes });
 		const paper = new dia.Paper({
 			el: document.getElementById('associationsGraph'),
 			model: graph,
+			height: (document.getElementById('GraphContainer') as HTMLDivElement)?.offsetHeight,
+			width: (document.getElementById('GraphContainer') as HTMLDivElement)?.offsetWidth,
 			gridSize: 1,
-			cellViewNamespace: namespace
+			cellViewNamespace: shapes
 		});
+		paper.scaleContentToFit({ padding: 10 });
 
-		const rect = new shapes.standard.Rectangle();
-		rect.position(100, 30);
-		rect.resize(100, 40);
+		//function to create a node
+		function node(xPos: number, yPos: number, text: string): shapes.standard.Rectangle {
+			const node = root.clone();
+			node.position(xPos, yPos);
+			node.attr({
+				body: {
+					fill: 'blue'
+				},
+				label: {
+					text: text,
+					fill: 'white'
+				}
+			});
+			node.addTo(graph);
+			return node;
+		}
 
-		rect.attr({
+		//function to create a link
+		function link(
+			node1: shapes.standard.Rectangle,
+			node2: shapes.standard.Rectangle,
+			label: string
+		) {
+			const link = new shapes.standard.Link();
+			link.appendLabel({
+				attrs: {
+					text: {
+						text: label
+					}
+				}
+			});
+			link.source(node1);
+			link.target(node2);
+			link.addTo(graph);
+		}
+
+		//setup for creation
+		let originalX =
+			(document.getElementById('GraphContainer') as HTMLDivElement)?.offsetWidth / 2 - 50;
+		let originalY = 30;
+
+		//creating root node
+		const root = new shapes.standard.Rectangle();
+		root.position(originalX, originalY);
+		root.resize(100, 40);
+		root.attr({
 			body: {
 				fill: 'blue'
 			},
@@ -38,32 +81,28 @@
 				fill: 'white'
 			}
 		});
-		rect.addTo(graph);
+		root.addTo(graph);
 
-		const rect2 = rect.clone();
-		rect2.position(100, 200);
-		rect2.attr({
-			body: {
-				fill: 'blue'
-			},
-			label: {
-				text: assetName,
-				fill: 'white'
-			}
-		});
-		rect2.addTo(graph);
-
-		const link = new shapes.standard.Link();
-		link.appendLabel({
-			attrs: {
-				text: {
-					text: assetName
+		//create the rest of the graph
+		originalX = originalX + 200;
+		for (let [field, value] of Object.entries(metadataFields)) {
+			if (typeof value === 'string' && value.startsWith('DOCUMENT-ID: ')) {
+				originalX = originalX - 200;
+				let newNode = node(originalX, originalY + 170, value);
+				link(root, newNode, field);
+			} else if (
+				Array.isArray(value) &&
+				value.length > 0 &&
+				typeof value[0] === 'string' &&
+				value[0].startsWith('DOCUMENT-ID: ')
+			) {
+				for (let doc of value) {
+					originalX = originalX - 200;
+					let newNode = node(originalX, originalY + 170, doc);
+					link(root, newNode, field);
 				}
 			}
-		});
-		link.source(rect);
-		link.target(rect2);
-		link.addTo(graph);
+		}
 	});
 </script>
 
@@ -145,7 +184,7 @@
 				<!--Audit trail-->
 				<p style="">Audit trail here</p>
 			</div>
-			<div class="card variant-ringed col-span-2 row-start-2">
+			<div class="card variant-ringed col-span-2 row-start-2" id="GraphContainer">
 				<!--Associations graph-->
 				<div id="associationsGraph" class="h-full w-full"></div>
 			</div>
