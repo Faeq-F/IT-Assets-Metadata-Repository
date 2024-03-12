@@ -15,130 +15,56 @@
 	const modalStore = getModalStore();
 
 	onMount(() => {
-		class RectangleTwoLabels extends shapes.standard.Rectangle {
-			defaults() {
-				return {
-					...super.defaults,
-					type: 'custom.RectangleTwoLabels'
-				};
-			}
-
-			preinitialize() {
-				this.markup = util.svg/* xml */ `
-            <rect @selector="body" />
-            <text @selector="label" />
-            <text @selector="labelSecondary" />
-        `;
-			}
-		}
-
-		const namespace = { ...shapes, custom: { RectangleTwoLabels } };
-
+		const namespace = shapes;
 		const graph = new dia.Graph({}, { cellNamespace: namespace });
 
 		const paper = new dia.Paper({
 			el: document.getElementById('associationsGraph'),
 			model: graph,
-
 			gridSize: 1,
 			cellViewNamespace: namespace
 		});
 
-		// Add this code to load cells from JSON
-		graph.fromJSON({
-			cells: [
-				{
-					type: 'standard.Rectangle',
-					size: { width: 100, height: 60 },
-					position: { x: 50, y: 50 },
-					attrs: {
-						body: { fill: '#C9ECF5' },
-						label: { text: 'standard.Rectangle', textWrap: { width: 'calc(w-10)' } }
-					}
-				},
-				{
-					type: 'custom.RectangleTwoLabels',
-					size: { width: 140, height: 80 },
-					position: { x: 200, y: 30 },
-					attrs: {
-						body: { fill: '#F5BDB0' },
-						label: { text: 'custom.RectangleTwoLabels', textWrap: { width: 'calc(w-10)' } },
-						labelSecondary: {
-							text: 'SecondaryLabel',
-							x: 'calc(w/2)',
-							y: 'calc(h+15)',
-							textAnchor: 'middle',
-							textVerticalAnchor: 'middle',
-							fontSize: 14
-						}
-					}
-				}
-			]
+		const rect = new shapes.standard.Rectangle();
+		rect.position(100, 30);
+		rect.resize(100, 40);
+
+		rect.attr({
+			body: {
+				fill: 'blue'
+			},
+			label: {
+				text: assetName,
+				fill: 'white'
+			}
 		});
+		rect.addTo(graph);
+
+		const rect2 = rect.clone();
+		rect2.position(100, 200);
+		rect2.attr({
+			body: {
+				fill: 'blue'
+			},
+			label: {
+				text: assetName,
+				fill: 'white'
+			}
+		});
+		rect2.addTo(graph);
+
+		const link = new shapes.standard.Link();
+		link.appendLabel({
+			attrs: {
+				text: {
+					text: assetName
+				}
+			}
+		});
+		link.source(rect);
+		link.target(rect2);
+		link.addTo(graph);
 	});
-
-	// 	class RectangleTwoLabels extends shapes.standard.Rectangle {
-	// 		defaults() {
-	// 			return {
-	// 				...super.defaults,
-	// 				type: 'custom.RectangleTwoLabels'
-	// 			};
-	// 		}
-
-	// 		preinitialize() {
-	// 			this.markup = joint.util.svg/* xml */ `
-	//         <rect @selector="body" />
-	//         <text @selector="label" />
-	//         <text @selector="labelSecondary" />
-	//     `;
-	// 		}
-	// 	}
-	// 	const namespace = { ...shapes, custom: { RectangleTwoLabels }};
-	// 	const graph = new dia.Graph({}, { cellNamespace: namespace });
-
-	// 	const paper = new dia.Paper({
-	// 		el: document.getElementById('myholder'),
-	// 		model: graph,
-	// 		width: 600,
-	// 		height: 100,
-	// 		gridSize: 1,
-	// 		cellViewNamespace: namespace
-	// 	});
-
-	// 	const rect = new shapes.standard.Rectangle();
-	// 	rect.position(100, 30);
-	// 	rect.resize(100, 40);
-	// 	//rect.type("custom.RectangleTwoLabels");
-	// 	rect.attr({
-	// 		body: {
-	// 			fill: 'blue'
-	// 		},
-	// 		label: {
-	// 			text: assetName,
-	// 			fill: 'white'
-	// 		},
-	// 		labelSecondary: {
-	// 			text: 'SecondaryLabel',
-	// 			x: 'calc(w/2)',
-	// 			y: 'calc(h+15)',
-	// 			textAnchor: 'middle',
-	// 			textVerticalAnchor: 'middle',
-	// 			fontSize: 14
-	// 		}
-
-	// 	});
-	// 	rect.addTo(graph);
-
-	// 	const rect2 = rect.clone();
-	// 	rect2.translate(300, 0);
-	// 	rect2.attr('label/text', 'World!');
-	// 	rect2.addTo(graph);
-
-	// 	const link = new shapes.standard.Link();
-	// 	link.source(rect);
-	// 	link.target(rect2);
-	// 	link.addTo(graph);
-	// });
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">
