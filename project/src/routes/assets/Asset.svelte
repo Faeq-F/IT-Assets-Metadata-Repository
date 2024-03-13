@@ -12,7 +12,7 @@
 	import { highlight } from '../../lib/scripts/keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';
 	import Cookies from 'js-cookie';
-	import AssociationCard from '../../lib/components/AssociationCard.svelte';
+	import AssociationCard from '../../lib/components/cards/AssociationCard.svelte';
 	import ExpandedType from '../types/ExpandedType.svelte';
 	import { onMount } from 'svelte';
 	const toastStore = getToastStore();

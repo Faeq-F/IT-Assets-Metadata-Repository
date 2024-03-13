@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
-	import ExpandedAsset from '../../routes/assets/ExpandedAsset.svelte';
-	import ExpandedUser from '../../routes/profile/ExpandedUser.svelte';
-	import { highlight } from '../scripts/keywordSearch';
+	import ExpandedAsset from '../../../routes/assets/ExpandedAsset.svelte';
+	import ExpandedUser from '../../../routes/profile/ExpandedUser.svelte';
+	import { highlight } from '../../scripts/keywordSearch';
 	const modalStore = getModalStore();
 
 	export let document: any;

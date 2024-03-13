@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import { fetchDocumentByID, fetchDocuments, updateDocument } from '$lib/apiRequests';
+	import { fetchDocumentByID, updateDocument, fetchDocuments } from '$lib/apiRequests';
 	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
 	import InputList from '../../lib/components/customInputs/InputList.svelte';
+	import Cookies from 'js-cookie';
 	import { diff } from 'json-diff-ts';
+
 	const toastStore = getToastStore();
 	toastStore.trigger({
 		message: 'You may have to refresh association lists',
@@ -119,113 +121,71 @@
 
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
-		// updateDocument('Asset', id, data).then((response) => {
-		// 	console.log(response);
-		// 	location.reload();
-		// 	toastStore.trigger({
-		// 		message: 'Asset updated',
-		// 		background: 'variant-ghost-success',
-		// 		timeout: 3000
-		// 	});
-		// 	modalStore.close();
-		// });
+		updateDocument('Asset', id, data).then((response: any) => {
+			location.reload();
+			console.log(response);
+			toastStore.trigger({
+				message: 'Asset updated',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
+			modalStore.close();
+		});
 
-		let diffs: any[] = [];
+		// formatting date
+		let current = new Date();
+		let day = current.getDate();
+		let month = current.getMonth() + 1;
+		let year = current.getFullYear();
+		let current_date = `${day}/${month}/${year}`;
+		let current_time = current.toLocaleTimeString();
 
 		var originalAsset = {
 			assetName: assetName,
 			assetLink: assetLink,
-			assetType: assetType,
 			metadataFields: metadataFields
 		};
 
-		var auditData = {
-			reference: id,
-			original: originalAsset,
-			diffs: diffs
+		// call import for diffs
+		let diffslib = diff(originalAsset, assetObject);
+
+		// formatting diffs
+		var diffs = {
+			author: Cookies.get('savedLogin-username'),
+			date: current_date,
+			time: current_time,
+			changes: diffslib
 		};
 
-		const audit = new FormData();
-		audit.append('newData', JSON.stringify(auditData));
+		var dbdiffs: any[] = [];
+		var auditid: any;
 
-		auditExists(id).then((exists) => {
-			if (exists) {
-				// TODO: update existingAudits to append newdata into diffs
-				console.log('exists');
+		// getting original diff
+		await fetchDocuments('diff').then((fetchdiffs: any) => {
+			for (let i of fetchdiffs) {
+				if (i.reference == id) {
+					dbdiffs = i.diffs;
+					auditid = i._id;
+				}
 			}
 		});
 
-		async function auditExists(id: string) {
-			const auditDocuments = await fetchDocuments('diff');
-			for (let i of auditDocuments) {
-				if (i.assetReference == id) {
-					return true; // Return true immediately if match found
-				}
-			}
-			return false; // Return false if no match found after checking all documents
-		}
+		// append new diffs onto existing diff document
+		dbdiffs.push(diffs);
 
-		// var testObj1 = {
-		// 	_id: '65dc7fc269720c71a664f879',
-		// 	assetName: 'Testing12',
-		// 	assetLink: 'testing12.co.uk',
-		// 	assetType: 'Class',
-		// 	metadataFields: {
-		// 		'Line count': '20',
-		// 		'Documentation site': 'testst',
-		// 		Language: 'java',
-		// 		'FPA Points': '33'
-		// 	}
-		// };
+		// remaking audit with new diff array
+		var auditData = {
+			reference: id,
+			original: originalAsset,
+			diffs: dbdiffs
+		};
 
-		// var testObj2 = {
-		// 	_id: '65dc7fc269720c71a664f879',
-		// 	assetName: 'test',
-		// 	assetLink: 'testing12.com',
-		// 	assetType: 'Class',
-		// 	metadataFields: {
-		// 		'Line count': '20',
-		// 		'Documentation site': 'testst',
-		// 		Language: 'Python',
-		// 		Test: 'hi'
-		// 	}
-		// };
-
-		// console.log(diff(testObj1, testObj2));
-
-		// defining that keys are strings same with the keys nested in key i.e. metaDataFields
-		// interface Difference {
-		// 	[key: string]: string | Difference;
-		// }
-
-		// function diff(originalAsset: any, newAsset: any) {
-		// 	const differences: Difference = {};
-		// 	// Go over each key in the asset
-		// 	for (const key in originalAsset) {
-		// 		// Checks if the names of the keys are the same
-		// 		if (originalAsset.hasOwnProperty(key) && newAsset.hasOwnProperty(key)) {
-		// 			// Checks if the type of the value is an object (covers metadataFields)
-		// 			if (typeof originalAsset[key] === 'object') {
-		// 				const nestedDifferences = diff(originalAsset[key], newAsset[key]);
-		// 				// Checks if there are any differences in recursive call
-		// 				if (Object.keys(nestedDifferences).length > 0) {
-		// 					// if true then add them as new values
-		// 					differences[key] = nestedDifferences;
-		// 				}
-		// 			} else if (originalAsset[key] !== newAsset[key]) {
-		// 				// Checks difference between values for specific keys then adds new value for the corresponding key
-		// 				differences[key] = newAsset[key];
-		// 			}
-		// 		}
-		// 	}
-		// 	return differences;
-		// }
-
-		//const differences = diff(test1, test2);
-		// console.log(differences);
-
-		// const otherdifference = diff(originalAsset, assetObject);
-		// console.log(otherdifference);
+		// update the audit with new data
+		const audit = new FormData();
+		audit.append('newData', JSON.stringify(auditData));
+		await updateDocument('diff', auditid, audit).then((response: any) => {
+			console.log(response);
+		});
 	}
 
 	function generatePreSavedAssociations(value: any, associationType: string) {
@@ -233,29 +193,33 @@
 		const generation = new Promise((resolve) => {
 			if (associationType == 'Asset') {
 				for (let i of value) {
-					fetchDocumentByID(i.replace('DOCUMENT-ID: ', '')).then((document) => {
-						associations.push({
-							label: document.assetName + ' (' + document.assetType + ')',
-							value: document._id,
-							meta: {
-								name: document.assetName,
-								extraDetail: document.assetType
-							}
-						});
-					});
+					fetchDocumentByID(i.replace('DOCUMENT-ID: ', '')).then(
+						(document: { assetName: string; assetType: string; _id: any }) => {
+							associations.push({
+								label: document.assetName + ' (' + document.assetType + ')',
+								value: document._id,
+								meta: {
+									name: document.assetName,
+									extraDetail: document.assetType
+								}
+							});
+						}
+					);
 				}
 			} else {
 				for (let i of value) {
-					fetchDocumentByID(i.replace('DOCUMENT-ID: ', '')).then((document) => {
-						associations.push({
-							label: document.username + ' (' + document.email + ')',
-							value: document._id,
-							meta: {
-								name: document.username,
-								extraDetail: document.email
-							}
-						});
-					});
+					fetchDocumentByID(i.replace('DOCUMENT-ID: ', '')).then(
+						(document: { username: string; email: string; _id: any }) => {
+							associations.push({
+								label: document.username + ' (' + document.email + ')',
+								value: document._id,
+								meta: {
+									name: document.username,
+									extraDetail: document.email
+								}
+							});
+						}
+					);
 				}
 			}
 			resolve(associations);

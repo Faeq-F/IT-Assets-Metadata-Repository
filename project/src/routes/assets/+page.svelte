@@ -23,7 +23,7 @@
 	import { highlight, keywordFilter } from '../../lib/scripts/keywordSearch';
 	import Cookies from 'js-cookie';
 	import { activeFilters } from '$lib/stores';
-	import Placeholder from '$lib/components/placeholder.svelte';
+	import Placeholder from '$lib/components/cards/placeholder.svelte';
 
 	onMount(() => {
 		if (browser) {

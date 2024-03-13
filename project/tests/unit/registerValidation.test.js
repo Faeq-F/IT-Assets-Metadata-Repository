@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { hashCode, containNumbers } from '../../src/routes/register/validate';
+import { hashCode, containNumbers } from '$lib/scripts/validate';
 
 test('HashCode', () => {
 	const result = hashCode('test');
