@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { fetchDocumentByID } from '$lib/apiRequests';
+	import { fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import AssociationCard from '../../lib/components/AssociationCard.svelte';
 
 	export let id: string;
@@ -47,6 +47,18 @@
 		}
 	];
 
+	function returnDiff() {
+		fetchDocuments('diff').then((diffs) => {
+			for (let i of diffs) {
+				if (i.reference == id) {
+					for (let j of i.diffs) {
+						parseDiff(j.changes);
+					}
+				}
+			}
+		}); 
+	}
+		
 	function parseDiff(diff: any) {
 		for (const item of diff) {
 			if (item.changes && Array.isArray(item.changes)) {
