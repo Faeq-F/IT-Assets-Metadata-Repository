@@ -55,6 +55,7 @@
 <svelte:head>
 	<title>Permissions</title>
 </svelte:head>
+<a class="variant-filled-primary btn" href="/profile" rel="nonreffere"> Back </a>
 
 <h1 class="h1">Manage Permissions</h1>
 <div class="usersContainer" id="usersContainer">
@@ -79,8 +80,8 @@
 	{/each}
 </div>
 <button id="updatePermissions" class="variant-filled-primary btn" on:click={updateUserPermissions}
-	>Update user permissions</button
->
+	>Update user permissions</button>
+
 
 <style>
 	#updatePermissions {
