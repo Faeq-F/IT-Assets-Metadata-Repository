@@ -58,8 +58,18 @@ test('Create a new user, login as it, delete account and attempt to log back in'
 
 	// Navigate to profile and delete account
 	await page.goto('/profile');
+
+	// Check if the confirmation prompt is created and accept it
+	page.on('dialog', async (dialog) => {
+		expect(dialog.type()).toContain('confirm');
+		expect(dialog.message()).toContain('Are you sure you want to delete your account?');
+
+		await dialog.accept();
+	});
+
 	await page.getByRole('button', { name: 'Delete Account' }).click();
 	await delay(time);
+
 	expect(page.url()).toBe(site);
 
 	// Attempt to sign back in

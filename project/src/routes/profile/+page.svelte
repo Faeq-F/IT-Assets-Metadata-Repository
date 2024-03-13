@@ -6,7 +6,12 @@
 	import Cookies from 'js-cookie';
 	import { deleteDocument, fetchDocuments } from '$lib/apiRequests';
 	import UpdateAccount from './updateAccount.svelte';
-	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import {
+		getModalStore,
+		getToastStore,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
 
 	onMount(() => {
 		if (browser) {
@@ -14,6 +19,7 @@
 		}
 	});
 
+	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: UpdateAccount };
 	const modal: ModalSettings = {
@@ -22,15 +28,23 @@
 	};
 
 	function deleteAccount() {
-		fetchDocuments('User').then((Users) => {
-			for (let i of Users) {
-				if (i.username == Cookies.get('savedLogin-username')) {
-					deleteDocument('User', i._id).then(() => {
-						logOut();
-					});
+		if (confirm('Are you sure you want to delete your account?')) {
+			fetchDocuments('User').then((Users) => {
+				for (let i of Users) {
+					if (i.username == Cookies.get('savedLogin-username')) {
+						deleteDocument('User', i._id).then(() => {
+							toastStore.trigger({
+								message: 'Account deleted',
+								background: 'variant-ghost-success',
+								timeout: 3000
+							});
+
+							logOut();
+						});
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	function logOut() {
