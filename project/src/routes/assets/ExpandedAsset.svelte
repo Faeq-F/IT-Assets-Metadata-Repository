@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { fetchDocumentByID } from '$lib/apiRequests';
+	import { fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
 	import Update from '$lib/components/cards/auditTrail/Update.svelte';
 	import User from '$lib/components/cards/auditTrail/User.svelte';
+	import { onMount } from 'svelte';
 
 	export let id: string;
 	export let assetName: string;
@@ -12,55 +13,7 @@
 	export let metadataFields: any;
 
 	const modalStore = getModalStore();
-	const diff = [
-		{
-			type: 'UPDATE',
-			key: 'assetName',
-			value: 'test',
-			oldValue: 'Testing12'
-		},
-		{
-			type: 'UPDATE',
-			key: 'assetLink',
-			value: 'testing12.com',
-			oldValue: 'testing12.co.uk'
-		},
-		{
-			type: 'UPDATE',
-			key: 'metadataFields',
-			changes: [
-				{
-					type: 'UPDATE',
-					key: 'Language',
-					value: 'Python',
-					oldValue: 'java'
-				},
-				{
-					type: 'ADD',
-					key: 'Test',
-					value: 'hi'
-				},
-				{
-					type: 'REMOVE',
-					key: 'FPA Points',
-					value: '33'
-				}
-			]
-		}
-	];
 
-	function returnDiff() {
-		fetchDocuments('diff').then((diffs) => {
-			for (let i of diffs) {
-				if (i.reference == id) {
-					for (let j of i.diffs) {
-						parseDiff(j.changes);
-					}
-				}
-			}
-		}); 
-	}
-		
 	function parseDiff(diff: any) {
 		for (const item of diff) {
 			if (item.changes && Array.isArray(item.changes)) {
@@ -84,7 +37,21 @@
 			}
 		}
 	}
-	parseDiff(diff);
+
+	onMount(async () => {
+		fetchDocuments('diff').then((diffs) => {
+			for (let i of diffs) {
+				if (i.reference == id) {
+					console.log(i.original);
+					for (let j of i.diffs) {
+						console.log(j.author);
+						console.log(j.date + ' ' + j.time);
+						parseDiff(j.changes);
+					}
+				}
+			}
+		});
+	});
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">
@@ -167,6 +134,7 @@
 				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />

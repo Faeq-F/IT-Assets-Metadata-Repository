@@ -121,70 +121,70 @@
 
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
-		updateDocument('Asset', id, data).then((response: any) => {
-			location.reload();
+		updateDocument('Asset', id, data).then(async (response: any) => {
 			console.log(response);
+			// formatting date
+			let current = new Date();
+			let day = current.getDate();
+			let month = current.getMonth() + 1;
+			let year = current.getFullYear();
+			let current_date = `${day}/${month}/${year}`;
+			let current_time = current.toLocaleTimeString();
+
+			var originalAsset = {
+				assetName: assetName,
+				assetLink: assetLink,
+				assetType: assetType,
+				metadataFields: metadataFields
+			};
+
+			// call import for diffs
+			let diffslib = diff(originalAsset, assetObject);
+
+			// formatting diffs
+			var diffs = {
+				author: Cookies.get('savedLogin-username'),
+				date: current_date,
+				time: current_time,
+				changes: diffslib
+			};
+
+			var dbdiffs: any[] = [];
+			var auditid: any;
+
+			// getting original diff
+			await fetchDocuments('diff').then((fetchdiffs: any) => {
+				for (let i of fetchdiffs) {
+					if (i.reference == id) {
+						dbdiffs = i.diffs;
+						auditid = i._id;
+					}
+				}
+			});
+
+			// append new diffs onto existing diff document
+			dbdiffs.push(diffs);
+
+			// remaking audit with new diff array
+			var auditData = {
+				reference: id,
+				original: originalAsset,
+				diffs: dbdiffs
+			};
+
+			// update the audit with new data
+			const audit = new FormData();
+			audit.append('newData', JSON.stringify(auditData));
+			await updateDocument('diff', auditid, audit).then((response: any) => {
+				console.log(response);
+			});
+			location.reload();
 			toastStore.trigger({
 				message: 'Asset updated',
 				background: 'variant-ghost-success',
 				timeout: 3000
 			});
 			modalStore.close();
-		});
-
-		// formatting date
-		let current = new Date();
-		let day = current.getDate();
-		let month = current.getMonth() + 1;
-		let year = current.getFullYear();
-		let current_date = `${day}/${month}/${year}`;
-		let current_time = current.toLocaleTimeString();
-
-		var originalAsset = {
-			assetName: assetName,
-			assetLink: assetLink,
-			metadataFields: metadataFields
-		};
-
-		// call import for diffs
-		let diffslib = diff(originalAsset, assetObject);
-
-		// formatting diffs
-		var diffs = {
-			author: Cookies.get('savedLogin-username'),
-			date: current_date,
-			time: current_time,
-			changes: diffslib
-		};
-
-		var dbdiffs: any[] = [];
-		var auditid: any;
-
-		// getting original diff
-		await fetchDocuments('diff').then((fetchdiffs: any) => {
-			for (let i of fetchdiffs) {
-				if (i.reference == id) {
-					dbdiffs = i.diffs;
-					auditid = i._id;
-				}
-			}
-		});
-
-		// append new diffs onto existing diff document
-		dbdiffs.push(diffs);
-
-		// remaking audit with new diff array
-		var auditData = {
-			reference: id,
-			original: originalAsset,
-			diffs: dbdiffs
-		};
-
-		// update the audit with new data
-		const audit = new FormData();
-		audit.append('newData', JSON.stringify(auditData));
-		await updateDocument('diff', auditid, audit).then((response: any) => {
-			console.log(response);
 		});
 	}
 
