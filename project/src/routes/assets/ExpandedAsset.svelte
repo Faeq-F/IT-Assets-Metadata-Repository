@@ -122,12 +122,15 @@
 		//create the rest of the graph
 		originalX = originalX + 200;
 		async function addToGraph(root: shapes.standard.Rectangle, metadataFields: any, yPos: number) {
+			let counter = 1;
 			for (let [field, value] of Object.entries(metadataFields)) {
 				if (typeof value === 'string' && value.startsWith('DOCUMENT-ID: ')) {
-					originalX = originalX - 200;
+					if (counter % 2 == 0) originalX = originalX - counter * 200;
+					else originalX = originalX + counter * 200;
 					let newNode = await node(originalX, yPos + 170, value);
 					nodesList.push(newNode);
 					link(root, newNode, field);
+					counter++;
 				} else if (
 					Array.isArray(value) &&
 					value.length > 0 &&
@@ -135,10 +138,12 @@
 					value[0].startsWith('DOCUMENT-ID: ')
 				) {
 					for (let doc of value) {
-						originalX = originalX - 200;
+						if (counter % 2 == 0) originalX = originalX - counter * 200;
+						else originalX = originalX + counter * 200;
 						let newNode = await node(originalX, yPos + 170, doc);
 						nodesList.push(newNode);
 						link(root, newNode, field);
+						counter++;
 					}
 				}
 			}
