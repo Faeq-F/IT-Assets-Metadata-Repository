@@ -32,8 +32,8 @@ export const insertDocument = (collectionName: string, formData: any) => {
 		method: 'POST',
 		body: formData
 	})
-		.then((response) => {
-			return response;
+		.then(async (response) => {
+			return await response.json();
 		})
 		.catch((err) => {
 			return err;
