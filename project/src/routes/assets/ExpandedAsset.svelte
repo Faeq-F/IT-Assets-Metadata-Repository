@@ -24,13 +24,13 @@
 		oldValue: string | undefined
 	) {
 		if (('' + value).startsWith('DOCUMENT-ID: ')) {
-			await fetchDocumentByID(value.replace('DOCUMENT-ID: ', '')).then((doc) => {
+			await fetchDocumentByID(value.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
 				if (doc.assetName != undefined) value = doc.assetName;
 				else value = doc.username;
 			});
 		}
 		if (oldValue != undefined && (oldValue + '').startsWith('DOCUMENT-ID: ')) {
-			await fetchDocumentByID(oldValue.replace('DOCUMENT-ID: ', '')).then((doc) => {
+			await fetchDocumentByID(oldValue.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
 				if (doc.assetName != undefined) oldValue = doc.assetName;
 				else oldValue = doc.username;
 			});
@@ -45,18 +45,30 @@
 				}
 			});
 		} else if (type == 'ADD') {
-			//create add component
+			new Add({
+				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
+				props: {
+					key: key,
+					newValue: value
+				}
+			});
 		} else {
-			//create removed component
+			new Remove({
+				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
+				props: {
+					key: key,
+					value: value
+				}
+			});
 		}
 	}
 
-	function parseDiff(diff: any) {
+	async function parseDiff(diff: any) {
 		for (const item of diff) {
 			if (item.changes && Array.isArray(item.changes)) {
-				parseChanges(item.changes);
+				await parseChanges(item.changes);
 			} else {
-				displayTrailComponent(item.type, item.key, item.value, item.oldValue);
+				await displayTrailComponent(item.type, item.key, item.value, item.oldValue);
 				console.log(
 					`Type: ${item.type}, Key: ${item.key}, Value: ${item.value}, Old Value: ${item.oldValue}`
 				);
@@ -64,12 +76,12 @@
 		}
 	}
 
-	function parseChanges(changes: any) {
+	async function parseChanges(changes: any) {
 		for (const change of changes) {
 			if (change.changes && Array.isArray(change.changes)) {
-				parseChanges(change.changes);
+				await parseChanges(change.changes);
 			} else {
-				displayTrailComponent(change.type, change.key, change.value, change.oldValue);
+				await displayTrailComponent(change.type, change.key, change.value, change.oldValue);
 				console.log(
 					`Type: ${change.type}, Key: ${change.key}, Value: ${change.value}, Old Value: ${change.oldValue}`
 				);
@@ -78,7 +90,7 @@
 	}
 
 	onMount(async () => {
-		fetchDocuments('diff').then((diffs): any => {
+		await fetchDocuments('diff').then(async (diffs) => {
 			for (let i of diffs) {
 				if (i.reference == id) {
 					new Original({
@@ -95,7 +107,7 @@
 								time: j.date + ' @ ' + j.time
 							}
 						});
-						parseDiff(j.changes);
+						await parseDiff(j.changes);
 					}
 				}
 			}
@@ -183,17 +195,6 @@
 			>
 				<!--Audit trail-->
 				<p class="h3 mt-1 text-center font-bold">Audit Trail</p>
-				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
-				<Add key="Test key" newValue="value0987" />
-				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
-				<Remove key="Test key" value="empty" />
 			</div>
 			<div class="card variant-ringed col-span-2 row-start-2">
 				<!--Associations graph-->
