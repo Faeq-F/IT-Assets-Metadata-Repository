@@ -36,37 +36,40 @@
 		}
 	});
 
+
 	function updateUserPermissions() {
 		let selects = document.getElementsByTagName('SELECT');
 		for (let i of selects) {
-			let newUserObject = {
-				username: (i as HTMLSelectElement).dataset.username,
-				email: (i as HTMLSelectElement).dataset.email,
-				role: (i as HTMLSelectElement).value,
-				passwordHash: (i as HTMLSelectElement).dataset.passwordHash
-			};
-			console.log(newUserObject);
-			
-//			fetchDocuments('User').then((Users) => {
-//				for (let i of Users) {
-//					if (i.username == newUserObject.username) {
-//						const data = new FormData();
-//						data.append('newData', JSON.stringify(newUserObject));
-//
-//						updateDocument('User', i._id, data)
-//							.then((response) => {
-//								console.log(response);
-//							})
-//							.catch((error) => {
-//								console.error('Update user role error', error)
-//							})
-//						Cookies.set('savedLogin-role', '' + i.role, { expires:70 });
-//						Cookies.set('savedLogin-username', '' + newUserObject.username, { expires: 70});
-//						Cookies.set('savedLogin-email', '' + newUserObject.email, { expires: 70});
-//						Cookies.set('savedLogin-password', '' + newUserObject.passwordHash, { expires: 70});
-//					}
-//				}	
-//			});
+			fetchDocuments('User').then((userDocument) => {
+				let user = userDocument.find((user: {username: string}) => user.username === (i as HTMLSelectElement).dataset.username);
+				let password = user.passwordHash;
+				let newUserObject = {
+					username: (i as HTMLSelectElement).dataset.username,
+					email: (i as HTMLSelectElement).dataset.email,
+					role: (i as HTMLSelectElement).value,
+					passwordHash: password,
+				};
+				console.log(newUserObject);
+		
+				for (let i of userDocument) {
+					if (i.username == newUserObject.username) {
+						const data = new FormData();
+						data.append('newData', JSON.stringify(newUserObject));
+
+						updateDocument('User', i._id, data)
+							.then((response) => {
+								console.log(response);
+							})
+							.catch((error) => {
+								console.error('Update user role error', error)
+							})
+						Cookies.set('savedLogin-role', '' + i.role, { expires:70 });
+						Cookies.set('savedLogin-username', '' + newUserObject.username, { expires: 70});
+						Cookies.set('savedLogin-email', '' + newUserObject.email, { expires: 70});
+						Cookies.set('savedLogin-password', '' + newUserObject.passwordHash, { expires: 70});
+					}
+				}	
+			});
 		}
 	}
 
