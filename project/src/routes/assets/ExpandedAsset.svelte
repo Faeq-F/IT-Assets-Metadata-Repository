@@ -14,7 +14,7 @@
 
 	const modalStore = getModalStore();
 
-	onMount(() => {
+	onMount(async () => {
 		//graph setup
 		const graph = new dia.Graph({}, { cellNamespace: shapes });
 		const paper = new dia.Paper({
@@ -28,19 +28,25 @@
 		paper.scaleContentToFit({ padding: 10 });
 
 		//function to create a node
-		function node(xPos: number, yPos: number, text: string): shapes.standard.Rectangle {
+		async function node(xPos: number, yPos: number, text: string): shapes.standard.Rectangle {
 			const node = root.clone();
-			node.position(xPos, yPos);
-			node.attr({
-				body: {
-					fill: 'blue'
-				},
-				label: {
-					text: text,
-					fill: 'white'
-				}
+			await fetchDocumentByID(text.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
+				let txt = 'Deleted item';
+				if (doc.assetName != undefined) txt = doc.assetName;
+				else if (doc.username != undefined) txt = doc.username;
+				node.position(xPos, yPos);
+				node.attr({
+					body: {
+						fill: 'blue'
+					},
+					label: {
+						text: txt,
+						fill: 'white'
+					}
+				});
+				node.addTo(graph);
 			});
-			node.addTo(graph);
+
 			return node;
 		}
 
@@ -88,7 +94,7 @@
 		for (let [field, value] of Object.entries(metadataFields)) {
 			if (typeof value === 'string' && value.startsWith('DOCUMENT-ID: ')) {
 				originalX = originalX - 200;
-				let newNode = node(originalX, originalY + 170, value);
+				let newNode = await node(originalX, originalY + 170, value);
 				link(root, newNode, field);
 			} else if (
 				Array.isArray(value) &&
@@ -98,7 +104,7 @@
 			) {
 				for (let doc of value) {
 					originalX = originalX - 200;
-					let newNode = node(originalX, originalY + 170, doc);
+					let newNode = await node(originalX, originalY + 170, doc);
 					link(root, newNode, field);
 				}
 			}
