@@ -35,13 +35,20 @@
 				if (doc.assetName != undefined) txt = doc.assetName;
 				else if (doc.username != undefined) txt = doc.username;
 				node.position(xPos, yPos);
+				node.resize(txt.length*12,60);
 				node.attr({
 					body: {
-						fill: 'blue'
+						fill: 'rgb(241,88,157)',
+						rx: 20,
+						ry: 20,
+
 					},
 					label: {
 						text: txt,
-						fill: 'white'
+						fill: '#E0E0FC',
+						fontSize: 18,
+						fontWeight: 'bold',
+						textShadow: '1px 1px 1px black'
 					}
 				});
 				node.addTo(graph);
@@ -77,14 +84,20 @@
 		//creating root node
 		const root = new shapes.standard.Rectangle();
 		root.position(originalX, originalY);
-		root.resize(100, 40);
+		root.resize(assetName.length * 12, 60);
 		root.attr({
 			body: {
-				fill: 'blue'
+				fill: '#b012f3',
+				rx: 20,
+				ry: 20,
+
 			},
 			label: {
 				text: assetName,
-				fill: 'white'
+				fill: '#E0E0FC',
+				fontSize: 18,
+				fontWeight: 'bold',
+				textShadow: '1px 1px 1px black'
 			}
 		});
 		root.addTo(graph);
