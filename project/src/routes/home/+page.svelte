@@ -26,7 +26,7 @@
 	<title>Home</title>
 </svelte:head>
 
-<h1 class="h1">Home</h1>
+<h1 class="h1 mt-14">Home</h1>
 <br />
 <div class="card bg-modern-50 w-9/12 object-center shadow-md" id="HomeCard">
 	<p>
@@ -35,7 +35,7 @@
 	</p>
 </div>
 <div class=" flex w-9/12" style="margin: 0 auto;">
-	<div class="card bg-modern-50 m-4 h-full w-3/6 p-5 shadow-md">
+	<div class="card bg-modern-50 m-4 w-3/6 p-5 shadow-md">
 		<div class="h3 font-medium">Your assets:</div>
 		{#if assetCount == 0}
 			⦿ You have no assets
@@ -45,10 +45,11 @@
 			⦿ You have a total of {assetCount} assets
 		{/if}
 		<div style="margin: 0 auto;">
+			<p class=" text-sm">Your top 20 associated assets:</p>
 			<AssociationsChart />
 		</div>
 	</div>
-	<div class="card bg-modern-50 m-4 h-full w-3/6 p-5 shadow-md">
+	<div class="card bg-modern-50 m-4 w-3/6 p-5 shadow-md">
 		<div class="h3 font-medium">Your asset types:</div>
 		{#if typeCount == 0}
 			⦿ You have no active asset types

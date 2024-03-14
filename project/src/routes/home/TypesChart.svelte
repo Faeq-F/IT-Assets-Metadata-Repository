@@ -6,7 +6,7 @@
 	import getRandomColor from '$lib/scripts/randomThemeColor';
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
-	const data = {
+	let data = {
 		labels: [''],
 		datasets: [
 			{
@@ -18,8 +18,8 @@
 	};
 
 	onMount(async () => {
-		fetchDocuments('Asset').then((AssetDocs) => {
-			fetchDocuments('AssetType').then((TypeDocs) => {
+		await fetchDocuments('Asset').then(async (AssetDocs) => {
+			await fetchDocuments('AssetType').then(async (TypeDocs) => {
 				const myMap = new Map();
 				for (let i of TypeDocs) {
 					myMap.set(i.typeName, 0);
@@ -39,6 +39,7 @@
 				}
 			});
 		});
+		data = data; // for reactivity - update the view when the graph is ready
 	});
 </script>
 
