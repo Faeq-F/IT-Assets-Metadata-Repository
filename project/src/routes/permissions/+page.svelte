@@ -60,11 +60,16 @@
 							.catch((error) => {
 								console.error('Update user role error', error)
 							})
+						Cookies.set('savedLogin-role', '' + i.role, { expires:70 });
+						Cookies.set('savedLogin-username', '' + newUserObject.username, { expires: 70});
+						Cookies.set('savedLogin-email', '' + newUserObject.email, { expires: 70});
+						Cookies.set('savedLogin-password', '' + newUserObject.passwordHash, { expires: 70});
 					}
 				}	
 			});
 		}
 	}
+
 </script>
 
 <svelte:head>
