@@ -15,11 +15,46 @@
 
 	const modalStore = getModalStore();
 
+	async function displayTrailComponent(
+		type: string,
+		key: string,
+		value: string,
+		oldValue: string | undefined
+	) {
+		if (('' + value).startsWith('DOCUMENT-ID: ')) {
+			await fetchDocumentByID(value.replace('DOCUMENT-ID: ', '')).then((doc) => {
+				if (doc.assetName != undefined) value = doc.assetName;
+				else value = doc.username;
+			});
+		}
+		if (oldValue != undefined && (oldValue + '').startsWith('DOCUMENT-ID: ')) {
+			await fetchDocumentByID(oldValue.replace('DOCUMENT-ID: ', '')).then((doc) => {
+				if (doc.assetName != undefined) oldValue = doc.assetName;
+				else oldValue = doc.username;
+			});
+		}
+		if (type == 'UPDATE') {
+			new Update({
+				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
+				props: {
+					key: key,
+					newValue: value,
+					oldValue: oldValue
+				}
+			});
+		} else if (type == 'ADD') {
+			//create add component
+		} else {
+			//create removed component
+		}
+	}
+
 	function parseDiff(diff: any) {
 		for (const item of diff) {
 			if (item.changes && Array.isArray(item.changes)) {
 				parseChanges(item.changes);
 			} else {
+				displayTrailComponent(item.type, item.key, item.value, item.oldValue);
 				console.log(
 					`Type: ${item.type}, Key: ${item.key}, Value: ${item.value}, Old Value: ${item.oldValue}`
 				);
@@ -32,6 +67,7 @@
 			if (change.changes && Array.isArray(change.changes)) {
 				parseChanges(change.changes);
 			} else {
+				displayTrailComponent(change.type, change.key, change.value, change.oldValue);
 				console.log(
 					`Type: ${change.type}, Key: ${change.key}, Value: ${change.value}, Old Value: ${change.oldValue}`
 				);
@@ -50,7 +86,6 @@
 						}
 					});
 					for (let j of i.diffs) {
-						//<User username="SOmeUser" time="12th January 2023, 12:05pm" />
 						new User({
 							target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
 							props: {
@@ -147,11 +182,6 @@
 				<!--Audit trail-->
 				<p class="h3 mt-1 text-center font-bold">Audit Trail</p>
 				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
-				<Update key="Test key" oldValue="value123" newValue="value0987" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
 			</div>
 			<div class="card variant-ringed col-span-2 row-start-2">
