@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
 	import { useForm, Hint, HintGroup, validators, minLength, required } from 'svelte-use-form';
-	import { checkPasswordsMatch, containNumbers, hashCode } from '../register/validate';
+	import { checkPasswordsMatch, containNumbers, hashCode } from '$lib/scripts/validate';
 	import Cookies from 'js-cookie';
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
 
