@@ -29,7 +29,7 @@
 	let expandType: ModalSettings;
 
 	onMount(async () => {
-		fetchDocuments('AssetType').then((docs) => {
+		await fetchDocuments('AssetType').then((docs) => {
 			for (let i of docs) {
 				if (i.typeName == type) {
 					expandTypeModalComponent = {
@@ -74,7 +74,20 @@
 	};
 
 	async function deleteAsset() {
-		await deleteDocument('Asset', id);
+		var auditid: string;
+		await deleteDocument('Asset', id).then(async () => {
+			await fetchDocuments('diff').then((fetchedAudits) => {
+				for (let i of fetchedAudits) {
+					if (i.reference == id) {
+						auditid = i._id;
+					}
+				}
+				console.log(auditid);
+				return auditid;
+			}).then(async (auditid) => {
+				await deleteDocument('diff', auditid);
+			}) 
+		});
 		toastStore.trigger({
 			message: 'Asset deleted',
 			background: 'variant-ghost-success',

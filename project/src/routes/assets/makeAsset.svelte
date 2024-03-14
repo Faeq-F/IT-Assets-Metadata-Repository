@@ -141,13 +141,7 @@
 				audit.append('newData', JSON.stringify(auditObject));
 		
 				await insertDocument('diff', audit)
-					.then((response: any) => {
-						console.log(response);
-					})
-					.catch((err: any) => {
-						console.log(err);
-					});
-		
+
 				toastStore.trigger({
 					message: 'Asset created',
 					background: 'variant-ghost-success',
