@@ -5,20 +5,25 @@
 		InputChip,
 		type ModalComponent,
 		type ModalSettings,
-		getDrawerStore
+		getDrawerStore,
+		RadioGroup,
+		RadioItem,
+		type PopupSettings,
+		popup
 	} from '@skeletonlabs/skeleton';
 
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import Asset from './Asset.svelte';
 	//@ts-ignore
 	import MakeAsset from './makeAsset.svelte';
-	import { highlight, keywordFilter } from './keywordSearch';
+	import { highlight, keywordFilter } from '../../lib/scripts/keywordSearch';
 	import Cookies from 'js-cookie';
 	import { activeFilters } from '$lib/stores';
+	import Placeholder from '$lib/components/cards/placeholder.svelte';
 
 	onMount(() => {
 		if (browser) {
@@ -28,7 +33,11 @@
 
 	const drawerStore = getDrawerStore();
 	function drawerOpen(): void {
-		drawerStore.open({ id: 'filterAssetsDrawer', width: 'w-[280px] md:w-[655px]' });
+		drawerStore.open({
+			id: 'filterAssetsDrawer',
+			width: 'w-[280px] md:w-[655px]',
+			position: 'right'
+		});
 	}
 
 	$: filters = $activeFilters;
@@ -49,22 +58,56 @@
 		type: 'component',
 		component: modalComponent
 	};
+
+	const association: PopupSettings = {
+		event: 'hover',
+		target: 'association',
+		placement: 'top'
+	};
+
+	let viewType: number = 0;
 </script>
 
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
 
-<h1 class="h1">Assets</h1>
+<div class="card z-[9999] p-4" data-popup="association">
+	An item annotated with <i class="fa-solid fa-stroopwafel"></i> refers to Users & Assets on the
+	system
+	<div class="card arrow" />
+</div>
+
+<h1 class="h1" use:popup={association}>Assets</h1>
 <br />
 <div>
 	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
-					<p id="nothingHere">Your assets:</p>
+					<RadioGroup
+						background="transparent"
+						class="text-token max-h-8  text-sm"
+						active="variant-soft"
+						hover="hover:variant-soft-primary"
+						border="border-2 border-modern-500"
+					>
+						<RadioItem bind:group={viewType} name="grid" value={0} class="h-4"
+							><i
+								class="fa-solid fa-grip fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+						<RadioItem bind:group={viewType} name="list" value={1} class="h-4"
+							><i
+								class="fa-solid fa-list-ul fa-md -mt-8 text-sm"
+								style="vertical-align: middle; line-height: 4.6rem;"
+							></i></RadioItem
+						>
+					</RadioGroup>
+					<p id="nothingHere" class="ml-2" use:popup={association}>Your assets:</p>
 				{:else}
-					<p id="nothingHere">
+					<p id="nothingHere" class="ml-2">
 						It doesn't look like you have any assets yet, click the <i class="fa-solid fa-plus"></i>
 						to get started
 					</p>
@@ -72,19 +115,19 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<!--Search by keyword bar-->
-				<div class="bg-white inline max-h-8 rounded-full border-2 border-modern-500">
+				<div class="inline max-h-8 rounded-full border-2 border-modern-500">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
 					<InputChip
 						bind:value={keywordSearchInput}
-						type="text"
 						id="keyword"
 						name="keyword"
 						placeholder="Enter search terms"
 						chips="variant-filled rounded-md"
 						rounded=" rounded-none"
 						padding="p-0"
-						class="float-right mr-5 inline w-9/12 border-0"
+						class="float-right mr-2 inline w-9/12 border-0 bg-modern-50"
+						style="background-color: transparent !important"
 					/>
 				</div>
 				<!--Open Filter Drawer-->
@@ -111,20 +154,33 @@
 <br />
 <!--Assets grid-->
 <div class="assetsContainer">
-	{#if AssetDocuments != undefined}
+	{#await fetchDocuments('Asset')}
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+		<Placeholder />
+	{:then AssetDocuments}
 		{#each AssetDocuments as asset}
-			{#if keywordFilter(asset, keywordSearchInput) && (filters.includes(asset.assetType) || filters.length == 0)}
-				<Asset
-					id={asset._id}
-					name={highlight(asset.assetName, keywordSearchInput)}
-					link={highlight(asset.assetLink, keywordSearchInput)}
-					type={highlight(asset.assetType, keywordSearchInput)}
-					metadata={asset.metadataFields}
-					{keywordSearchInput}
-				/>
-			{/if}
+			{#await keywordFilter(asset, keywordSearchInput)}
+				<Placeholder />
+			{:then shouldShow}
+				{#if shouldShow && (filters.includes(asset.assetType) || filters.length == 0)}
+					<Asset
+						{viewType}
+						id={asset._id}
+						name={highlight(asset.assetName, keywordSearchInput)}
+						link={highlight(asset.assetLink, keywordSearchInput)}
+						type={highlight(asset.assetType, keywordSearchInput)}
+						metadata={asset.metadataFields}
+						{keywordSearchInput}
+					/>
+				{/if}
+			{/await}
 		{/each}
-	{/if}
+	{/await}
 </div>
 
 <style>

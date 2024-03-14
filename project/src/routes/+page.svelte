@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { focusTrap } from '@skeletonlabs/skeleton';
-	import { fetchDocuments } from './api/apiRequests';
-	import { hashCode } from './register/validate';
+	import { fetchDocuments } from '$lib/apiRequests';
+	import { hashCode } from '../lib/scripts/validate';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 	import { redirectWhenLoginSaved } from '$lib/scripts/loginSaved';
 	redirectWhenLoginSaved();
 
+	/**
+	 *
+	 */
 	function loginUser() {
 		fetchDocuments('User').then((userDocuments) => {
 			let username = (document.getElementById('username') as HTMLInputElement).value;
@@ -60,7 +63,8 @@
 		/>
 	</label>
 	<br />
-	<button class="variant-filled-primary btn w-52" on:click={loginUser}>Log in</button>
+	<button class="variant-filled-primary btn w-52" on:click|preventDefault={loginUser}>Log in</button
+	>
 	<a href="/register">
 		<button class="variant-filled-primary btn w-52">Sign up</button>
 	</a>

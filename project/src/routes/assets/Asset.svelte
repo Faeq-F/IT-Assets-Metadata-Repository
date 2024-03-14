@@ -5,13 +5,17 @@
 		type ModalComponent,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
-
-	import { deleteDocument } from '../api/apiRequests';
+	//@ts-ignore
+	import { page } from '$app/stores'; //Does work
+	import { deleteDocument, fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import ExpandedAsset from './ExpandedAsset.svelte';
-	import { highlight } from './keywordSearch';
+	import { highlight } from '../../lib/scripts/keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';
-	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
+	import AssociationCard from '../../lib/components/cards/AssociationCard.svelte';
+	import ExpandedType from '../types/ExpandedType.svelte';
+	import { onMount } from 'svelte';
+	const toastStore = getToastStore();
 
 	export let name: string;
 	export let id: string;
@@ -19,6 +23,32 @@
 	export let type: string;
 	export let metadata: any;
 	export let keywordSearchInput: string[] = [];
+	export let viewType: number;
+
+	let expandTypeModalComponent: ModalComponent;
+	let expandType: ModalSettings;
+
+	onMount(async () => {
+		await fetchDocuments('AssetType').then((docs) => {
+			for (let i of docs) {
+				if (i.typeName == type) {
+					expandTypeModalComponent = {
+						ref: ExpandedType,
+						props: {
+							id: i._id,
+							typeName: i.typeName,
+							metadataFields: i.metadataFields
+						}
+					};
+					expandType = {
+						type: 'component',
+						component: expandTypeModalComponent,
+						backdropClasses: '!p-0'
+					};
+				}
+			}
+		});
+	});
 
 	let role = Cookies.get('savedLogin-role');
 	const modalStore = getModalStore();
@@ -44,7 +74,22 @@
 	};
 
 	async function deleteAsset() {
-		await deleteDocument('Asset', id);
+		var auditid: string;
+		await deleteDocument('Asset', id).then(async () => {
+			await fetchDocuments('diff')
+				.then((fetchedAudits) => {
+					for (let i of fetchedAudits) {
+						if (i.reference == id) {
+							auditid = i._id;
+						}
+					}
+					console.log(auditid);
+					return auditid;
+				})
+				.then(async (auditid) => {
+					await deleteDocument('diff', auditid);
+				});
+		});
 		toastStore.trigger({
 			message: 'Asset deleted',
 			background: 'variant-ghost-success',
@@ -57,7 +102,11 @@
 	let showMenu = 'none';
 </script>
 
-<div id="Asset" class="card card-hover bg-modern-50 drop-shadow-md">
+<div
+	id="Asset"
+	class="card card-hover bg-modern-50 drop-shadow-md"
+	style={viewType != 0 ? 'width: 100%;' : ''}
+>
 	<!--Popup menu-->
 	<div
 		id="menuPopup"
@@ -65,6 +114,20 @@
 		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
 	>
 		<div class="">
+			<button
+				class="variant-filled-surface btn btn-sm card-hover m-1"
+				on:click={() => {
+					navigator.clipboard.writeText($page.url.origin + '/shared?asset=' + id);
+					toastStore.trigger({
+						message: 'Copied link',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+				}}
+			>
+				<span><i class="fa-solid fa-share-nodes"></i></span>
+				<span>Share</span>
+			</button>
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
 				on:click={() => modalStore.trigger(expandModal)}
@@ -109,26 +172,58 @@
 		>
 	</div>
 
-	<div style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</div>
-	<hr />
-	<div class="ml-2 mt-1">
-		<!-- metadata -->
-		{#each Object.entries(metadata) as [field, value]}
-			<!-- eslint-disable svelte/no-at-html-tags-->
-			⦿ {@html highlight(field, keywordSearchInput)}:
-			{#if Array.isArray(value)}
-				{#each value as item}
-					<br />
-					<!-- eslint-disable svelte/no-at-html-tags-->
-					&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {@html highlight(item, keywordSearchInput)}
-				{/each}
-			{:else}
+	<button
+		on:click={() => modalStore.trigger(expandType)}
+		style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</button
+	>
+	{#if viewType == 0}
+		<hr />
+		<div class="ml-2 mt-1">
+			<!-- metadata -->
+			{#each Object.entries(metadata) as [field, value]}
 				<!-- eslint-disable svelte/no-at-html-tags-->
-				{@html highlight(value, keywordSearchInput)}
-			{/if}
-			<br />
-		{/each}
-	</div>
+				{#if Array.isArray(value)}
+					⦿ {@html highlight(field, keywordSearchInput)}:
+					{#each value as item}
+						<br />
+						{#if (item + '').startsWith('DOCUMENT-ID: ')}
+							{#await fetchDocumentByID(('' + item).replace('DOCUMENT-ID: ', ''))}
+								&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+								<span>Loading association</span>
+							{:then document}
+								&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-stroopwafel"></i>
+								{#if Object.keys(document).length == 0}
+									<span style="color: red; font-weight: bold;">Deleted item</span>
+								{:else}
+									<AssociationCard {document} />
+								{/if}
+							{/await}
+						{:else}
+							<!-- eslint-disable svelte/no-at-html-tags-->
+							&nbsp;&nbsp;&nbsp;&nbsp; ⦿ {@html highlight(item, keywordSearchInput)}
+						{/if}
+					{/each}
+				{:else if (value + '').startsWith('DOCUMENT-ID: ')}
+					<i class="fa-solid fa-stroopwafel"></i>
+					{@html highlight(field, keywordSearchInput)}:
+					{#await fetchDocumentByID(('' + value).replace('DOCUMENT-ID: ', ''))}
+						<span>Loading association</span>
+					{:then document}
+						{#if Object.keys(document).length == 0}
+							<span style="color: red; font-weight: bold;">Deleted item</span>
+						{:else}
+							<AssociationCard {document} {keywordSearchInput} />
+						{/if}
+					{/await}
+				{:else}
+					⦿ {@html highlight(field, keywordSearchInput)}:
+					<!-- eslint-disable svelte/no-at-html-tags-->
+					{@html highlight(value, keywordSearchInput)}
+				{/if}
+				<br />
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>

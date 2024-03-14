@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	import { fetchDocuments, insertDocument } from '../api/apiRequests';
+	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
+	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
+	import InputList from '../../lib/components/customInputs/InputList.svelte';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
-	fetchDocuments('AssetType').then((assetTypeDocuments) => {
+	fetchDocuments('AssetType').then((assetTypeDocuments: any[]) => {
 		activeTypes = assetTypeDocuments;
 	});
 
-	function makeAsset() {
+	async function makeAsset() {
 		//start by checking if the required fields are filled in
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;
 		var link = (document.getElementById('assetLink') as HTMLInputElement).value;
@@ -41,17 +43,40 @@
 		let metadataInputs = metadataForm.getElementsByTagName('input');
 		var metadataObject = {};
 		for (let i of metadataInputs) {
-			let key = i.id;
+			let key = i.id.replace('-association', '').replace('-InputList', '');
 			let value;
-			//check if the field is a list
-			if (i.placeholder.includes('multiple')) {
-				//if so, seperate the values
-				value = i.value.split(', ');
-				let newArr: number[] = [];
-				// check if cast required for numbers
+			//check if the field is a list of numbers or text
+			if (i.id.includes('InputList')) {
+				//if so, get the elements with the values
+				let collection = document
+					.getElementById(key + '-ListInputCollector')
+					?.getElementsByTagName('li');
+				if (collection) {
+					let newArr: any[] = [];
+					for (let j of collection) {
+						let iVal: any = (j as HTMLLIElement).innerHTML;
+						if (!i.placeholder.includes('strings of text')) iVal = parseFloat(iVal);
+						newArr.push(iVal);
+					}
+					value = newArr;
+				}
+			} else if (i.placeholder.includes('Search for multiple')) {
+				//the input is for a list of associations
+				let item = document
+					.getElementById(key + '-associationCollector')
+					?.getElementsByTagName('LI');
+				if (item) {
+					let newArr = [];
+					for (let j of item) {
+						let object = (j as HTMLElement).dataset.associatedobject;
+						if (object) newArr.push('DOCUMENT-ID: ' + JSON.parse(object).value);
+					}
+					value = newArr;
+				}
+			} else {
 				if (i.placeholder.includes('number')) {
-					for (let i in value) {
-						if (Number.isNaN(parseFloat(value[i]))) {
+					if (!(i.value == '')) {
+						if (Number.isNaN(parseFloat(i.value))) {
 							toastStore.trigger({
 								message: 'You tried submitting text as a number!',
 								background: 'variant-ghost-error',
@@ -59,23 +84,19 @@
 							});
 							return;
 						}
-						newArr[i] = parseFloat(value[i]);
+						value = parseFloat(i.value);
 					}
-					value = newArr;
-				}
-			} else {
-				if (i.placeholder.includes('number')) {
-					if (Number.isNaN(parseFloat(i.value))) {
-						toastStore.trigger({
-							message: 'You tried submitting text as a number!',
-							background: 'variant-ghost-error',
-							timeout: 3000
-						});
-						return;
+				} else if (i.placeholder.includes('text')) {
+					value = i.value;
+				} else if (i.placeholder.includes('Search for a')) {
+					let item = document
+						.getElementById(key + '-associationCollector')
+						?.getElementsByTagName('LI');
+					if (!(item == undefined || item.length == 0)) {
+						let liItem = (item[0] as HTMLElement).dataset.associatedobject;
+						if (liItem) value = 'DOCUMENT-ID: ' + JSON.parse(liItem).value;
 					}
-					value = parseFloat(i.value);
 				}
-				value = i.value;
 			}
 			metadataObject = { ...metadataObject, [key]: value };
 		}
@@ -86,23 +107,52 @@
 			assetType: type,
 			metadataFields: metadataObject
 		};
+
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
-		insertDocument('Asset', data).then((response) => {
-			console.log(response);
-		});
+		await insertDocument('Asset', data).then(async (response: any) => {
+			// response is the new id of the inserted doc now
+			let diffs: any[] = [];
+			// constructing audit object
+			var auditObject = {
+				reference: response,
+				original: {
+					assetName: name,
+					assetLink: link,
+					assetType: type,
+					metadataFields: metadataObject
+				},
+				diffs: diffs
+			};
+			// sending new asset into diff
+			const audit = new FormData();
+			audit.append('newData', JSON.stringify(auditObject));
 
-		toastStore.trigger({
-			message: 'Asset created',
-			background: 'variant-ghost-success',
-			timeout: 3000
+			await insertDocument('diff', audit);
+
+			toastStore.trigger({
+				message: 'Asset created',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
+			//Refresh the page
+			location.reload();
 		});
-		// Refresh the page
-		location.reload();
 	}
+
+	const requiredField: PopupSettings = {
+		event: 'hover',
+		target: 'requiredField',
+		placement: 'top'
+	};
 
 	let currentType: string;
 </script>
+
+<div class="bg-initial card p-4" data-popup="requiredField">
+	<p>Required Field</p>
+	<div class="bg-initial arrow" />
+</div>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
 	<div class="card h-full bg-modern-50 p-5">
@@ -110,7 +160,9 @@
 		<br /><br />
 		<form id="rootCreateAssetForm" class="text-center">
 			<label for="assetName" class="formlabel">
-				<p class="p-4 text-center">Asset Name:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Name:
+				</p>
 				<input
 					type="text"
 					id="assetName"
@@ -122,7 +174,9 @@
 			</label><br />
 
 			<label for="assetLink" class="formlabel">
-				<p class="p-4 text-center">Asset Link:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Link:
+				</p>
 				<input
 					type="text"
 					id="assetLink"
@@ -134,7 +188,9 @@
 			</label><br />
 
 			<label for="assetType" class="formlabel">
-				<p class="p-4 text-center">Asset Type:</p>
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Type:
+				</p>
 
 				<select id="assetType" class="select w-96" bind:value={currentType}>
 					<option>Select type</option>
@@ -152,13 +208,13 @@
 							<div class="p-4 text-center">{field.field}</div>
 							{#if field.dataType == 'Text'}
 								{#if field.list == true}
-									<input
-										type="text"
-										placeholder="Enter multiple bits of text, separate them with commas (', ')"
-										class="input w-96"
-										id={field.field}
-										name={field.field}
-									/><br /><br />
+									<InputList
+										fieldName={field.field}
+										dataType="text"
+										presavedValues={undefined}
+										style="margin: 5px auto;"
+									/>
+									<br /><br />
 								{:else}
 									<input
 										type="text"
@@ -170,12 +226,11 @@
 								{/if}
 							{:else if field.dataType == 'Number'}
 								{#if field.list == true}
-									<input
-										type="text"
-										placeholder="Enter multiple numbers, separate them with commas (', ')"
-										class="input w-96"
-										id={field.field}
-										name={field.field}
+									<InputList
+										fieldName={field.field}
+										dataType="number"
+										presavedValues={undefined}
+										style="margin: 5px auto;"
 									/><br /><br />
 								{:else}
 									<input
@@ -187,17 +242,23 @@
 									/><br /><br />
 								{/if}
 							{:else if field.dataType == 'Account'}
-								{#if field.list == true}
-									The application cannot associate accounts yet - coming soon!<br /><br />
-								{:else}
-									The application cannot associate accounts yet - coming soon!<br /><br />
-								{/if}
+								<InputAssociation
+									fieldName={field.field}
+									list={field.list}
+									associationType={'User'}
+									presavedAssociation={undefined}
+									style="margin: 5px auto;"
+								/>
+								<br /><br />
 							{:else if field.dataType == 'Asset'}
-								{#if field.list == true}
-									The application cannot associate assets yet - coming soon!<br /><br />
-								{:else}
-									The application cannot associate assets yet - coming soon!<br /><br />
-								{/if}
+								<InputAssociation
+									fieldName={field.field}
+									list={field.list}
+									associationType={'Asset'}
+									presavedAssociation={undefined}
+									style="margin: 5px auto;"
+								/>
+								<br /><br />
 							{/if}
 						{/each}
 					{/if}
@@ -206,7 +267,11 @@
 			<br />
 			<hr />
 			<br />
-			<button class="variant-filled-primary btn w-52" id="assetMaker" on:click={makeAsset}>
+			<button
+				class="variant-filled-primary btn w-52"
+				id="assetMaker"
+				on:click|preventDefault={makeAsset}
+			>
 				Make Asset</button
 			>
 		</form>

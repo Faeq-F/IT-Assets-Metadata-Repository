@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Sprint 4] - 2024-03-14
+
+### Added
+
+- Graphs on the home page
+  - A graph to show the number of assets created for each asset type
+  - A graph to show the top 20, most associated assets
+- Associations between assets
+- A graph in the expanded view to show asset associations
+  - ability to click on an asset associated to view its associations
+- Audit trails in the expanded view, to show changes to an asset over time
+- Share button on Assets, Asset Types and Users
+- Warning prompt on account deletion
+- List view for Assets & Asset Types
+- Loading spinners & animated placeholder elements
+
+### Fixed
+
+- Update Role permissions page to actually update user roles
+- Dark mode on assets search bar
+
+### Changed
+
+- Input for creating lists; now tokenized
+- 'Make Asset' modal to indicate required fields
+- 'Update Asset' modal to allow for updates to lists
+
+### Security
+
+- No changes.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
 ## [Sprint 3] - 2024-02-29
 
 ### Added
@@ -122,3 +161,4 @@ All notable changes to this project will be documented in this file.
 [Sprint 1]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-1
 [Sprint 2]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-2
 [Sprint 3]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-3
+[Sprint 4]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-4

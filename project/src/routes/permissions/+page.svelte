@@ -2,7 +2,7 @@
 	//@ts-ignore
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { fetchDocuments, updateDocument } from '../api/apiRequests';
+	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
@@ -91,7 +91,7 @@
 <h1 class="h1">Manage Permissions</h1>
 <div class="usersContainer" id="usersContainer">
 	{#each users as user}
-		<div class="card card-hover bg-modern-50 m-4 p-3.5 drop-shadow-md">
+		<div class="card card-hover m-4 bg-modern-50 p-3.5 drop-shadow-md">
 			<div class="h3 font-bold">{user.username}</div>
 			<div class="h4">{user.email}</div>
 			<br />
