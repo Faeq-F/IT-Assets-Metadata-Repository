@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@types/jointjs": "^2.0.0"
+  }
+}
