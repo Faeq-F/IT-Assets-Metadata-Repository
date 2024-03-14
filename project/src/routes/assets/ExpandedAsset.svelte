@@ -5,6 +5,7 @@
 	import { dia, shapes } from '@joint/core/joint.mjs';
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/AssociationCard.svelte';
+	import getRandomColor from '$lib/scripts/randomThemeColor';
 
 	export let id: string;
 	export let assetName: string;
@@ -35,17 +36,16 @@
 				if (doc.assetName != undefined) txt = doc.assetName;
 				else if (doc.username != undefined) txt = doc.username;
 				node.position(xPos, yPos);
-				node.resize(txt.length*12,60);
+				node.resize(txt.length * 12, 60);
 				node.attr({
 					body: {
-						fill: 'rgb(241,88,157)',
+						fill: getRandomColor(),
 						rx: 20,
-						ry: 20,
-
+						ry: 20
 					},
 					label: {
 						text: txt,
-						fill: '#E0E0FC',
+						fill: '#000000',
 						fontSize: 18,
 						fontWeight: 'bold',
 						textShadow: '1px 1px 1px black'
@@ -89,8 +89,7 @@
 			body: {
 				fill: '#b012f3',
 				rx: 20,
-				ry: 20,
-
+				ry: 20
 			},
 			label: {
 				text: assetName,
