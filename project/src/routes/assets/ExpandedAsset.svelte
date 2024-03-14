@@ -16,6 +16,7 @@
 	const modalStore = getModalStore();
 
 	onMount(async () => {
+		let nodesList: shapes.standard.Rectangle[] = [];
 		//graph setup
 		const graph = new dia.Graph({}, { cellNamespace: shapes });
 		const paper = new dia.Paper({
@@ -26,7 +27,23 @@
 			gridSize: 1,
 			cellViewNamespace: shapes
 		});
-		paper.scaleContentToFit({ padding: 10 });
+		paper.on('cell:pointerclick', async function (cellView: any, evt: any, x: number, y: number) {
+			let nodeWanted: shapes.standard.Rectangle;
+			for (let i of nodesList) {
+				if (i.attributes.attrs.label.extra == cellView.model.attributes.attrs.label.extra) {
+					nodeWanted = i;
+				}
+			}
+			if (nodeWanted) {
+				await fetchDocumentByID(
+					nodeWanted.attributes.attrs.label.extra.replace('DOCUMENT-ID: ', '')
+				).then(async (doc) => {
+					originalY = originalY + 100;
+					if (doc.metadataFields) await addToGraph(nodeWanted, doc.metadataFields, originalY);
+				});
+			}
+			paper.scaleContentToFit({ padding: 10 });
+		});
 
 		//function to create a node
 		async function node(xPos: number, yPos: number, text: string): shapes.standard.Rectangle {
@@ -45,6 +62,7 @@
 					},
 					label: {
 						text: txt,
+						extra: text,
 						fill: '#000000',
 						fontSize: 18,
 						fontWeight: 'bold',
@@ -103,24 +121,32 @@
 
 		//create the rest of the graph
 		originalX = originalX + 200;
-		for (let [field, value] of Object.entries(metadataFields)) {
-			if (typeof value === 'string' && value.startsWith('DOCUMENT-ID: ')) {
-				originalX = originalX - 200;
-				let newNode = await node(originalX, originalY + 170, value);
-				link(root, newNode, field);
-			} else if (
-				Array.isArray(value) &&
-				value.length > 0 &&
-				typeof value[0] === 'string' &&
-				value[0].startsWith('DOCUMENT-ID: ')
-			) {
-				for (let doc of value) {
+		async function addToGraph(root: shapes.standard.Rectangle, metadataFields: any, yPos: number) {
+			for (let [field, value] of Object.entries(metadataFields)) {
+				if (typeof value === 'string' && value.startsWith('DOCUMENT-ID: ')) {
 					originalX = originalX - 200;
-					let newNode = await node(originalX, originalY + 170, doc);
+					let newNode = await node(originalX, yPos + 170, value);
+					nodesList.push(newNode);
 					link(root, newNode, field);
+				} else if (
+					Array.isArray(value) &&
+					value.length > 0 &&
+					typeof value[0] === 'string' &&
+					value[0].startsWith('DOCUMENT-ID: ')
+				) {
+					for (let doc of value) {
+						originalX = originalX - 200;
+						let newNode = await node(originalX, yPos + 170, doc);
+						nodesList.push(newNode);
+						link(root, newNode, field);
+					}
 				}
 			}
 		}
+
+		await addToGraph(root, metadataFields, originalY);
+
+		paper.scaleContentToFit({ padding: 10 });
 	});
 
 	let expandedGraph = false;

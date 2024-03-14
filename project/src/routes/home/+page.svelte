@@ -26,7 +26,7 @@
 	<title>Home</title>
 </svelte:head>
 
-<h1 class="h1 mt-14">Home</h1>
+<h1 class="h1">Home</h1>
 <br />
 <div class="card bg-modern-50 w-9/12 object-center shadow-md" id="HomeCard">
 	<p>
@@ -34,7 +34,7 @@
 		source-code related assets
 	</p>
 </div>
-<div class=" flex w-9/12" style="margin: 0 auto;">
+<div class="flex w-9/12" style="margin: 0 auto;">
 	<div class="card bg-modern-50 m-4 w-3/6 p-5 shadow-md">
 		<div class="h3 font-medium">Your assets:</div>
 		{#if assetCount == 0}
