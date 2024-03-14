@@ -5,6 +5,7 @@
 	import Update from '$lib/components/cards/auditTrail/Update.svelte';
 	import User from '$lib/components/cards/auditTrail/User.svelte';
 	import { onMount } from 'svelte';
+	import Original from '$lib/components/cards/auditTrail/Original.svelte';
 
 	export let id: string;
 	export let assetName: string;
@@ -39,13 +40,24 @@
 	}
 
 	onMount(async () => {
-		fetchDocuments('diff').then((diffs) => {
+		fetchDocuments('diff').then((diffs): any => {
 			for (let i of diffs) {
 				if (i.reference == id) {
-					console.log(i.original);
+					new Original({
+						target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
+						props: {
+							original: i.original
+						}
+					});
 					for (let j of i.diffs) {
-						console.log(j.author);
-						console.log(j.date + ' ' + j.time);
+						//<User username="SOmeUser" time="12th January 2023, 12:05pm" />
+						new User({
+							target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
+							props: {
+								username: j.author,
+								time: j.date + ' @ ' + j.time
+							}
+						});
 						parseDiff(j.changes);
 					}
 				}
@@ -128,7 +140,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="card variant-ringed col-span-2 col-start-2 mr-4 overflow-y-scroll">
+			<div
+				class="card variant-ringed col-span-2 col-start-2 mr-4 overflow-y-scroll"
+				id="auditTrailDiv"
+			>
 				<!--Audit trail-->
 				<p class="h3 mt-1 text-center font-bold">Audit Trail</p>
 				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
