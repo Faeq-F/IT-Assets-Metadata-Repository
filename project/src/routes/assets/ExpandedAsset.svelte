@@ -3,6 +3,8 @@
 	import { fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
 	import Update from '$lib/components/cards/auditTrail/Update.svelte';
+	import Add from '$lib/components/cards/auditTrail/Add.svelte';
+	import Remove from '$lib/components/cards/auditTrail/Remove.svelte';
 	import User from '$lib/components/cards/auditTrail/User.svelte';
 	import { onMount } from 'svelte';
 	import Original from '$lib/components/cards/auditTrail/Original.svelte';
@@ -182,7 +184,16 @@
 				<!--Audit trail-->
 				<p class="h3 mt-1 text-center font-bold">Audit Trail</p>
 				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
+				<Add key="Test key" newValue="value0987" />
+				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
 				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<Update key="Test key" oldValue="value123" newValue="value0987" />
+				<User username="SOmeUser" time="12th January 2023, 12:05pm" />
+				<Remove key="Test key" value="empty" />
 			</div>
 			<div class="card variant-ringed col-span-2 row-start-2">
 				<!--Associations graph-->
