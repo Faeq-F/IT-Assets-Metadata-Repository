@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 
 	import { onMount } from 'svelte';
-	import { fetchDocuments } from '../api/apiRequests';
+	import { fetchDocuments, updateDocument } from '../api/apiRequests';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import Cookies from 'js-cookie';
 
@@ -46,8 +46,23 @@
 				passwordHash: (i as HTMLSelectElement).dataset.passwordHash
 			};
 			console.log(newUserObject);
-			//let id = (i as HTMLSelectElement).dataset.role;
-			//updateDocument request here
+			
+			fetchDocuments('User').then((Users) => {
+				for (let i of Users) {
+					if (i.username == newUserObject.username) {
+						const data = new FormData();
+						data.append('newData', JSON.stringify(newUserObject));
+
+						updateDocument('User', i._id, data)
+							.then((response) => {
+								console.log(response);
+							})
+							.catch((error) => {
+								console.error('Update user role error', error)
+							})
+					}
+				}	
+			});
 		}
 	}
 </script>
