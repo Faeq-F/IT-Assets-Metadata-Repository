@@ -69,9 +69,6 @@
 				await parseChanges(item.changes);
 			} else {
 				await displayTrailComponent(item.type, item.key, item.value, item.oldValue);
-				console.log(
-					`Type: ${item.type}, Key: ${item.key}, Value: ${item.value}, Old Value: ${item.oldValue}`
-				);
 			}
 		}
 	}
@@ -82,9 +79,6 @@
 				await parseChanges(change.changes);
 			} else {
 				await displayTrailComponent(change.type, change.key, change.value, change.oldValue);
-				console.log(
-					`Type: ${change.type}, Key: ${change.key}, Value: ${change.value}, Old Value: ${change.oldValue}`
-				);
 			}
 		}
 	}
