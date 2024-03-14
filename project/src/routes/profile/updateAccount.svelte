@@ -1,21 +1,27 @@
 <script lang="ts">
-	import { focusTrap } from '@skeletonlabs/skeleton';
+	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
 	import { useForm, Hint, HintGroup, validators, minLength, required } from 'svelte-use-form';
-	import {
-		checkPasswordsMatch,
-		containNumbers,
-		hashCode,
-		duplicateUsername
-	} from '../register/validate';
+	import { checkPasswordsMatch, containNumbers, hashCode } from '$lib/scripts/validate';
 	import Cookies from 'js-cookie';
-	//import { getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
 
-	//const toastStore = getToastStore();
-	//redirectWhenLoginSaved();
-
+	const toastStore = getToastStore();
 	const form = useForm();
 	const requiredMsg = 'This field is required';
+
+	function duplicateUsername(username: string): Promise<boolean> {
+		return fetchDocuments('User').then((documentsReturned) => {
+			for (let i of documentsReturned) {
+				// Return false if the username is unchanged (the same as the username stored in the cookie)
+				if (username == Cookies.get('savedLogin-username')) {
+					return false;
+				} else if (i.username == username) {
+					return true;
+				}
+			}
+			return false;
+		});
+	}
 
 	let usernameTaken = true;
 	function checkValidUsername() {
@@ -45,10 +51,29 @@
 
 						updateDocument('User', i._id, data)
 							.then((response) => {
+								// Update the cookies
+								Cookies.set('savedLogin-username', newUsername, { expires: 70 });
+								Cookies.set('savedLogin-password', '' + newPassHash, { expires: 70 });
+
 								console.log(response);
+
+								toastStore.trigger({
+									message: 'Account updated',
+									background: 'variant-ghost-success',
+									timeout: 3000
+								});
+
+								// Refresh the page
+								location.reload();
 							})
 							.catch((error) => {
 								console.error('Update user error: ', error);
+
+								toastStore.trigger({
+									message: 'Error updating details',
+									background: 'variant-ghost-error',
+									timeout: 3000
+								});
 							});
 					}
 				}
@@ -62,11 +87,13 @@
 </svelte:head>
 <div class="card p-5 shadow-xl" id="rootDiv">
 	<div class="card h-full bg-modern-50 p-1">
-		<br />
-		<h2 class="h2 mt-24 text-center">Update your details</h2>
+		<h2 class="h2 mt-20 text-center">Update your details</h2>
+		<p class="p mt-10 text-center">
+			Note: If you want to leave a credential unchanged (i.e. keep the same username/password), you
+			must enter your existing credential
+		</p>
 		<br /><br />
 		<hr />
-		<br />
 		<br />
 		<form action="" class="userForm w-6/12 text-center" use:focusTrap={true} use:form>
 			<form action="" class="userForm" use:focusTrap={true} use:form>
@@ -84,11 +111,11 @@
 							use:validators={[required, minLength(4)]}
 						/>
 						{#if usernameTaken}
-							<a href="/" title="Username already in use or invalid">
-								<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+							<a href="/profile" title="Username already in use or invalid">
+								<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 							</a>
 						{:else}
-							<a href="/" title="Valid username">
+							<a href="/profile" title="Valid username">
 								<i class="fa-solid fa-check"></i>
 							</a>
 						{/if}
@@ -168,7 +195,7 @@
 	}
 
 	#rootDiv {
-		height: 70vh;
+		height: 78vh;
 		width: 70vw;
 	}
 </style>

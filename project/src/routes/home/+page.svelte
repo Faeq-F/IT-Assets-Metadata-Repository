@@ -4,6 +4,9 @@
 	import { onMount } from 'svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { fetchDocuments } from '$lib/apiRequests';
+	import TypesChart from './TypesChart.svelte';
+	import AssociationsChart from './AssociationsChart.svelte';
+
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
@@ -31,8 +34,8 @@
 		source-code related assets
 	</p>
 </div>
-<div class=" flex w-9/12" style="margin: 0 auto;">
-	<div class="card m-4 h-96 w-3/6 bg-modern-50 p-5 shadow-md">
+<div class="flex w-9/12" style="margin: 0 auto;">
+	<div class="card m-4 w-3/6 bg-modern-50 p-5 shadow-md">
 		<div class="h3 font-medium">Your assets:</div>
 		{#if assetCount == 0}
 			⦿ You have no assets
@@ -41,16 +44,23 @@
 		{:else}
 			⦿ You have a total of {assetCount} assets
 		{/if}
+		<div style="margin: 0 auto;">
+			<p class=" text-sm">Your top 20 associated assets:</p>
+			<AssociationsChart />
+		</div>
 	</div>
-	<div class="card m-4 h-96 w-3/6 bg-modern-50 p-5 shadow-md">
+	<div class="card m-4 w-3/6 bg-modern-50 p-5 shadow-md">
 		<div class="h3 font-medium">Your asset types:</div>
 		{#if typeCount == 0}
 			⦿ You have no active asset types
 		{:else if typeCount == 1}
 			⦿ You have 1 active asset type
 		{:else}
-			⦿ You have a total of {typeCount} asset types
+			⦿ You have a total of {typeCount} active asset types
 		{/if}
+		<div style="margin: 0 auto;">
+			<TypesChart />
+		</div>
 	</div>
 </div>
 

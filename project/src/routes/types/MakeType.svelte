@@ -92,7 +92,7 @@
 				>
 					remove bottom field
 				</button>
-				<div class=" relative h-72 overflow-y-scroll">
+				<div class="min-h-24">
 					<ul class="list" id="createdMetadataFieldsList">
 						{#each fieldsSaved as field}
 							<li class="">
@@ -163,6 +163,11 @@
 	form {
 		position: relative;
 		top: initial;
+	}
+
+	#rootCreateTypeForm {
+		height: 75%;
+		overflow-y: scroll;
 	}
 
 	#metadataFieldAdder {

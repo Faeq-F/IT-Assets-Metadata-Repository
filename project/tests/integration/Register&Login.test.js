@@ -3,12 +3,6 @@ const delay = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(
 const time = 500;
 const site = 'http://localhost:4173/';
 
-test('Index page has expected h1', async ({ page }) => {
-	await page.goto('/');
-	//Demo assertion
-	//await expect(page.getByRole('heading', { name: 'Team Project' })).toBeVisible();
-});
-
 // Note: database must be running for the tests below to run as expected
 test('Login as root and sign out', async ({ page }) => {
 	await page.goto('/');
@@ -46,16 +40,17 @@ test('Invalid login', async ({ page }) => {
 test('Create a new user, login as it, delete account and attempt to log back in', async ({
 	page
 }) => {
-	const email = 'test@mail.com';
+	const email = 'tests@mail.com';
 	const username = 'testUser';
-	const password = 'testPass123';
-	const passwordCon = 'testPass123';
+	const password = 'password123';
 
 	await page.goto('/register');
 	await page.getByLabel('email').fill(email);
 	await page.getByLabel('username').fill(username);
 	await page.getByPlaceholder('Enter Password...').fill(password);
-	await page.getByPlaceholder('Enter Password again...').fill(passwordCon);
+	await page.getByPlaceholder('Enter Password again...').fill(password);
+
+	await expect(page.getByRole('button', { name: 'Create account' })).toBeEnabled();
 	await page.getByRole('button', { name: 'Create account' }).click();
 	// Wait (time) seconds for the login to process
 	await delay(time);
@@ -63,8 +58,18 @@ test('Create a new user, login as it, delete account and attempt to log back in'
 
 	// Navigate to profile and delete account
 	await page.goto('/profile');
+
+	// Check if the confirmation prompt is created and accept it
+	page.on('dialog', async (dialog) => {
+		expect(dialog.type()).toContain('confirm');
+		expect(dialog.message()).toContain('Are you sure you want to delete your account?');
+
+		await dialog.accept();
+	});
+
 	await page.getByRole('button', { name: 'Delete Account' }).click();
 	await delay(time);
+
 	expect(page.url()).toBe(site);
 
 	// Attempt to sign back in
