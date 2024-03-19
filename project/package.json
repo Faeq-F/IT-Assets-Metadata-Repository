@@ -76,6 +76,7 @@
 	"dependencies": {
 		"@floating-ui/dom": "1.6.1",
 		"@types/mongodb": "^4.0.7",
-		"dotenv": "^16.4.3"
+		"dotenv": "^16.4.3",
+		"jointjs": "^3.7.7"
 	}
 }
