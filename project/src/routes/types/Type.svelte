@@ -87,7 +87,7 @@
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
-			{#if role != 'viewer'}
+			{#if role == 'admin'}
 				<button
 					class="variant-filled-surface btn btn-sm card-hover m-1"
 					on:click={() => modalStore.trigger(updateModal)}
