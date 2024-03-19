@@ -2,7 +2,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	//@ts-ignore
-	import { dia, shapes } from '@joint/core/joint.mjs';
+	import { dia, shapes, V } from '@joint/core/joint.mjs';
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/AssociationCard.svelte';
 	import getRandomColor from '$lib/scripts/randomThemeColor';
@@ -16,6 +16,7 @@
 	const modalStore = getModalStore();
 
 	onMount(async () => {
+		let dragStartPosition
 		//graph setup
 		const graph = new dia.Graph({}, { cellNamespace: shapes });
 		const paper = new dia.Paper({
@@ -27,6 +28,21 @@
 			cellViewNamespace: shapes
 		});
 		paper.scaleContentToFit({ padding: 10 });
+		paper.on('blank:pointerdown',
+				function(event, x, y) {
+					var scale = V(paper.viewport).scale();
+					dragStartPosition = { x: x * scale.sx, y: y * scale.sy};
+				}
+		);
+		paper.on('cell:pointerup blank:pointerup', function(cellView, x, y) {
+			dragStartPosition = undefined;
+		});
+		document.getElementById("associationsGraph").addEventListener("mousemove", (event) => {
+			if (dragStartPosition)
+				paper.translate(
+						event.offsetX - dragStartPosition.x,
+						event.offsetY - dragStartPosition.y);
+		});
 
 		//function to create a node
 		async function node(xPos: number, yPos: number, text: string): shapes.standard.Rectangle {
