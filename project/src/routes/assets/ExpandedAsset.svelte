@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	import { dia, shapes } from 'jointjs';
+	import * as joint from 'jointjs';
 	import { fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
 	import getRandomColor from '$lib/scripts/randomThemeColor';
@@ -115,14 +115,14 @@
 	onMount(async () => {
 		let nodesList: any[] = [];
 		//graph setup
-		const graph = new dia.Graph({}, { cellNamespace: shapes });
-		const paper = new dia.Paper({
+		const graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
+		const paper = new joint.dia.Paper({
 			el: document.getElementById('associationsGraph'),
 			model: graph,
 			height: (document.getElementById('GraphContainer') as HTMLDivElement)?.offsetHeight,
 			width: (document.getElementById('GraphContainer') as HTMLDivElement)?.offsetWidth,
 			gridSize: 1,
-			cellViewNamespace: shapes
+			cellViewNamespace: joint.shapes
 		});
 
 		paper.on('cell:pointerclick', async function (cellView: any) {
@@ -148,7 +148,7 @@
 			xPos: number,
 			yPos: number,
 			text: string
-		): Promise<shapes.standard.Rectangle> {
+		): Promise<joint.shapes.standard.Rectangle> {
 			const node = root.clone();
 			await fetchDocumentByID(text.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
 				let txt = 'Deleted item';
@@ -179,11 +179,11 @@
 
 		//function to create a link
 		function link(
-			node1: shapes.standard.Rectangle,
-			node2: shapes.standard.Rectangle,
+			node1: joint.shapes.standard.Rectangle,
+			node2: joint.shapes.standard.Rectangle,
 			label: string
 		) {
-			const link = new shapes.standard.Link();
+			const link = new joint.shapes.standard.Link();
 			link.appendLabel({
 				attrs: {
 					text: {
@@ -202,7 +202,7 @@
 		let originalY = 30;
 
 		//creating root node
-		const root = new shapes.standard.Rectangle();
+		const root = new joint.shapes.standard.Rectangle();
 		root.position(originalX, originalY);
 		root.resize(assetName.length * 12, 60);
 		root.attr({
@@ -223,7 +223,11 @@
 
 		//create the rest of the graph
 		originalX = originalX + 200;
-		async function addToGraph(root: shapes.standard.Rectangle, metadataFields: any, yPos: number) {
+		async function addToGraph(
+			root: joint.shapes.standard.Rectangle,
+			metadataFields: any,
+			yPos: number
+		) {
 			let counter = 1;
 			for (let [field, value] of Object.entries(metadataFields)) {
 				if (typeof value === 'string' && value.startsWith('DOCUMENT-ID: ')) {
