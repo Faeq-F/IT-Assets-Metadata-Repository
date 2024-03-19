@@ -15,7 +15,7 @@
 		hashCode,
 		duplicateUsername,
 		duplicateEmail
-	} from './validate';
+	} from '../../lib/scripts/validate';
 	import { insertDocument } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
@@ -26,13 +26,13 @@
 	const form = useForm();
 	const requiredMsg = 'This field is required';
 
-	let emailTaken = true;
+	let emailTaken = false;
 	function checkValidEmail() {
 		let email = (document.getElementById('email') as HTMLInputElement).value;
 		duplicateEmail(email).then((taken) => (emailTaken = taken));
 	}
 
-	let usernameTaken = true;
+	let usernameTaken = false;
 	function checkValidUsername() {
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		duplicateUsername(username).then((taken) => (usernameTaken = taken));
@@ -91,11 +91,11 @@
 				use:validators={[required, email]}
 			/>
 			{#if emailTaken}
-				<a href="/" title="Email already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation text-warniong-500 animate-pulse"></i>
+				<a href="/register" title="Email already in use or invalid">
+					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 				</a>
 			{:else}
-				<a href="/" title="Valid email">
+				<a href="/register" title="Valid email">
 					<i class="fa-solid fa-check"></i>
 				</a>
 			{/if}
@@ -190,7 +190,7 @@
 
 	<button
 		class="variant-filled-primary btn w-52"
-		disabled={!$form.valid || emailTaken}
+		disabled={!$form.valid || emailTaken || usernameTaken}
 		on:click|preventDefault={registerUser}
 	>
 		Create account</button

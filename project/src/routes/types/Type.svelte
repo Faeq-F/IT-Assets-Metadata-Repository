@@ -1,4 +1,6 @@
 <script lang="ts">
+	//@ts-ignore
+	import { page } from '$app/stores'; //Does work
 	import {
 		getModalStore,
 		getToastStore,
@@ -8,16 +10,16 @@
 	import ExpandedType from './ExpandedType.svelte';
 	import { deleteDocument } from '$lib/apiRequests';
 	import UpdateType from './UpdateType.svelte';
-	const toastStore = getToastStore();
 	import Cookies from 'js-cookie';
+	const toastStore = getToastStore();
+	const modalStore = getModalStore();
 
 	export let id: string;
 	export let typeName: string;
 	export let metadataFields: any[];
+	export let viewType: number;
 
 	let role = Cookies.get('savedLogin-role');
-
-	const modalStore = getModalStore();
 
 	const expandModalComponent: ModalComponent = {
 		ref: ExpandedType,
@@ -53,13 +55,31 @@
 	let showMenu = 'none';
 </script>
 
-<div id="Type" class="card card-hover bg-modern-50 drop-shadow-md">
+<div
+	id="Type"
+	class="card card-hover bg-modern-50 drop-shadow-md"
+	style={viewType != 0 ? 'width: 100%;' : ''}
+>
 	<div
 		id="menuPopup"
 		class="card card-hover p-3 drop-shadow-md"
 		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
 	>
 		<div class="">
+			<button
+				class="variant-filled-surface btn btn-sm card-hover m-1"
+				on:click={() => {
+					navigator.clipboard.writeText($page.url.origin + '/shared?type=' + id);
+					toastStore.trigger({
+						message: 'Copied link',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+				}}
+			>
+				<span><i class="fa-solid fa-share-nodes"></i></span>
+				<span>Share</span>
+			</button>
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
 				on:click={() => modalStore.trigger(expandModal)}
@@ -93,18 +113,20 @@
 	<div class="h3" style="margin:10px; font-weight: bold;">
 		{typeName}
 	</div>
-	<div style="margin: 10px; font-weight: 500">Fields required:</div>
-	<ul>
-		{#each metadataFields as field}
-			<li>
-				⦿ {field.field}
-				<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
-				{#if field.list}
-					<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
-				{/if}
-			</li>
-		{/each}
-	</ul>
+	{#if viewType == 0}
+		<div style="margin: 10px; font-weight: 500">Fields required:</div>
+		<ul>
+			{#each metadataFields as field}
+				<li>
+					⦿ {field.field}
+					<span class="assetCard card variant-ghost-surface badge">{field.dataType}</span>
+					{#if field.list}
+						<span class="assetCard card variant-ghost-surface badge">Multi-value</span>
+					{/if}
+				</li>
+			{/each}
+		</ul>
+	{/if}
 </div>
 
 <style>
