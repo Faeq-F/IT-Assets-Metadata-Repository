@@ -120,7 +120,14 @@
 		<Placeholder />
 	{:then Boards}
 		{#each Boards as board}
-			<DiscussionBoard {board} {viewType} />
+			<button
+				on:click={() => {
+					window.location.href = '/discussion?board=' + board._id;
+					//$page.url.origin + ;
+				}}
+			>
+				<DiscussionBoard {board} {viewType} />
+			</button>
 		{/each}
 	{/await}
 </div>

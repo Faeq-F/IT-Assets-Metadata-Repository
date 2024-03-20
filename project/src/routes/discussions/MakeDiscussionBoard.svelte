@@ -8,7 +8,7 @@
 	const toastStore = getToastStore();
 
 	async function makeBoard() {
-		if (boardName || description) {
+		if (boardName && description) {
 			const data = new FormData();
 			data.append(
 				'newData',
@@ -26,6 +26,8 @@
 					background: 'variant-ghost-success',
 					timeout: 3000
 				});
+				//Refresh the page
+				location.reload();
 			});
 		} else {
 			toastStore.trigger({
