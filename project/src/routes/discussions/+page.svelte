@@ -30,7 +30,7 @@
 	let DiscussionBoards: any[];
 
 	onMount(async () => {
-		fetchDocuments('DiscussionBoards').then((Docs) => {
+		fetchDocuments('DisscussionBoards').then((Docs) => {
 			DiscussionBoards = Docs;
 		});
 	});
@@ -110,7 +110,7 @@
 </div>
 
 <div class="typesContainer">
-	{#await fetchDocuments('AssetType')}
+	{#await fetchDocuments('DisscussionBoards')}
 		<Placeholder />
 		<Placeholder />
 		<Placeholder />
@@ -118,9 +118,9 @@
 		<Placeholder />
 		<Placeholder />
 		<Placeholder />
-	{:then AssetTypesDocuments}
-		{#each AssetTypesDocuments as type}
-			<DiscussionBoard />
+	{:then Boards}
+		{#each Boards as board}
+			<DiscussionBoard {board} {viewType} />
 		{/each}
 	{/await}
 </div>
