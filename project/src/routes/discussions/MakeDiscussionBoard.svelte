@@ -26,15 +26,37 @@
 				</p>
 				<input
 					type="text"
-					id="assetName"
-					name="assetName"
-					placeholder="Enter Asset Name"
+					id="boardName"
+					name="boardName"
+					placeholder="Enter Board Name"
 					data-focusindex="0"
 					class="input w-96"
 				/>
-			</label><br />
+			</label>
+			<br />
+			<label for="Description" class="formlabel">
+				<p class="p-4 text-center">
+					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Description:
+				</p>
+				<textarea
+					type="text"
+					id="Description"
+					name="Description"
+					placeholder="Enter Description"
+					data-focusindex="0"
+					class="input w-96 rounded-2xl"
+					rows="5"
+				/>
+			</label>
+			<br />
 
 			<br />
+			<button
+					class="variant-filled-primary btn w-52"
+					style="margin: 0 auto; display:block;"
+					id="assetMaker"
+					on:click|preventDefault={makeType}>Make discussion board</button
+			>
 		</form>
 	</div>
 </div>
