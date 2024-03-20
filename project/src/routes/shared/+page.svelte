@@ -11,6 +11,7 @@
 	let assetParam: string | null;
 	let typeParam: string | null;
 	let userParam: string | null;
+	let boardParam: string | null;
 
 	/**
 	 * Gets the relevant shared document id from the url
@@ -26,6 +27,7 @@
 		assetParam = urlParams.get('asset'); // if the shared document is an asset
 		typeParam = urlParams.get('type'); // if the shared document is an asset type
 		userParam = urlParams.get('user'); // if the shared document is a user
+		boardParam = urlParams.get('board'); // if the shared document is a board
 	});
 </script>
 
