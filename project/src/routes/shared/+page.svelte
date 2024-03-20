@@ -7,6 +7,7 @@
 	import ExpandedType from '../types/ExpandedType.svelte';
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import ExpandedUser from '../profile/ExpandedUser.svelte';
+	import ExpandedBoard from '../discussions/ExpandedBoard.svelte';
 
 	let assetParam: string | null;
 	let typeParam: string | null;
@@ -70,6 +71,12 @@
 			email={userDoc.email}
 			style="display:none;"
 		/>
+	{/await}
+{:else if boardParam != null}
+	{#await fetchDocumentByID(boardParam)}
+		<p class="w-full text-center">Loading Board {boardParam}</p>
+	{:then boardDoc}
+		<ExpandedBoard {boardDoc} />
 	{/await}
 {:else}
 	<p class="w-full text-center">incorrect url format</p>
