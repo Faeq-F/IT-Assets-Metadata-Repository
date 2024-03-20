@@ -25,17 +25,67 @@
 	{#await fetchDocumentByID(board)}
 		<Placeholder /><Placeholder />
 	{:then boardDoc}
-		<h1 class="h1">Discussions</h1>
+		<h1 class="h1">{boardDoc.BoardName}</h1>
 		<br />
 		<div>
-			<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
+			<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="boardHeader">
 				<AppBar background="transparent">
 					<svelte:fragment slot="lead">
-						{boardDoc.BoardName}
+						{#if boardDoc.Messages.length > 0}
+							<p id="nothingHere" class="ml-2">Messages:</p>
+						{:else}
+							<p id="nothingHere" class="ml-2">
+								It doesn't look like there are any messages on this board yet, click the <i
+									class="fa-solid fa-plus"
+								></i>
+								to get started
+							</p>
+						{/if}
 					</svelte:fragment>
-					<svelte:fragment slot="trail"></svelte:fragment>
+					<svelte:fragment slot="trail">
+						<button
+							id="createMessage"
+							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
+							on:click={() => {}}><i class="fa-solid fa-plus"></i></button
+						>
+					</svelte:fragment>
 				</AppBar>
 			</div>
 		</div>
 	{/await}
 {/if}
+
+<style>
+	#createMessage {
+		width: 2vw;
+		height: 2vw;
+		padding: 0;
+		float: right;
+	}
+
+	#nothingHere {
+		display: inline;
+		float: left;
+	}
+
+	#boardHeader {
+		height: auto;
+		padding: 0px;
+		margin: 0 auto;
+	}
+
+	#boardHeader::after {
+		content: '';
+		clear: both;
+		display: table;
+	}
+
+	/* .assetsContainer {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		align-items: stretch;
+		width: 90%;
+		margin: 10px auto;
+	} */
+</style>
