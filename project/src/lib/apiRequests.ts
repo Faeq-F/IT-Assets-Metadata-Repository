@@ -46,6 +46,7 @@ export const insertDocument = (collectionName: string, formData: any) => {
  * @param collectionName The collection that holds the document to update
  * @param id The id of the document to update
  * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed
+ * @param user The user details stored from the cookie made upon logging in successfully.
  * @returns Acknowledgment from the database
  */
 export const updateDocument = (collectionName: string, id: string, formData: any, user: any) => {
@@ -53,6 +54,7 @@ export const updateDocument = (collectionName: string, id: string, formData: any
         .then((users: any[]) => {
 			console.log(user);
 			console.log('User:', users);
+			// .find returns true or false depending on if the user from the cookie is the same as the users in db
             const foundUser = users.find((u) => u.username === user.username && u.passwordHash === user.password && u.role === user.role);
             if (!foundUser) {
                 throw new Error('Invalid user credentials');
