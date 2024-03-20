@@ -161,7 +161,7 @@
 	</div>
 	<!--asset details-->
 	<!-- eslint-disable svelte/no-at-html-tags-->
-	<div class="h3" style="margin:10px; font-weight: bold; margin-bottom: 3px;">{@html name}</div>
+	<div id = "assetName" class="h3" style="margin:10px; font-weight: bold; margin-bottom: 3px;">{@html name}</div>
 	<div class="m-0 mb-1 p-0">
 		<a
 			style="font-weight: 500"

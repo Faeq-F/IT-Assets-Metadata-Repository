@@ -92,7 +92,7 @@ test('Test permissions of a viewer user ', async ({ page }) => {
 
 	let url = await page.url();
 	if (url == site + 'permissions') {
-		// Normal user shouldn't be able to access the permissions page
+		// Viewer user shouldn't be able to access the permissions page
 		test.fail();
 	}
 
