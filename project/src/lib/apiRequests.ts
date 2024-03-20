@@ -48,16 +48,31 @@ export const insertDocument = (collectionName: string, formData: any) => {
  * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed
  * @returns Acknowledgment from the database
  */
-export const updateDocument = (collectionName: string, id: string, formData: any) => {
-	return fetch(
-		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
-		{
-			method: 'PUT',
-			body: formData
-		}
-	).then((response) => {
-		return response;
-	});
+export const updateDocument = (collectionName: string, id: string, formData: any, user: any) => {
+    return fetchDocuments('User')
+        .then((users: any[]) => {
+			console.log(user);
+			console.log('User:', users);
+            const foundUser = users.find((u) => u.username === user.username && u.passwordHash === user.password && u.role === user.role);
+            if (!foundUser) {
+                throw new Error('Invalid user credentials');
+            }
+
+            return fetch(`http://localhost:5038/api/update/collection/${collectionName}/document/${id}`, {
+                method: 'PUT',
+                body: formData
+            });
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Failed to update document');
+            }
+            return response.json(); // or whatever response format you expect
+        })
+        .catch((error) => {
+            console.error(error);
+            throw error; // re-throw the error to be handled by the caller
+        });
 };
 
 /**

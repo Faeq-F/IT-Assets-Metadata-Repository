@@ -121,7 +121,17 @@
 
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
-		updateDocument('Asset', id, data).then(async (response: any) => {
+		let username = Cookies.get('savedLogin-username');
+		let password = parseInt(Cookies.get('savedLogin-password'));
+		let role = Cookies.get('savedLogin-role');
+
+		var user = {
+			username: username,
+			password: password,
+			role: role
+		};
+
+		updateDocument('Asset', id, data, user).then(async (response: any) => {
 			console.log(response);
 			// formatting date
 			let current = new Date();
@@ -175,16 +185,22 @@
 			// update the audit with new data
 			const audit = new FormData();
 			audit.append('newData', JSON.stringify(auditData));
-			await updateDocument('diff', auditid, audit).then((response: any) => {
+			await updateDocument('diff', auditid, audit, user).then((response: any) => {
 				console.log(response);
 			});
-			location.reload();
-			toastStore.trigger({
-				message: 'Asset updated',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			modalStore.close();
+		}).catch((error) => {
+			if (error.message == 'Invalid user credentials') {
+				alert(error.message);
+			} else {
+				alert("Updated asset");
+				location.reload();
+				toastStore.trigger({
+					message: 'Asset updated',
+					background: 'variant-ghost-success',
+					timeout: 3000
+				});
+				modalStore.close();
+			}
 		});
 	}
 
