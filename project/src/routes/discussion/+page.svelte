@@ -6,6 +6,8 @@
 	import { browser } from '$app/environment'; //Does work
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
+	import MakeMessage from './MakeMessage.svelte';
+
 	let board: string;
 	onMount(() => {
 		if (browser) {
@@ -18,7 +20,15 @@
 		} else {
 			board = temp;
 		}
+
 	});
+
+	const modalStore = getModalStore();
+	const modalComponent: ModalComponent = { ref: MakeMessage.svelte };
+	const makeModal: ModalSettings = {
+		type: 'component',
+		component: modalComponent
+	};
 </script>
 
 {#if board}
@@ -46,7 +56,7 @@
 						<button
 							id="createMessage"
 							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
-							on:click={() => {}}><i class="fa-solid fa-plus"></i></button
+							on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
 						>
 					</svelte:fragment>
 				</AppBar>
