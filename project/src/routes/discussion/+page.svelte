@@ -1,25 +1,15 @@
 <script lang="ts">
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import {
-		AppBar,
-		getModalStore,
-		type ModalComponent,
-		type ModalSettings
-	} from '@skeletonlabs/skeleton';
+	import { AppBar } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
-	import MakeMessage from './MakeMessage.svelte';
-	import 'bytemd/dist/index.css'
-	import { Editor, Viewer } from 'bytemd'
-	import gfm from '@bytemd/plugin-gfm'
-
 
 	let board: string;
-	onMount(() => {
 
+	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
@@ -32,12 +22,45 @@
 		}
 	});
 
-	const modalStore = getModalStore();
-	const modalComponent: ModalComponent = { ref: MakeMessage };
-	const makeModal: ModalSettings = {
-		type: 'component',
-		component: modalComponent
-	};
+	import { Carta, CartaEditor } from 'carta-md';
+	import 'carta-md/default.css'; /* Default theme */
+	import 'carta-md/light.css'; /* Markdown input theme */
+	import DOMPurify from 'dompurify';
+	import { emoji } from '@cartamd/plugin-emoji';
+	import { slash } from '@cartamd/plugin-slash';
+	import { code } from '@cartamd/plugin-code';
+	import { math } from '@cartamd/plugin-math';
+	import { anchor } from '@cartamd/plugin-anchor';
+	import '@cartamd/plugin-emoji/default.css';
+	import 'katex/dist/katex.css';
+	import '@cartamd/plugin-code/default.css';
+	import '@cartamd/plugin-slash/default.css';
+	import '@cartamd/plugin-anchor/default.css';
+
+	const carta = new Carta({
+		sanitizer: DOMPurify.sanitize,
+		extensions: [
+			emoji(),
+			slash({
+				snippets: [
+					{
+						id: 'Emoji',
+						group: 'default',
+						title: 'Emoji',
+						description: 'Add emojis',
+						action: (input) => {
+							input.textarea.value += '::';
+						}
+					}
+				]
+			}),
+			code(),
+			math(),
+			anchor()
+		]
+	});
+
+	let value = '';
 </script>
 
 {#if board}
@@ -48,35 +71,29 @@
 		<h1 class="h1">{boardDoc.BoardName}</h1>
 		<br />
 		<div>
-			<div class="card bg-modern-50 block w-11/12 drop-shadow-md absolute bottom-10" id="boardHeader" >
+			<div
+				class="card bg-modern-50 absolute bottom-10 block w-11/12 drop-shadow-md"
+				id="boardHeader"
+			>
 				<AppBar background="transparent">
 					<svelte:fragment slot="lead">
 						{#if boardDoc.Messages.length > 0}
-							<p id="nothingHere" class="ml-2">Messages:</p>
+							<p id="nothingHere" class="ml-2">Add a message:</p>
 						{:else}
-							<p id="nothingHere" class="ml-2">
-								It doesn't look like there are any messages on this board yet, click the <i
-									class="fa-solid fa-plus"
-								></i>
-								to get started
-							</p>
+							<p id="nothingHere" class="ml-2">Be the first to message:</p>
 						{/if}
 					</svelte:fragment>
-					<svelte:fragment slot="trail">
-
-					</svelte:fragment>
+					<svelte:fragment slot="trail"></svelte:fragment>
 				</AppBar>
+				<CartaEditor {carta} bind:value />
 			</div>
 		</div>
 	{/await}
 {/if}
 
 <style>
-	#createMessage {
-		width: 2vw;
-		height: 2vw;
-		padding: 0;
-		float: right;
+	:global(.carta-font-code) {
+		font-family: monospace;
 	}
 
 	#nothingHere {

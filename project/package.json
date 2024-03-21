@@ -19,6 +19,11 @@
 		"start": "sirv public --no-clear"
 	},
 	"devDependencies": {
+		"@cartamd/plugin-anchor": "^1.0.0",
+		"@cartamd/plugin-code": "^3.0.1",
+		"@cartamd/plugin-emoji": "^3.1.0",
+		"@cartamd/plugin-math": "^3.0.2",
+		"@cartamd/plugin-slash": "^3.1.0",
 		"@floating-ui/dom": "^1.6.1",
 		"@joint/core": "^4.0.1",
 		"@playwright/test": "^1.28.1",
@@ -39,17 +44,21 @@
 		"@typescript-eslint/parser": "^6.0.0",
 		"@vitest/coverage-v8": "^1.2.1",
 		"autoprefixer": "10.4.17",
-		"bytemd": "^1.21.0",
 		"c8": "^9.1.0",
+		"carta-md": "^3.6.1",
+		"carta-plugin-subscript": "^1.0.0",
 		"chart.js": "^4.4.2",
 		"cors": "^2.8.5",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.35.1",
 		"express": "^4.18.2",
+		"isomorphic-dompurify": "^2.5.0",
 		"js-cookie": "^3.0.5",
 		"jsdoc": "^4.0.2",
 		"json-diff-ts": "^2.2.1",
+		"katex": "^0.16.9",
+		"medium-editor": "^5.23.3",
 		"mongodb": "^4.1.0",
 		"multer": "^1.4.5-lts.1",
 		"postcss": "8.4.34",
@@ -79,6 +88,7 @@
 		"@floating-ui/dom": "1.6.1",
 		"@types/mongodb": "^4.0.7",
 		"dotenv": "^16.4.3",
-		"jointjs": "^3.7.7"
+		"jointjs": "^3.7.7",
+		"vditor": "^3.10.2"
 	}
 }
