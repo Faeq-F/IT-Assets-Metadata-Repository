@@ -7,7 +7,6 @@
 		type ModalComponent,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
-	import ExpandedBoard from './ExpandedBoard.svelte';
 	import UpdateBoard from './UpdateBoard.svelte';
 	export let board: any;
 	export let viewType: number;
@@ -15,16 +14,6 @@
 	const modalStore = getModalStore();
 	import Cookies from 'js-cookie';
 	let role = Cookies.get('savedLogin-role');
-
-	const expandModalComponent: ModalComponent = {
-		ref: ExpandedBoard,
-		props: { board: board }
-	};
-	const expandModal: ModalSettings = {
-		type: 'component',
-		component: expandModalComponent,
-		backdropClasses: '!p-0'
-	};
 
 	const updateModalComponent: ModalComponent = {
 		ref: UpdateBoard,
@@ -66,13 +55,6 @@
 			>
 				<span><i class="fa-solid fa-share-nodes"></i></span>
 				<span>Share</span>
-			</button>
-			<button
-				class="variant-filled-surface btn btn-sm card-hover m-1"
-				on:click={() => modalStore.trigger(expandModal)}
-			>
-				<span><i class="fa-solid fa-maximize"></i></span>
-				<span>Expand</span>
 			</button>
 			{#if role != 'viewer'}
 				<button

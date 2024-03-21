@@ -37,7 +37,8 @@
 
 {#if board}
 	{#await fetchDocumentByID(board)}
-		<Placeholder /><Placeholder />
+		If this page takes too long to load, the link may be invalid
+		<Placeholder />
 	{:then boardDoc}
 		<h1 class="h1">{boardDoc.BoardName}</h1>
 		<br />

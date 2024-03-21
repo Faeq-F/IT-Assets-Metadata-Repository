@@ -63,7 +63,6 @@ app.get(
 					.collection(i.name)
 					.findOne({ $expr: { $eq: ['$_id', { $toObjectId: id }] } });
 				if (document != null) {
-					console.log(document);
 					return await document;
 				}
 			}

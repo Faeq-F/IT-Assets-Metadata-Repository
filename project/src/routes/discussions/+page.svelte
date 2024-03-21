@@ -97,7 +97,7 @@
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				{#if role == 'admin'}
+				{#if role != 'viewer'}
 					<button
 						id="assetMaker"
 						class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
