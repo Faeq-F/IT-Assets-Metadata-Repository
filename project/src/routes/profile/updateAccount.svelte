@@ -8,7 +8,9 @@
 	const toastStore = getToastStore();
 	const form = useForm();
 	const requiredMsg = 'This field is required';
-
+	/*
+	this function checks to see if a username already exists
+	*/
 	function duplicateUsername(username: string): Promise<boolean> {
 		return fetchDocuments('User').then((documentsReturned) => {
 			for (let i of documentsReturned) {
@@ -22,13 +24,18 @@
 			return false;
 		});
 	}
-
+	/*
+		This function checks to see if the new username is valid
+	*/
 	let usernameTaken = true;
 	function checkValidUsername() {
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		duplicateUsername(username).then((taken) => (usernameTaken = taken));
 	}
-
+	/*
+		this function updates the accounts username and password to
+		the new username and password
+	*/
 	function makeUpdate() {
 		let newUsername = (document.getElementById('username') as HTMLInputElement).value;
 		let newPass = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
@@ -38,6 +45,7 @@
 
 			fetchDocuments('User').then((Users) => {
 				for (let i of Users) {
+					// this updates the username to the new username
 					if (i.username == Cookies.get('savedLogin-username')) {
 						var userObj = {
 							username: newUsername,
@@ -98,6 +106,7 @@
 		<form action="" class="userForm w-6/12 text-center" use:focusTrap={true} use:form>
 			<form action="" class="userForm" use:focusTrap={true} use:form>
 				<label for="username" class="label">
+					<!--this creates the textboc which the user uses to enter their new username-->
 					<p>Choose a new Username:</p>
 					<div class="input-group input-group-divider grid-cols-[1fr_auto]">
 						<input
@@ -110,11 +119,14 @@
 							on:keyup={checkValidUsername}
 							use:validators={[required, minLength(4)]}
 						/>
+					    <!--this checks if the username is already taken-->
 						{#if usernameTaken}
+						 	<!--if the username is taken a relevant message is displayed-->
 							<a href="/profile" title="Username already in use or invalid">
 								<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 							</a>
 						{:else}
+							<!--if the username isnt taken it display a relevant message-->
 							<a href="/profile" title="Valid username">
 								<i class="fa-solid fa-check"></i>
 							</a>
@@ -122,6 +134,7 @@
 					</div>
 				</label>
 
+				<!--this displays the requirements for that the new username must meet-->
 				<HintGroup for="username">
 					<Hint on="required">{requiredMsg}</Hint>
 					<Hint on="minLength" hideWhenRequired let:value
@@ -130,6 +143,7 @@
 				</HintGroup>
 
 				<br />
+				<!--this creates the textbox for the user to enter their new password-->
 				<label for="password" class="label">
 					<p>Choose a new Password:</p>
 					<input
@@ -142,7 +156,7 @@
 						use:validators={[required, minLength(8), containNumbers(2)]}
 					/>
 				</label>
-
+				<!--this displays the requirements that the new password must meet to be considered valid-->
 				<HintGroup for="password">
 					<Hint on="required">{requiredMsg}</Hint>
 					<Hint on="minLength" hideWhenRequired let:value
@@ -154,6 +168,7 @@
 				</HintGroup>
 
 				<br />
+				<!--this creates the textbox which the user has to reenter their new password-->
 				<label for="passwordConfirmation" class="label">
 					<p>Repeat Password:</p>
 					<input
@@ -166,12 +181,13 @@
 						use:validators={[required, checkPasswordsMatch]}
 					/>
 				</label>
-
+				<!--this displays that this passwod must match the preivously entered new password-->
 				<HintGroup for="passwordConfirmation">
 					<Hint on="required">{requiredMsg}</Hint>
 					<Hint on="checkPasswordsMatch" hideWhenRequired>Passwords do not match</Hint>
 				</HintGroup><br />
 
+				<!-- this creates the button which updates the account details-->
 				<button
 					class="variant-filled-primary btn w-52"
 					disabled={!$form.valid}
