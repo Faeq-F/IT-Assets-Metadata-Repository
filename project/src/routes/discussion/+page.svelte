@@ -12,9 +12,14 @@
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
 	import MakeMessage from './MakeMessage.svelte';
+	import 'bytemd/dist/index.css'
+	import { Editor, Viewer } from 'bytemd'
+	import gfm from '@bytemd/plugin-gfm'
+
 
 	let board: string;
 	onMount(() => {
+
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
@@ -43,7 +48,7 @@
 		<h1 class="h1">{boardDoc.BoardName}</h1>
 		<br />
 		<div>
-			<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="boardHeader">
+			<div class="card bg-modern-50 block w-11/12 drop-shadow-md absolute bottom-10" id="boardHeader" >
 				<AppBar background="transparent">
 					<svelte:fragment slot="lead">
 						{#if boardDoc.Messages.length > 0}
@@ -58,12 +63,7 @@
 						{/if}
 					</svelte:fragment>
 					<svelte:fragment slot="trail">
-						<button
-							id="createMessage"
-							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
-							on:click={() => modalStore.trigger(makeModal)}
-							><i class="fa-solid fa-plus"></i></button
-						>
+
 					</svelte:fragment>
 				</AppBar>
 			</div>
@@ -88,6 +88,9 @@
 		height: auto;
 		padding: 0px;
 		margin: 0 auto;
+		bottom: 0%;
+		left: 50%;
+		transform: translate(-50%, -20%);
 	}
 
 	#boardHeader::after {
