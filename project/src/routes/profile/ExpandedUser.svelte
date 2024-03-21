@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-
-	export let id: string;
+    /*
+		these lines export the following variables so that
+		they can be imported and used elsewhere in the code
+	*/
+	export let id: string; 
 	export let username: string;
 	export let email: string;
 	export let role: string;
 
+    // gets the modalStore
 	const modalStore = getModalStore();
 </script>
 
@@ -25,6 +29,7 @@
 	</div>
 </div>
 
+<!--this makes the close button which closes the modal-->
 <button
 	{...$$restProps}
 	class="variant-filled-primary btn absolute bottom-3 right-3"
