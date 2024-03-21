@@ -109,7 +109,7 @@
 	</div>
 </div>
 
-<div class="typesContainer">
+<div class="boardsContainer">
 	{#await fetchDocuments('DisscussionBoards')}
 		<Placeholder />
 		<Placeholder />
@@ -120,14 +120,7 @@
 		<Placeholder />
 	{:then Boards}
 		{#each Boards as board}
-			<button
-				on:click={() => {
-					window.location.href = '/discussion?board=' + board._id;
-					//$page.url.origin + ;
-				}}
-			>
-				<DiscussionBoard {board} {viewType} />
-			</button>
+			<DiscussionBoard {board} {viewType} />
 		{/each}
 	{/await}
 </div>
@@ -157,7 +150,7 @@
 		display: table;
 	}
 
-	.typesContainer {
+	.boardsContainer {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-around;

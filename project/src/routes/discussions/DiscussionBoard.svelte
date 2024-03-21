@@ -42,7 +42,7 @@
 </script>
 
 <div
-	id="Asset"
+	id="Board"
 	class="card card-hover bg-modern-50 drop-shadow-md"
 	style={viewType != 0 ? 'width: 100%;' : ''}
 >
@@ -98,10 +98,38 @@
 			><i class="fa-solid fa-ellipsis-vertical"></i></button
 		>
 	</div>
-	<!--asset details-->
-	<!-- eslint-disable svelte/no-at-html-tags-->
-	<div class="h3" style="margin:10px; font-weight: bold; margin-bottom: 3px;">
-		{board.BoardName}
-	</div>
-	<div class="m-0 mb-1 p-0"></div>
+	<!--details-->
+	<button
+		on:click={() => {
+			window.location.href = '/discussion?board=' + board._id;
+		}}
+		class="w-full"
+	>
+		<div class="h3 text-left" style="margin:10px; font-weight: bold; margin-bottom: 5px;">
+			{board.BoardName}
+		</div>
+		{#if viewType == 0}
+			<hr style="width: 100%;" />
+			<div style="margin: 10px; font-weight: 500" class="text-left">Description:</div>
+			<div class="mb-2 ml-4 mt-1 text-left font-normal">
+				<p>{board.Description}</p>
+			</div>
+		{/if}
+	</button>
 </div>
+
+<style>
+	#Board {
+		margin: 10px;
+		padding: 10px;
+		flex-grow: 1;
+		position: relative;
+	}
+
+	#ButtonActions {
+		position: absolute;
+		top: 10px;
+		right: 20px;
+		width: 10px;
+	}
+</style>

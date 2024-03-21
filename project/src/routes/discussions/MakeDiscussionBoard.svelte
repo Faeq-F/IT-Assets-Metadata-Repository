@@ -79,8 +79,9 @@
 					name="Description"
 					placeholder="Enter Description"
 					data-focusindex="0"
-					class="input w-96 rounded-2xl"
-					rows="5"
+					class="input w-9/12 rounded-2xl"
+					style="resize: both; overflow:auto;"
+					rows="9"
 					bind:value={description}
 				/>
 			</label>

@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import { AppBar } from '@skeletonlabs/skeleton';
+	import {
+		AppBar,
+		getModalStore,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
@@ -20,11 +25,10 @@
 		} else {
 			board = temp;
 		}
-
 	});
 
 	const modalStore = getModalStore();
-	const modalComponent: ModalComponent = { ref: MakeMessage.svelte };
+	const modalComponent: ModalComponent = { ref: MakeMessage };
 	const makeModal: ModalSettings = {
 		type: 'component',
 		component: modalComponent
@@ -56,7 +60,8 @@
 						<button
 							id="createMessage"
 							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
-							on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
+							on:click={() => modalStore.trigger(makeModal)}
+							><i class="fa-solid fa-plus"></i></button
 						>
 					</svelte:fragment>
 				</AppBar>
