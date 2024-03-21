@@ -13,6 +13,7 @@
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	import Cookies from 'js-cookie';
+	import { deleteDocument } from '$lib/apiRequests';
 	let role = Cookies.get('savedLogin-role');
 
 	const updateModalComponent: ModalComponent = {
@@ -25,7 +26,16 @@
 		backdropClasses: '!p-0'
 	};
 
-	async function deleteBoard() {}
+	async function deleteBoard() {
+		await deleteDocument('DisscussionBoards', board._id);
+		toastStore.trigger({
+			message: 'Discussion deleted',
+			background: 'variant-ghost-success',
+			timeout: 3000
+		});
+		// Refresh the page
+		location.reload();
+	}
 
 	let showMenu = 'none';
 </script>
