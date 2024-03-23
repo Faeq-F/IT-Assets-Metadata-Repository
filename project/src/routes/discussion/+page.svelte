@@ -23,7 +23,7 @@
 		}
 	});
 
-	import { Carta, CartaEditor } from 'carta-md';
+	import { Carta, CartaEditor, CartaViewer } from 'carta-md';
 	import 'carta-md/default.css'; /* Default theme */
 	import 'carta-md/light.css'; /* Markdown input theme */
 	import DOMPurify from 'dompurify';
@@ -175,6 +175,11 @@
 		});
 	}
 
+	const cartaViewer = new Carta({
+		sanitizer: DOMPurify.sanitize,
+		extensions: [emoji(), code(), math(), anchor()]
+	});
+
 	let value = '';
 	let replied = '';
 	let collapsed = false;
@@ -186,7 +191,7 @@
 		<Placeholder />
 	{:then boardDoc}
 		<div>
-			<div class="overflow-y-scroll">
+			<div class="mb-24">
 				<h1 class="h1">{boardDoc.BoardName}</h1>
 				<br />
 				<div class="card bg-modern-50 w-11/12 p-4 drop-shadow-md" style="margin: 0 auto">
@@ -195,6 +200,17 @@
 				<br />
 				<Containers {boardDoc} />
 				<br />
+				<div id="messagesContainer">
+					{#each boardDoc.Messages as message}
+						<div class="card bg-modern-50 w-11/12 w-full p-4 drop-shadow-md" style="margin: 0 auto">
+							<b>{message.Author}</b> on {message.Date} @ {message.Time}
+							<br />
+							<hr />
+							<br />
+							<CartaViewer carta={cartaViewer} value={message.Message} />
+						</div>
+					{/each}
+				</div>
 			</div>
 			<div
 				class="card bg-modern-50 absolute bottom-10 block w-11/12 drop-shadow-md"
@@ -287,12 +303,12 @@
 		display: table;
 	}
 
-	/* .assetsContainer {
+	#messagesContainer {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-around;
 		align-items: stretch;
 		width: 90%;
 		margin: 10px auto;
-	} */
+	}
 </style>
