@@ -171,7 +171,17 @@
 							<p id="nothingHere" class="ml-2">Be the first to message:</p>
 						{/if}
 					</svelte:fragment>
-					<svelte:fragment slot="trail"></svelte:fragment>
+					<svelte:fragment slot="trail">
+						<button
+								class="variant-filled-primary btn w-52"
+								style="margin: 0 auto; display:block;"
+								id="assetMaker"
+								on:click|preventDefault={() => {
+					console.log('');
+				}}><i class="fa-regular fa-paper-plane"></i></button
+						>
+
+					</svelte:fragment>
 				</AppBar>
 				<div style="height: 20vh;padding: 10px;padding-top: 0;" class={collapsed ? 'hidden' : ''}>
 					<CartaEditor mode="tabs" {carta} bind:value placeholder="Type a '/' to get started" />
