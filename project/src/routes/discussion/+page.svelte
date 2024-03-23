@@ -36,6 +36,7 @@
 	import '@cartamd/plugin-code/default.css';
 	import '@cartamd/plugin-slash/default.css';
 	import '@cartamd/plugin-anchor/default.css';
+	import Containers from './Containers.svelte';
 
 	const carta = new Carta({
 		sanitizer: DOMPurify.sanitize,
@@ -140,9 +141,17 @@
 		If this page takes too long to load, the link may be invalid
 		<Placeholder />
 	{:then boardDoc}
-		<h1 class="h1">{boardDoc.BoardName}</h1>
-		<br />
 		<div>
+			<div class="overflow-y-scroll">
+				<h1 class="h1">{boardDoc.BoardName}</h1>
+				<br />
+				<div class="card bg-modern-50 w-11/12 p-4 drop-shadow-md" style="margin: 0 auto">
+					{boardDoc.Description}
+				</div>
+				<br />
+				<Containers {boardDoc} />
+				<br />
+			</div>
 			<div
 				class="card bg-modern-50 absolute bottom-10 block w-11/12 drop-shadow-md"
 				id="boardHeader"

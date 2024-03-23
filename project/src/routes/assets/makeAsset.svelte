@@ -194,7 +194,6 @@
 				<p class="p-4 text-center">
 					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Type:
 				</p>
-
 				<select id="assetType" class="select w-96" bind:value={currentType}>
 					<option>Select type</option>
 					{#each activeTypes as type}
