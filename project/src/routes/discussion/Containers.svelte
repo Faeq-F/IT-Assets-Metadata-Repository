@@ -7,15 +7,16 @@
 	} from '@skeletonlabs/skeleton';
 	import MakeContainer from './MakeContainer.svelte';
 
+	export let boardDoc: any;
+	let collapsed = false;
+
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: MakeContainer };
 	const makeModal: ModalSettings = {
 		type: 'component',
-		component: modalComponent
+		component: modalComponent,
+		meta: { boardDoc: boardDoc }
 	};
-
-	export let boardDoc: any;
-	let collapsed = false;
 </script>
 
 <div class="card bg-modern-50 w-11/12 p-4 drop-shadow-md" style="margin: 0 auto">
