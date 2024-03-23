@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
-	import { AppBar } from '@skeletonlabs/skeleton';
+	import { AppBar, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	//@ts-ignore
 	import { browser } from '$app/environment'; //Does work
-	import { fetchDocumentByID } from '$lib/apiRequests';
+	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
-
+	import Cookies from 'js-cookie';
+	const toastStore = getToastStore();
 	let board: string;
 
 	onMount(() => {
@@ -132,7 +133,50 @@
 		]
 	});
 
+	async function sendMessage(boardDoc: any) {
+		// formatting date
+		let current = new Date();
+		let day = current.getDate();
+		let month = current.getMonth() + 1;
+		let year = current.getFullYear();
+		let current_date = `${day}/${month}/${year}`;
+		let current_time = current.toLocaleTimeString();
+
+		//add it to the list of messages
+		boardDoc.Messages.push({
+			Date: current_date,
+			Time: current_time,
+			Replied: replied,
+			Author: Cookies.get('savedLogin-username'),
+			Message: value
+		});
+
+		//construct the final obj
+		const data = new FormData();
+		data.append(
+			'newData',
+			JSON.stringify({
+				BoardCreator: boardDoc.BoardCreator,
+				BoardName: boardDoc.BoardName,
+				Containers: boardDoc.Containers,
+				Description: boardDoc.Description,
+				Messages: boardDoc.Messages
+			})
+		);
+		updateDocument('DisscussionBoards', boardDoc._id, data).then((response) => {
+			console.log(response);
+			toastStore.trigger({
+				message: 'Container created',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
+			// Refresh the page
+			location.reload();
+		});
+	}
+
 	let value = '';
+	let replied = '';
 	let collapsed = false;
 </script>
 
@@ -176,9 +220,7 @@
 							class="variant-filled-primary btn p-1"
 							style="margin: 0 auto; display:block;"
 							id="assetMaker"
-							on:click|preventDefault={() => {
-								console.log('');
-							}}
+							on:click|preventDefault={() => sendMessage(boardDoc)}
 							><svg
 								width="25px"
 								height="25px"
