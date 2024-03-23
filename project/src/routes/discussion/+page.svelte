@@ -6,6 +6,7 @@
 	import { browser } from '$app/environment'; //Does work
 	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
+	import Containers from './Containers.svelte';
 	import Cookies from 'js-cookie';
 	const toastStore = getToastStore();
 	let board: string;
@@ -23,115 +24,16 @@
 		}
 	});
 
-	import { Carta, CartaEditor, CartaViewer } from 'carta-md';
+	import { CartaEditor, CartaViewer } from 'carta-md';
+	import { carta, cartaViewer } from '$lib/components/carta';
 	import 'carta-md/default.css'; /* Default theme */
 	import 'carta-md/light.css'; /* Markdown input theme */
-	import DOMPurify from 'dompurify';
-	import { emoji } from '@cartamd/plugin-emoji';
-	import { slash } from '@cartamd/plugin-slash';
-	import { code } from '@cartamd/plugin-code';
-	import { math } from '@cartamd/plugin-math';
-	import { anchor } from '@cartamd/plugin-anchor';
 	import '@cartamd/plugin-emoji/default.css';
 	import 'katex/dist/katex.css';
 	import '@cartamd/plugin-code/default.css';
 	import '@cartamd/plugin-slash/default.css';
 	import '@cartamd/plugin-anchor/default.css';
-	import Containers from './Containers.svelte';
-
-	const carta = new Carta({
-		sanitizer: DOMPurify.sanitize,
-		extensions: [
-			emoji(),
-			slash({
-				snippets: [
-					{
-						id: 'Link',
-						group: 'Basic',
-						title: 'Link',
-
-						description: 'Link anywhere; assets, types, etc.',
-						action: (input) => {
-							input.textarea.value += '[Link text](url)';
-						}
-					},
-					{
-						id: 'Bold',
-						group: 'Basic',
-						title: 'Bold',
-
-						description: 'Add bold text',
-						action: (input) => {
-							input.textarea.value += '**Bold text**';
-						}
-					},
-					{
-						id: 'Italics',
-						group: 'Basic',
-						title: 'Italics',
-
-						description: 'Add italicized text',
-						action: (input) => {
-							input.textarea.value += '_Italicized text_';
-						}
-					},
-					{
-						id: 'Strikethrough',
-						group: 'Basic',
-						title: 'Strikethrough',
-
-						description: 'Add crossed out text',
-						action: (input) => {
-							input.textarea.value += '~~Crossed out text~~';
-						}
-					},
-					{
-						id: 'LineBreak',
-						group: 'Basic',
-						title: 'Line Break',
-
-						description: 'Separate text',
-						action: (input) => {
-							input.textarea.value += '<br>';
-						}
-					},
-					{
-						id: 'ThematicBreak ',
-						group: 'Basic',
-						title: 'Thematic Break',
-
-						description: 'Add a horizontal line',
-						action: (input) => {
-							input.textarea.value += '<hr>';
-						}
-					},
-					{
-						id: 'Math',
-						group: 'Extra',
-						title: 'Math',
-
-						description: 'Add KaTeX expressions',
-						action: (input) => {
-							input.textarea.value +=
-								'inline:\n<br>\nPythagorean theorem: $a^2+b^2=c^2$\n<br><br>\nBlock:\n<br>\n$$\\mathcal{L}\\{f\\}(s) = \\int_0^{\\infty} {f(t)e^{-st}dt}$$\n<br><br>\n$$\\dfrac{\\partial}{\\partial t}(\\dfrac{\\partial \\mathcal{L}}{\\partial \\dot{q}_k}) - \\dfrac{\\partial \\mathcal{L}}{\\partial q_k} = 0$$';
-						}
-					},
-					{
-						id: 'Emoji',
-						group: 'Extra',
-						title: 'Emoji',
-						description: 'Add emojis',
-						action: (input) => {
-							input.textarea.value += ":smile: Type after a ':' to search for emojis";
-						}
-					}
-				]
-			}),
-			code(),
-			math(),
-			anchor()
-		]
-	});
+	import 'carta-plugin-video/default.css';
 
 	async function sendMessage(boardDoc: any) {
 		// formatting date
@@ -146,7 +48,6 @@
 		boardDoc.Messages.push({
 			Date: current_date,
 			Time: current_time,
-			Replied: replied,
 			Author: Cookies.get('savedLogin-username'),
 			Message: value
 		});
@@ -175,13 +76,7 @@
 		});
 	}
 
-	const cartaViewer = new Carta({
-		sanitizer: DOMPurify.sanitize,
-		extensions: [emoji(), code(), math(), anchor()]
-	});
-
 	let value = '';
-	let replied = '';
 	let collapsed = false;
 </script>
 
@@ -202,11 +97,12 @@
 				<br />
 				<div id="messagesContainer">
 					{#each boardDoc.Messages as message}
-						<div class="card bg-modern-50 w-11/12 w-full p-4 drop-shadow-md" style="margin: 0 auto">
+						<div
+							class="message card bg-modern-50 w-full p-4 drop-shadow-md"
+							style="margin: 5px auto"
+						>
 							<b>{message.Author}</b> on {message.Date} @ {message.Time}
-							<br />
 							<hr />
-							<br />
 							<CartaViewer carta={cartaViewer} value={message.Message} />
 						</div>
 					{/each}
@@ -308,7 +204,7 @@
 		flex-wrap: wrap;
 		justify-content: space-around;
 		align-items: stretch;
-		width: 90%;
+		width: 87%;
 		margin: 10px auto;
 	}
 </style>
