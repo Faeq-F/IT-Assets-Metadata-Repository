@@ -44,12 +44,83 @@
 			slash({
 				snippets: [
 					{
+						id: 'Link',
+						group: 'Basic',
+						title: 'Link',
+
+						description: 'Link anywhere; assets, types, etc.',
+						action: (input) => {
+							input.textarea.value += '[Link text](url)';
+						}
+					},
+					{
+						id: 'Bold',
+						group: 'Basic',
+						title: 'Bold',
+
+						description: 'Add bold text',
+						action: (input) => {
+							input.textarea.value += '**Bold text**';
+						}
+					},
+					{
+						id: 'Italics',
+						group: 'Basic',
+						title: 'Italics',
+
+						description: 'Add italicized text',
+						action: (input) => {
+							input.textarea.value += '_Italicized text_';
+						}
+					},
+					{
+						id: 'Strikethrough',
+						group: 'Basic',
+						title: 'Strikethrough',
+
+						description: 'Add crossed out text',
+						action: (input) => {
+							input.textarea.value += '~~Crossed out text~~';
+						}
+					},
+					{
+						id: 'LineBreak',
+						group: 'Basic',
+						title: 'Line Break',
+
+						description: 'Separate text',
+						action: (input) => {
+							input.textarea.value += '<br>';
+						}
+					},
+					{
+						id: 'ThematicBreak ',
+						group: 'Basic',
+						title: 'Thematic Break',
+
+						description: 'Add a horizontal line',
+						action: (input) => {
+							input.textarea.value += '<hr>';
+						}
+					},
+					{
+						id: 'Math',
+						group: 'Extra',
+						title: 'Math',
+
+						description: 'Add KaTeX expressions',
+						action: (input) => {
+							input.textarea.value +=
+								'inline:\n<br>\nPythagorean theorem: $a^2+b^2=c^2$\n<br><br>\nBlock:\n<br>\n$$\\mathcal{L}\\{f\\}(s) = \\int_0^{\\infty} {f(t)e^{-st}dt}$$\n<br><br>\n$$\\dfrac{\\partial}{\\partial t}(\\dfrac{\\partial \\mathcal{L}}{\\partial \\dot{q}_k}) - \\dfrac{\\partial \\mathcal{L}}{\\partial q_k} = 0$$';
+						}
+					},
+					{
 						id: 'Emoji',
-						group: 'default',
+						group: 'Extra',
 						title: 'Emoji',
 						description: 'Add emojis',
 						action: (input) => {
-							input.textarea.value += '::';
+							input.textarea.value += ":smile: Type after a ':' to search for emojis";
 						}
 					}
 				]
@@ -61,6 +132,7 @@
 	});
 
 	let value = '';
+	let collapsed = false;
 </script>
 
 {#if board}
@@ -77,6 +149,13 @@
 			>
 				<AppBar background="transparent">
 					<svelte:fragment slot="lead">
+						<button on:click={() => (collapsed = !collapsed)}>
+							{#if collapsed}
+								<i class="fa-solid fa-angle-up"></i>
+							{:else}
+								<i class="fa-solid fa-angle-down"></i>
+							{/if}
+						</button>
 						{#if boardDoc.Messages.length > 0}
 							<p id="nothingHere" class="ml-2">Add a message:</p>
 						{:else}
@@ -85,7 +164,9 @@
 					</svelte:fragment>
 					<svelte:fragment slot="trail"></svelte:fragment>
 				</AppBar>
-				<CartaEditor {carta} bind:value />
+				<div style="height: 20vh;padding: 10px;padding-top: 0;" class={collapsed ? 'hidden' : ''}>
+					<CartaEditor mode="tabs" {carta} bind:value placeholder="Type a '/' to get started" />
+				</div>
 			</div>
 		</div>
 	{/await}
@@ -107,7 +188,7 @@
 		margin: 0 auto;
 		bottom: 0%;
 		left: 50%;
-		transform: translate(-50%, -20%);
+		transform: translate(-50%, -5%);
 	}
 
 	#boardHeader::after {
