@@ -18,6 +18,7 @@
 	 * @email faeqfaisal@hotmail.co.uk
 	 * @email zlac318@live.rhul.ac.uk
 	 */
+	/*
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
@@ -27,6 +28,7 @@
 		typeParam = urlParams.get('type'); // if the shared document is an asset type
 		userParam = urlParams.get('user'); // if the shared document is a user
 	});
+	*/
 </script>
 
 <!--The style prop applies to the close button on the component.

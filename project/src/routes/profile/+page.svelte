@@ -21,11 +21,13 @@
 	let expandedUser: ModalComponent;
 	let expandUser: ModalSettings;
 
+	/*
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
 	});
+	*/
 
 	onMount(async () => {
 		await fetchDocuments('User').then((Users) => {

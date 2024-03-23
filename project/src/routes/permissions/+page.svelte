@@ -19,6 +19,7 @@
 
 	let users: User[] = [];
 
+	/*
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
@@ -27,6 +28,7 @@
 			}
 		}
 	});
+	*/
 
 	onMount(async () => {
 		try {
@@ -62,7 +64,7 @@
 					if (i.username == newUserObject.username) {
 						const data = new FormData();
 						data.append('newData', JSON.stringify(newUserObject));
-						updateDocument('User', i._id, data)
+						updateDocument('User', i._id, data, data)
 							.then((response) => {
 								console.log(response);
 								toastStore.trigger({

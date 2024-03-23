@@ -18,13 +18,13 @@
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
 
 	let role = Cookies.get('savedLogin-role');
-
+	/*
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
 		}
 	});
-
+	*/
 	let AssetTypesDocuments: any[];
 
 	onMount(async () => {

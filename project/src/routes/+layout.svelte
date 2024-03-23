@@ -10,6 +10,23 @@
 	import FilterDrawer from './assets/filterDrawer.svelte';
 	import { fade } from 'svelte/transition';
 	import NavBar from './NavBar.svelte';
+	import { onMount } from 'svelte';
+	import { redirectWhenNotLoggedIn, redirectWhenLoginSaved } from '$lib/scripts/loginSaved';
+	//@ts-ignore
+	import { browser } from '$app/environment';
+	
+	// controls all page routings checking if the redirect is valid on not
+	onMount(() => {
+		if (browser) {
+			if ($page.url.pathname == "/" || $page.url.pathname == "/register") {
+				redirectWhenLoginSaved();
+			} else {
+				redirectWhenNotLoggedIn();
+			}
+		}
+	});
+	
+	
 	initializeStores();
 	const drawerStore = getDrawerStore();
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
