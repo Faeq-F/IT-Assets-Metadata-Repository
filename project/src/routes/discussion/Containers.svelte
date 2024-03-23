@@ -6,6 +6,7 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import MakeContainer from './MakeContainer.svelte';
+	import Container from './Container.svelte';
 
 	export let boardDoc: any;
 	let collapsed = false;
@@ -46,6 +47,13 @@
 			>
 		</svelte:fragment>
 	</AppBar>
+	{#if !collapsed}
+		<div id="ContainersContainer">
+			{#each boardDoc.Containers as container}
+				<Container {container} />
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -54,5 +62,14 @@
 		height: 2vw;
 		padding: 0;
 		float: right;
+	}
+
+	#ContainersContainer {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		align-items: stretch;
+		width: 90%;
+		margin: 10px auto;
 	}
 </style>
