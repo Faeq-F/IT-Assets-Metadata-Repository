@@ -1,12 +1,19 @@
 //remember to wrap these in onMount checks
+import Cookies from 'js-cookie';
 
+const userObject = {
+	username: Cookies.get('savedLogin-username'),
+	passwordHash: Cookies.get('savedLogin-password'),
+	role: Cookies.get('savedLogin-role')
+};
 /**
  * Gets documents from a collection in the database & returns them in json form
  * @param collectionName The collection to fetch documents from
  * @returns The documents in the collection
  */
 export const fetchDocuments = (collectionName: string) => {
-	return fetch('http://localhost:5038/api/get/collection/' + collectionName).then((response) => {
+	return fetch('http://localhost:5038/api/get/collection/' + collectionName)
+	.then((response) => {
 		return response.json();
 	});
 };
@@ -17,7 +24,8 @@ export const fetchDocuments = (collectionName: string) => {
  * @returns The fetched document, {} if it doesn't exist
  */
 export const fetchDocumentByID = (id: string) => {
-	return fetch('http://localhost:5038/api/get/document/' + id).then((response) => {
+	return fetch('http://localhost:5038/api/get/document/' + id
+	).then((response) => {
 		return response.json();
 	});
 };
@@ -29,6 +37,7 @@ export const fetchDocumentByID = (id: string) => {
  * @returns Acknowledgment from the database
  */
 export const insertDocument = (collectionName: string, formData: any) => {
+	formData.set('userData', JSON.stringify(userObject))
 	return fetch('http://localhost:5038/api/insert/collection/' + collectionName, {
 		method: 'POST',
 		body: formData
@@ -49,6 +58,7 @@ export const insertDocument = (collectionName: string, formData: any) => {
  * @returns Acknowledgment from the database
  */
 export const updateDocument = (collectionName: string, id: string, formData: any) => {
+	formData.set('userData', JSON.stringify(userObject))
 	return fetch(
 		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
 		{
@@ -68,8 +78,7 @@ export const updateDocument = (collectionName: string, id: string, formData: any
  * @returns Acknowledgment from the database, including json representing the original document that has now been removed
  */
 export const deleteDocument = (collectionName: string, documentID: string, formData: any) => {
-	console.log("hey");
-	console.log(formData.get('userData'));
+	formData.set('userData', JSON.stringify(userObject))
 	return fetch(
 		'http://localhost:5038/api/delete/collection/' + collectionName + '/document/' + documentID,
 		{

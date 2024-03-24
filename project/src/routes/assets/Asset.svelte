@@ -97,21 +97,18 @@
 					return auditid;
 				})
 				.then(async (auditid) => {
-					const deleteData2 = new FormData();
-					console.log(userObject);
-					deleteData2.append('userData', JSON.stringify(userObject))
-					await deleteDocument('diff', auditid, deleteData2);
+					await deleteDocument('diff', auditid, deleteData);
+					toastStore.trigger({
+						message: 'Asset deleted',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
 				}).catch((err) => {
 					return err;
 				});
 		});
-		toastStore.trigger({
-			message: 'Asset deleted',
-			background: 'variant-ghost-success',
-			timeout: 3000
-		});
 		// Refresh the page
-		// location.reload();
+		location.reload();
 	}
 
 	let showMenu = 'none';

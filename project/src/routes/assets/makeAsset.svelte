@@ -109,20 +109,9 @@
 			assetType: type,
 			metadataFields: metadataObject
 		};
-		
-		var userObject = {
-			username: Cookies.get('savedLogin-username'),
-			passwordHash: Cookies.get('savedLogin-password'),
-			role: Cookies.get('savedLogin-role')
-		}
-
-		console.log(userObject);
 
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
-		data.append('userData', JSON.stringify(userObject));
-		console.log(data);
-		console.log(data.get('userData'))
 		await insertDocument('Asset', data).then(async (response: any) => {
 			// response is the new id of the inserted doc now
 			let diffs: any[] = [];
@@ -140,7 +129,6 @@
 			// sending new asset into diff
 			const audit = new FormData();
 			audit.append('newData', JSON.stringify(auditObject));
-			audit.append('userData', JSON.stringify(userObject));	
 
 			await insertDocument('diff', audit);
 
