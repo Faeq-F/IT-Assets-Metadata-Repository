@@ -4,7 +4,7 @@
 	export let container: any;
 </script>
 
-<div id="container" class="card card-hover bg-modern-50 w-4/12 drop-shadow-md">
+<div id="container" class="card card-hover bg-modern-50 border-2">
 	<h4 class="h5">{container.ContainerName}</h4>
 	{container.ContainerDescription}
 	<br />
@@ -32,5 +32,6 @@
 		padding: 15px;
 		flex-grow: 1;
 		position: relative;
+		border-color: plum;
 	}
 </style>

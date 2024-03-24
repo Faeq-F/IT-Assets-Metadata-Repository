@@ -22,5 +22,19 @@
     "project/typedoc.config.json": true,
     "project/typedocs.css": true
   },
-  "cSpell.words": ["Mongoclient", "pcss", "skeletonlabs", "Teamproject"]
+  "cSpell.words": [
+    "associatedobject",
+    "auditid",
+    "carta",
+    "cartamd",
+    "Disscussion",
+    "focusindex",
+    "katex",
+    "Mongoclient",
+    "pcss",
+    "presaved",
+    "skeletonlabs",
+    "Teamproject",
+    "textbox"
+  ]
 }

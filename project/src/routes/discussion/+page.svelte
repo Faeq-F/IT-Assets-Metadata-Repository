@@ -76,8 +76,42 @@
 		});
 	}
 
+	function reply(Author: string, Message: string) {
+		let valueToAssign: string = '> Replying to ' + Author + ':<br>\n';
+		for (let i of Message.split('\n')) {
+			valueToAssign += '>' + i + '\n';
+		}
+		valueToAssign += '\n\n' + value;
+		value = valueToAssign;
+	}
+
+	function deleteMessage(boardDoc: any, message: any) {
+		const data = new FormData();
+		data.append(
+			'newData',
+			JSON.stringify({
+				BoardCreator: boardDoc.BoardCreator,
+				BoardName: boardDoc.BoardName,
+				Containers: boardDoc.Containers,
+				Description: boardDoc.Description,
+				Messages: boardDoc.Messages.filter((messageCurr: any) => messageCurr != message)
+			})
+		);
+		updateDocument('DisscussionBoards', boardDoc._id, data).then((response) => {
+			console.log(response);
+			toastStore.trigger({
+				message: 'Message deleted',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
+			// Refresh the page
+			location.reload();
+		});
+	}
+
 	let value = '';
 	let collapsed = false;
+	let collapsedContainers = true;
 </script>
 
 {#if board}
@@ -86,14 +120,24 @@
 		<Placeholder />
 	{:then boardDoc}
 		<div>
-			<div class="mb-24">
+			<div class={collapsed ? 'mb-24' : 'mb-72'}>
 				<h1 class="h1">{boardDoc.BoardName}</h1>
 				<br />
 				<div class="card bg-modern-50 w-11/12 p-4 drop-shadow-md" style="margin: 0 auto">
+					<button on:click={() => (collapsedContainers = !collapsedContainers)}>
+						{#if collapsedContainers}
+							<i class="fa-solid fa-angle-up"></i>
+						{:else}
+							<i class="fa-solid fa-angle-down"></i>
+						{/if}
+					</button>
 					{boardDoc.Description}
+					{#if !collapsedContainers}
+						<br />
+						<hr />
+						<Containers {boardDoc} />
+					{/if}
 				</div>
-				<br />
-				<Containers {boardDoc} />
 				<br />
 				<div id="messagesContainer">
 					{#each boardDoc.Messages as message}
@@ -101,9 +145,26 @@
 							class="message card bg-modern-50 w-full p-4 drop-shadow-md"
 							style="margin: 5px auto"
 						>
-							<b>{message.Author}</b> on {message.Date} @ {message.Time}
+							<AppBar background="transparent">
+								<svelte:fragment slot="lead">
+									<b>{message.Author}</b>&nbsp;on {message.Date} @ {message.Time}
+								</svelte:fragment>
+								<svelte:fragment slot="trail">
+									<button on:click={() => reply(message.Author, message.Message)}
+										><i class="fa-solid fa-reply"></i></button
+									>
+									{#if Cookies.get('savedLogin-username') == message.Author}
+										<button on:click={() => deleteMessage(boardDoc, message)}
+											><i class="fa-solid fa-trash"></i></button
+										>
+									{/if}
+								</svelte:fragment>
+							</AppBar>
 							<hr />
-							<CartaViewer carta={cartaViewer} value={message.Message} />
+							<br />
+							<div class="pb-4 pl-4">
+								<CartaViewer carta={cartaViewer} value={message.Message} />
+							</div>
 						</div>
 					{/each}
 				</div>
@@ -190,7 +251,9 @@
 		margin: 0 auto;
 		bottom: 0%;
 		left: 50%;
-		transform: translate(-50%, -5%);
+		transform: translate(-50%, 5%);
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 
 	#boardHeader::after {
