@@ -17,6 +17,9 @@
 	import { onMount } from 'svelte';
 	const toastStore = getToastStore();
 
+	/*
+		this exports the following variables so they can be used elsewhere in the code
+	*/
 	export let name: string;
 	export let id: string;
 	export let link: string;
@@ -27,6 +30,7 @@
 
 	let expandTypeModalComponent: ModalComponent;
 	let expandType: ModalSettings;
+
 
 	onMount(async () => {
 		await fetchDocuments('AssetType').then((docs) => {
@@ -72,7 +76,9 @@
 		component: updateModalComponent,
 		backdropClasses: '!p-0'
 	};
-
+	/*
+	  This function is used to delete assets
+	*/
 	async function deleteAsset() {
 		var auditid: string;
 		await deleteDocument('Asset', id).then(async () => {
@@ -90,6 +96,7 @@
 					await deleteDocument('diff', auditid);
 				});
 		});
+		// this adds a relevant message to the assets audit trail
 		toastStore.trigger({
 			message: 'Asset deleted',
 			background: 'variant-ghost-success',
@@ -114,6 +121,7 @@
 		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
 	>
 		<div class="">
+			<!--This creates a button which is used to share an asset-->
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
 				on:click={() => {
@@ -128,6 +136,7 @@
 				<span><i class="fa-solid fa-share-nodes"></i></span>
 				<span>Share</span>
 			</button>
+			<!--This crates a button which will open the expanded view of that asset-->
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
 				on:click={() => modalStore.trigger(expandModal)}
@@ -135,7 +144,9 @@
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
+			<!--This checks to see if the current users role is not viewer-->			
 			{#if role != 'viewer'}
+				<!--This creates the edit button which opens open the modal which is used to edit the asset-->
 				<button
 					class="variant-filled-surface btn btn-sm card-hover m-1"
 					on:click={() => modalStore.trigger(updateModal)}
@@ -143,6 +154,7 @@
 					<span><i class="fa-solid fa-pen"></i></span>
 					<span>Edit</span>
 				</button>
+				<!--This creates the delete button which is used to delte the asset-->
 				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAsset}>
 					<span><i class="fa-solid fa-trash text-sm"></i></span>
 					<span>Delete</span>
@@ -152,6 +164,7 @@
 	</div>
 	<!--menu button-->
 	<div id="ButtonActions">
+		<!-- this button is used to display the menu of actions which can be taken on the asset e.g. delete,expand,share or edit-->
 		<button
 			type="button"
 			class="btn btn-sm"
@@ -171,11 +184,12 @@
 			<span><i class="fa-solid fa-paperclip"></i></span><span>{@html link}</span></a
 		>
 	</div>
-
+	<!--This creates the button which enables to open the expanded view of the assets data type-->
 	<button
 		on:click={() => modalStore.trigger(expandType)}
 		style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</button
 	>
+	
 	{#if viewType == 0}
 		<hr />
 		<div class="ml-2 mt-1">
