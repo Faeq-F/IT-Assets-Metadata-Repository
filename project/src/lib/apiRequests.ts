@@ -67,11 +67,14 @@ export const updateDocument = (collectionName: string, id: string, formData: any
  * @param documentID The _id value of the document to delete
  * @returns Acknowledgment from the database, including json representing the original document that has now been removed
  */
-export const deleteDocument = (collectionName: string, documentID: string) => {
+export const deleteDocument = (collectionName: string, documentID: string, formData: any) => {
+	console.log("hey");
+	console.log(formData.get('userData'));
 	return fetch(
 		'http://localhost:5038/api/delete/collection/' + collectionName + '/document/' + documentID,
 		{
-			method: 'DELETE'
+			method: 'DELETE',
+			body: formData
 		}
 	)
 		.then((response) => {

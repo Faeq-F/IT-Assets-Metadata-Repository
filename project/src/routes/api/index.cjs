@@ -1,3 +1,4 @@
+// @ts-nocheck
 //▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 
 //get env vars - only used in this file - everything else will go through the port open for server-side processing
@@ -27,7 +28,7 @@ app.listen(5038, () => {
 		envs.DB_API_URL,
 		async (/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
 			database = client.db(envs.DB_NAME);
-			var call = await (validUser({"username":"root","passwordHash":"-567368219","role":"admin"}));
+			var call = await (validUser(JSON.stringify({"username":"root","passwordHash":"-567368219","role":"admin"})));
 			console.log(call)
 			if (error) console.error(error);
 			console.log(`server-side is running at port 5038\nConnected`);
@@ -123,28 +124,36 @@ app.get(
 
 		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
 			response.send(result)
-			);
-		}
-		).catch((/** @type {any} */ error) => {
-			console.log(error);
-			return error;
-		});;
+			).catch((/** @type {any} */ error) => {
+				console.log(error);
+				return error;
+			});
+		});
 		
 		//▰▰▰▰▰▰▰▰▰
 		
 		// delete a document in a collection
 		app.delete(
-			'/api/delete/collection/:name/document/:id',
+			'/api/delete/collection/:name/document/:id', multer().none(),
 			(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
-			// @ts-ignore
-			database
-			.collection(collection)
-				.remove({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } });
+			const formData = request.body;            
+			console.log("Received user data:", formData);
+
+			let call = await validUser(formData.userData);
+			if (call == 1) {
+				database
+				.collection(collection)
+					.remove({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } });
+			};
 		};
+
 		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
 			response.send(result)
-			);
+			).catch((/** @type {any} */ error) => {
+				console.log(error);
+				return error;
+			});
 		}
 );
 
@@ -154,7 +163,7 @@ app.get(
  *
  *
  * @param {*} user
- * @return {*} 
+ * @return {*} boolean
  */
 async function validUser(user) {
     try {

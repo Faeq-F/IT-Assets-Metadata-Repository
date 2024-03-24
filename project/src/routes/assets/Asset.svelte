@@ -25,6 +25,12 @@
 	export let keywordSearchInput: string[] = [];
 	export let viewType: number;
 
+	var userObject = {
+			username: Cookies.get('savedLogin-username'),
+			passwordHash: Cookies.get('savedLogin-password'),
+			role: Cookies.get('savedLogin-role')
+	}
+
 	let expandTypeModalComponent: ModalComponent;
 	let expandType: ModalSettings;
 
@@ -75,7 +81,11 @@
 
 	async function deleteAsset() {
 		var auditid: string;
-		await deleteDocument('Asset', id).then(async () => {
+		const deleteData = new FormData();
+		console.log(userObject);
+		deleteData.append('userData', JSON.stringify(userObject))
+		console.log(deleteData.get('userData'));
+		await deleteDocument('Asset', id, deleteData).then(async () => {
 			await fetchDocuments('diff')
 				.then((fetchedAudits) => {
 					for (let i of fetchedAudits) {
@@ -87,7 +97,12 @@
 					return auditid;
 				})
 				.then(async (auditid) => {
-					await deleteDocument('diff', auditid);
+					const deleteData2 = new FormData();
+					console.log(userObject);
+					deleteData2.append('userData', JSON.stringify(userObject))
+					await deleteDocument('diff', auditid, deleteData2);
+				}).catch((err) => {
+					return err;
 				});
 		});
 		toastStore.trigger({
@@ -96,7 +111,7 @@
 			timeout: 3000
 		});
 		// Refresh the page
-		location.reload();
+		// location.reload();
 	}
 
 	let showMenu = 'none';
