@@ -54,10 +54,11 @@ export const insertDocument = (collectionName: string, formData: any) => {
  * Updates a document in a collection from the database
  * @param collectionName The collection that holds the document to update
  * @param id The id of the document to update
- * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed
+ * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed.
  * @returns Acknowledgment from the database
  */
 export const updateDocument = (collectionName: string, id: string, formData: any) => {
+	// adds user details into formData
 	formData.set('userData', JSON.stringify(userObject))
 	return fetch(
 		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
@@ -77,7 +78,10 @@ export const updateDocument = (collectionName: string, id: string, formData: any
  * @param documentID The _id value of the document to delete
  * @returns Acknowledgment from the database, including json representing the original document that has now been removed
  */
-export const deleteDocument = (collectionName: string, documentID: string, formData: any) => {
+export const deleteDocument = (collectionName: string, documentID: string) => {
+	// create FormData object
+	const formData = new FormData;
+	// have the FormData object include user credentials
 	formData.set('userData', JSON.stringify(userObject))
 	return fetch(
 		'http://localhost:5038/api/delete/collection/' + collectionName + '/document/' + documentID,

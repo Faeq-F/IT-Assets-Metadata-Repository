@@ -81,11 +81,7 @@
 
 	async function deleteAsset() {
 		var auditid: string;
-		const deleteData = new FormData();
-		console.log(userObject);
-		deleteData.append('userData', JSON.stringify(userObject))
-		console.log(deleteData.get('userData'));
-		await deleteDocument('Asset', id, deleteData).then(async () => {
+		await deleteDocument('Asset', id).then(async () => {
 			await fetchDocuments('diff')
 				.then((fetchedAudits) => {
 					for (let i of fetchedAudits) {
@@ -97,7 +93,7 @@
 					return auditid;
 				})
 				.then(async (auditid) => {
-					await deleteDocument('diff', auditid, deleteData);
+					await deleteDocument('diff', auditid);
 					toastStore.trigger({
 						message: 'Asset deleted',
 						background: 'variant-ghost-success',

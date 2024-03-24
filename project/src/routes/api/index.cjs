@@ -138,7 +138,6 @@ app.get(
 			(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			const formData = request.body;            
-			console.log("Received user data:", formData);
 
 			let call = await validUser(formData.userData);
 			if (call == 1) {
@@ -160,24 +159,19 @@ app.get(
 //▰▰▰▰▰▰▰▰▰
 
 /**
+ * Checks whether if the cookie sent has valid user credentials in the database
  *
- *
- * @param {*} user
- * @return {*} boolean
+ * @param {*} user JSON object of user details stored in cookie
+ * @return {*} boolean true if valid user false if not
  */
 async function validUser(user) {
     try {
-		console.log("Received user:", user);
 		const userString = JSON.parse(user);
-		console.log(userString);
+
         // Extract values from the user object
         var username = userString.username;
         var password = parseInt(userString.passwordHash);
         var role = userString.role;
-
-        console.log("Extracted username:", username);
-        console.log("Extracted password:", password);
-        console.log("Extracted role:", role);
 
         // Query the database for the user
         var count = await database.collection('User').countDocuments({ 
@@ -185,8 +179,6 @@ async function validUser(user) {
             passwordHash: password,
             role: role
         });
-
-        console.log("User count:", count);
 
         return count == 1;
     } catch (error) {
