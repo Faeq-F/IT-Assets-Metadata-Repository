@@ -88,12 +88,13 @@ app.get(
 				if (call == 1) {
 					const rec = await database.collection(collection).insertOne(JSON.parse(formData.newData));
 					return rec.insertedId;
-				} else {
-					throw new Error("user details are incorrect");
 				}
 		};
 		result(request.params.name.toString()).then((result) => {
 			response.send(result);
+		}).catch((error) => {
+			console.log(error);
+			return error;
 		});
 	}
 	);
@@ -117,16 +118,17 @@ app.get(
 					.catch((/** @type {any} */ err) => {
 						return err;
 					});
-				} else {
-				throw new Error("user details are incorrect");
-			}
+				}
 		};
 
 		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
 			response.send(result)
 			);
 		}
-		);
+		).catch((/** @type {any} */ error) => {
+			console.log(error);
+			return error;
+		});;
 		
 		//▰▰▰▰▰▰▰▰▰
 		
