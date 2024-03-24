@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
-	import { AppBar, getToastStore } from '@skeletonlabs/skeleton';
+	import {
+		AppBar,
+		getModalStore,
+		getToastStore,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
+	import UpdateContainer from './UpdateContainer.svelte';
 	const toastStore = getToastStore();
 	export let container: any;
 	export let boardDoc: any;
@@ -29,6 +36,14 @@
 			location.reload();
 		});
 	}
+
+	const modalStore = getModalStore();
+	const modalComponent: ModalComponent = { ref: UpdateContainer };
+	const updateModal: ModalSettings = {
+		type: 'component',
+		component: modalComponent,
+		meta: { boardDoc: boardDoc, container: container }
+	};
 </script>
 
 <div id="container" class="card card-hover bg-modern-50 border-2">
@@ -37,7 +52,9 @@
 			<h4 class="h5">{container.ContainerName}</h4>
 		</svelte:fragment>
 		<svelte:fragment slot="trail">
-			<button on:click={() => {}}><i class="fa-solid fa-pen"></i></button>
+			<button on:click={() => modalStore.trigger(updateModal)}
+				><i class="fa-solid fa-pen"></i></button
+			>
 			<button on:click={() => deleteContainer(boardDoc, container)}
 				><i class="fa-solid fa-trash"></i></button
 			>
