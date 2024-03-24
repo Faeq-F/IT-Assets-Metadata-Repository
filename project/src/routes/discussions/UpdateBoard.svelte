@@ -49,7 +49,7 @@
 </div>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
-	<div class="card bg-modern-50 h-full p-5">
+	<div class="card h-full bg-modern-50 p-5">
 		<header class="h2 card-header text-center">Edit Discussion Board</header>
 		<br /><br />
 		<form id="rootCreateAssetForm" class="text-center">

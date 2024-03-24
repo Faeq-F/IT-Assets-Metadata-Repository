@@ -64,7 +64,7 @@
 <h1 class="h1" use:popup={about}>Discussions</h1>
 <br />
 <div>
-	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
+	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				{#if DiscussionBoards != undefined && DiscussionBoards.length > 0}
@@ -100,7 +100,7 @@
 				{#if role != 'viewer'}
 					<button
 						id="assetMaker"
-						class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
+						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
 						on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
 					>
 				{/if}

@@ -19,10 +19,10 @@
 
 			<svelte:fragment slot="trail">
 				<LightSwitch width="w-10" height="h-5" />
-				<a class="btn btn-sm bg-transparent" href="/home" rel="noreferrer"> Home </a>
-				<a class="btn btn-sm bg-transparent" href="/assets" rel="noreferrer"> Assets </a>
-				<a class="btn btn-sm bg-transparent" href="/types" rel="noreferrer"> Types </a>
-				<a class="btn btn-sm bg-transparent" href="/discussions" rel="noreferrer"> Discussions </a>
+				<a class="bg-transparent btn btn-sm" href="/home" rel="noreferrer"> Home </a>
+				<a class="bg-transparent btn btn-sm" href="/assets" rel="noreferrer"> Assets </a>
+				<a class="bg-transparent btn btn-sm" href="/types" rel="noreferrer"> Types </a>
+				<a class="bg-transparent btn btn-sm" href="/discussions" rel="noreferrer"> Discussions </a>
 
 				<a href="/profile" rel="noreferrer"><i class="fa-solid fa-circle-user text-3xl"></i></a>
 			</svelte:fragment>

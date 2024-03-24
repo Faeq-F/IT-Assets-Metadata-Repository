@@ -1,4 +1,4 @@
-<div class="card card-hover bg-modern-50 m-10 w-5/12 drop-shadow-md">
+<div class="card card-hover m-10 w-5/12 bg-modern-50 drop-shadow-md">
 	<div class="card-header flex items-center justify-between">
 		<div class="flex animate-pulse items-center justify-center space-x-4">
 			<div class="placeholder-circle w-16" />

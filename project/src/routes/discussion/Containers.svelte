@@ -33,7 +33,7 @@
 	<svelte:fragment slot="trail">
 		<button
 			id="containerMaker"
-			class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
+			class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
 			on:click={() => modalStore.trigger(makeModal)}><i class="fa-solid fa-plus"></i></button
 		>
 	</svelte:fragment>

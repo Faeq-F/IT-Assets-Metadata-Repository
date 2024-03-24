@@ -122,7 +122,7 @@
 			<div class={collapsed ? 'mb-24' : 'mb-72'}>
 				<h1 class="h1">{boardDoc.BoardName}</h1>
 				<br />
-				<div class="card bg-modern-50 w-11/12 p-4 drop-shadow-md" style="margin: 0 auto">
+				<div class="card w-11/12 bg-modern-50 p-4 drop-shadow-md" style="margin: 0 auto">
 					<button on:click={() => (collapsedContainers = !collapsedContainers)}>
 						{#if collapsedContainers}
 							<i class="fa-solid fa-angle-up"></i>
@@ -141,7 +141,7 @@
 				<div id="messagesContainer">
 					{#each boardDoc.Messages as message}
 						<div
-							class="message card bg-modern-50 w-full p-4 drop-shadow-md"
+							class="message card w-full bg-modern-50 p-4 drop-shadow-md"
 							style="margin: 5px auto"
 						>
 							<AppBar background="transparent">
@@ -169,7 +169,7 @@
 				</div>
 			</div>
 			<div
-				class="card bg-modern-50 absolute bottom-10 block w-11/12 drop-shadow-md"
+				class="card absolute bottom-10 block w-11/12 bg-modern-50 drop-shadow-md"
 				id="boardHeader"
 			>
 				<AppBar background="transparent">

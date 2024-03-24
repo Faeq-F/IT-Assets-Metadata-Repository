@@ -46,7 +46,7 @@
 	};
 </script>
 
-<div id="container" class="card card-hover bg-modern-50 border-2">
+<div id="container" class="card card-hover border-2 bg-modern-50">
 	<AppBar background="transparent">
 		<svelte:fragment slot="lead">
 			<h4 class="h5">{container.ContainerName}</h4>
