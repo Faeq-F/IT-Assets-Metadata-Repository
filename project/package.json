@@ -18,6 +18,7 @@
 		"doc": "typedoc --options ./typedoc.config.json",
 		"start": "sirv public --no-clear"
 	},
+	"type": "module",
 	"devDependencies": {
 		"@cartamd/plugin-anchor": "^1.0.0",
 		"@cartamd/plugin-code": "^3.0.1",
@@ -49,7 +50,6 @@
 		"carta-plugin-imsize": "^1.0.1",
 		"carta-plugin-ins-del": "^1.0.0",
 		"carta-plugin-subscript": "^1.0.0",
-		"carta-plugin-video": "^1.0.0",
 		"chart.js": "^4.4.2",
 		"cors": "^2.8.5",
 		"eslint": "^8.56.0",
@@ -86,11 +86,13 @@
 		"vite-plugin-tailwind-purgecss": "0.2.0",
 		"vitest": "^1.2.0"
 	},
-	"type": "module",
 	"dependencies": {
 		"@floating-ui/dom": "1.6.1",
 		"@types/mongodb": "^4.0.7",
 		"dotenv": "^16.4.3",
 		"jointjs": "^3.7.7"
+	},
+	"optionalDependencies": {
+		"@rollup/rollup-linux-x64-gnu": "4.6.1"
 	}
 }

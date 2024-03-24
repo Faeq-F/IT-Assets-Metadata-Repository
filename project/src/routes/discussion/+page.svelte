@@ -33,7 +33,6 @@
 	import '@cartamd/plugin-code/default.css';
 	import '@cartamd/plugin-slash/default.css';
 	import '@cartamd/plugin-anchor/default.css';
-	import 'carta-plugin-video/default.css';
 
 	async function sendMessage(boardDoc: any) {
 		// formatting date

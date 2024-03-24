@@ -7,7 +7,6 @@ import DOMPurify from 'dompurify';
 	import { subscript } from 'carta-plugin-subscript';
 	import { insdel } from 'carta-plugin-ins-del';
 	import { imsize } from 'carta-plugin-imsize';
-	import { video } from 'carta-plugin-video';
 
 import { Carta } from 'carta-md';
 
@@ -156,11 +155,11 @@ export const carta = new Carta({
 			subscript(),
 			insdel(),
 			imsize(),
-			video()
+
 		]
 	});
 
   export const cartaViewer = new Carta({
 		sanitizer: DOMPurify.sanitize,
-		extensions: [emoji(), code(), math(), anchor(), subscript(), insdel(), imsize(), video()]
+		extensions: [emoji(), code(), math(), anchor(), subscript(), insdel(), imsize()]
 	});
