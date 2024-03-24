@@ -3,7 +3,6 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
@@ -19,16 +18,13 @@
 
 	let users: User[] = [];
 
-	/*
 	onMount(() => {
 		if (browser) {
-			redirectWhenNotLoggedIn();
 			if (Cookies.get('savedLogin-role') != 'admin') {
 				window.location.href = '/profile';
 			}
 		}
 	});
-	*/
 
 	onMount(async () => {
 		try {

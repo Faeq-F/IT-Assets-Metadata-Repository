@@ -1,7 +1,5 @@
 <script lang="ts">
 	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
-	//@ts-ignore
 	import { page } from '$app/stores'; //Does work
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { onMount } from 'svelte';
@@ -20,14 +18,6 @@
 	let userDoc: any;
 	let expandedUser: ModalComponent;
 	let expandUser: ModalSettings;
-
-	/*
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
-	*/
 
 	onMount(async () => {
 		await fetchDocuments('User').then((Users) => {

@@ -25,10 +25,13 @@ var database;
 app.listen(5038, () => {
 	MongoClient.connect(
 		envs.DB_API_URL,
-		(/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
+		async (/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
 			database = client.db(envs.DB_NAME);
+			var call = await (validUser({"username":"root","passwordHash":"-567368219","role":"admin"}));
+			console.log(call)
 			if (error) console.error(error);
 			console.log(`server-side is running at port 5038\nConnected`);
+			
 		}
 	);
 });
@@ -48,20 +51,20 @@ app.get(
 		};
 		result(request.params.name.toString()).then((result) => response.send(result));
 	}
-);
-
-//▰▰▰▰▰▰▰▰▰
-
-//get a single document
-app.get(
-	'/api/get/document/:id',
-	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
-		let result = async (/** @type {string} */ id) => {
-			let collections = await database.listCollections().toArray();
+	);
+	
+	//▰▰▰▰▰▰▰▰▰
+	
+	//get a single document
+	app.get(
+		'/api/get/document/:id',
+		(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
+			let result = async (/** @type {string} */ id) => {
+				let collections = await database.listCollections().toArray();
 			for (let i of collections) {
 				let document = await database
-					.collection(i.name)
-					.findOne({ $expr: { $eq: ['$_id', { $toObjectId: id }] } });
+				.collection(i.name)
+				.findOne({ $expr: { $eq: ['$_id', { $toObjectId: id }] } });
 				if (document != null) {
 					return await document;
 				}
@@ -70,67 +73,114 @@ app.get(
 		};
 		result(request.params.id.toString()).then((result) => response.send(result));
 	}
-);
-
-//▰▰▰▰▰▰▰▰▰
-
-//insert a document into a collection
-app.post(
-	'/api/insert/collection/:name',
-	multer().none(),
-	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
-		let result = async (/** @type {string} */ collection) => {
-			const formData = request.body;
-			const rec = await database.collection(collection).insertOne(JSON.parse(formData.newData));
-			return rec.insertedId;
+	);
+	
+	//▰▰▰▰▰▰▰▰▰
+	
+	//insert a document into a collection
+	app.post(
+		'/api/insert/collection/:name',
+		multer().none(),
+		(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
+			let result = async (/** @type {string} */ collection) => {
+				const formData = request.body;
+				let call = await validUser(formData.userData);
+				if (call == 1) {
+					const rec = await database.collection(collection).insertOne(JSON.parse(formData.newData));
+					return rec.insertedId;
+				} else {
+					throw new Error("user details are incorrect");
+				}
 		};
 		result(request.params.name.toString()).then((result) => {
 			response.send(result);
 		});
 	}
-);
-//▰▰▰▰▰▰▰▰▰
-
-// update a document in a collection
-app.put(
-	'/api/update/collection/:name/document/:id',
-	multer().none(),
+	);
+	//▰▰▰▰▰▰▰▰▰
+	
+	// update a document in a collection
+	app.put(
+		'/api/update/collection/:name/document/:id',
+		multer().none(),
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			const formData = request.body;
-			database
+			let call = await validUser(formData.userData);
+			if (call == 1) {
+				database
 				.collection(collection)
 				.replaceOne(
 					{ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },
-					JSON.parse(formData.newData)
-				)
-				.catch((/** @type {any} */ err) => {
-					return err;
-				});
+						JSON.parse(formData.newData)
+					)
+					.catch((/** @type {any} */ err) => {
+						return err;
+					});
+				} else {
+				throw new Error("user details are incorrect");
+			}
 		};
 
 		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
 			response.send(result)
+			);
+		}
 		);
-	}
-);
-
-//▰▰▰▰▰▰▰▰▰
-
-// delete a document in a collection
-app.delete(
-	'/api/delete/collection/:name/document/:id',
-	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
+		
+		//▰▰▰▰▰▰▰▰▰
+		
+		// delete a document in a collection
+		app.delete(
+			'/api/delete/collection/:name/document/:id',
+			(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			// @ts-ignore
 			database
-				.collection(collection)
+			.collection(collection)
 				.remove({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } });
 		};
 		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
 			response.send(result)
-		);
-	}
+			);
+		}
 );
 
 //▰▰▰▰▰▰▰▰▰
+
+/**
+ *
+ *
+ * @param {*} user
+ * @return {*} 
+ */
+async function validUser(user) {
+    try {
+		console.log("Received user:", user);
+		const userString = JSON.parse(user);
+		console.log(userString);
+        // Extract values from the user object
+        var username = userString.username;
+        var password = parseInt(userString.passwordHash);
+        var role = userString.role;
+
+        console.log("Extracted username:", username);
+        console.log("Extracted password:", password);
+        console.log("Extracted role:", role);
+
+        // Query the database for the user
+        var count = await database.collection('User').countDocuments({ 
+            username: username, 
+            passwordHash: password,
+            role: role
+        });
+
+        console.log("User count:", count);
+
+        return count == 1;
+    } catch (error) {
+        console.error('Error checking user:', error);
+        return false;
+    }
+
+}

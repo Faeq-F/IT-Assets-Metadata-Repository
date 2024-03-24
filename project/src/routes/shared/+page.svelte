@@ -1,11 +1,9 @@
 <script lang="ts">
 	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { fetchDocumentByID } from '$lib/apiRequests';
 	import { onMount } from 'svelte';
 	import ExpandedAsset from '../assets/ExpandedAsset.svelte';
 	import ExpandedType from '../types/ExpandedType.svelte';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import ExpandedUser from '../profile/ExpandedUser.svelte';
 
 	let assetParam: string | null;
@@ -18,17 +16,12 @@
 	 * @email faeqfaisal@hotmail.co.uk
 	 * @email zlac318@live.rhul.ac.uk
 	 */
-	/*
 	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
 		const urlParams = new URLSearchParams(window.location.search);
 		assetParam = urlParams.get('asset'); // if the shared document is an asset
 		typeParam = urlParams.get('type'); // if the shared document is an asset type
 		userParam = urlParams.get('user'); // if the shared document is a user
 	});
-	*/
 </script>
 
 <!--The style prop applies to the close button on the component.
