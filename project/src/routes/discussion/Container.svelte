@@ -1,12 +1,51 @@
 <script lang="ts">
-	import { fetchDocumentByID } from '$lib/apiRequests';
+	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
+	import { AppBar, getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 	export let container: any;
+	export let boardDoc: any;
+
+	function deleteContainer(board: any, container: any) {
+		const data = new FormData();
+		data.append(
+			'newData',
+			JSON.stringify({
+				BoardCreator: board.BoardCreator,
+				BoardName: board.BoardName,
+				Containers: board.Containers.filter((containerCurr: any) => containerCurr != container),
+				Description: board.Description,
+				Messages: board.Messages
+			})
+		);
+		updateDocument('DisscussionBoards', board._id, data).then((response) => {
+			console.log(response);
+			toastStore.trigger({
+				message: 'Container deleted',
+				background: 'variant-ghost-success',
+				timeout: 3000
+			});
+			// Refresh the page
+			location.reload();
+		});
+	}
 </script>
 
 <div id="container" class="card card-hover bg-modern-50 border-2">
-	<h4 class="h5">{container.ContainerName}</h4>
-	{container.ContainerDescription}
+	<AppBar background="transparent">
+		<svelte:fragment slot="lead">
+			<h4 class="h5">{container.ContainerName}</h4>
+		</svelte:fragment>
+		<svelte:fragment slot="trail">
+			<button on:click={() => {}}><i class="fa-solid fa-pen"></i></button>
+			<button on:click={() => deleteContainer(boardDoc, container)}
+				><i class="fa-solid fa-trash"></i></button
+			>
+		</svelte:fragment>
+	</AppBar>
+	<div class="pl-4">
+		{container.ContainerDescription}
+	</div>
 	<br />
 	<hr class="p-1" />
 	<b>{container.ContainerType}:</b>
@@ -32,6 +71,6 @@
 		padding: 15px;
 		flex-grow: 1;
 		position: relative;
-		border-color: plum;
+		border-color: rgb(214, 195, 250);
 	}
 </style>

@@ -41,7 +41,7 @@
 
 <div id="ContainersContainer">
 	{#each boardDoc.Containers as container}
-		<Container {container} />
+		<Container {container} {boardDoc} />
 	{/each}
 </div>
 
