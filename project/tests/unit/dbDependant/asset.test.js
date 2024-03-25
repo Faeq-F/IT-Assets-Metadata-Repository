@@ -39,8 +39,8 @@ test('SelectAssetType', () => {
 		return expect(answer[8].assetType).toEqual('Framework');
 	});
 });
-
-async function resetAsset() {
+//Used to test update function
+function resetAsset() {
 	var asset = {
 		assetName: 'AssetName',
 		assetLink: 'AssetLink',
