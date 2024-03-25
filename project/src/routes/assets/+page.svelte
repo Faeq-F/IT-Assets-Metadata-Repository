@@ -25,7 +25,7 @@
 	import { activeFilters } from '$lib/stores';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
 
-	// this will redirect the user to the login page if they aren#t logged in
+	// This will redirect the user to the login page if they aren#t logged in
 	onMount(() => {
 		if (browser) {
 			redirectWhenNotLoggedIn();
@@ -46,7 +46,7 @@
 	let keywordSearchInput: string[] = [];
 	let AssetDocuments: any[];
 
-	// this gets the documents related to the assets
+	// This gets the documents related to the assets
 	onMount(async () => {
 		fetchDocuments('Asset').then((Docs) => {
 			AssetDocuments = Docs;
@@ -55,14 +55,15 @@
 
 	let role = Cookies.get('savedLogin-role');
 
-	//this code sets up the code which will be used for loading modals
+	//This code sets up the code which will be used for loading modals
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: MakeAsset };
+	// This defines the settings of any modals used
 	const modal: ModalSettings = {
 		type: 'component',
 		component: modalComponent
 	};
-
+	// This deines the setting for popups
 	const association: PopupSettings = {
 		event: 'hover',
 		target: 'association',
@@ -89,7 +90,7 @@
 	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				<!-- this checks if the user has any assets created-->
+				<!-- This checks if the user has any assets created-->
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
 				<!--This determines which way the assets will be displayed either
 					as a grid with more detail or as a list with minium detail-->
@@ -100,12 +101,14 @@
 						hover="hover:variant-soft-primary"
 						border="border-2 border-modern-500"
 					>
+						<!--This defines how assets are displayed when in grid form-->
 						<RadioItem bind:group={viewType} name="grid" value={0} class="h-4"
 							><i
 								class="fa-solid fa-grip fa-md -mt-8 text-sm"
 								style="vertical-align: middle; line-height: 4.6rem;"
 							></i></RadioItem
 						>
+						<!--This defines how assets are displayed when in list form-->
 						<RadioItem bind:group={viewType} name="list" value={1} class="h-4"
 							><i
 								class="fa-solid fa-list-ul fa-md -mt-8 text-sm"
@@ -115,7 +118,7 @@
 					</RadioGroup>
 					<p id="nothingHere" class="ml-2" use:popup={association}>Your assets:</p>
 				{:else}
-					<!-- this is the message displayed if the current user has no assets to be displayed-->
+					<!-- This is the message displayed if the current user has no assets to be displayed-->
 					<p id="nothingHere" class="ml-2">
 						It doesn't look like you have any assets yet, click the <i class="fa-solid fa-plus"></i>
 						to get started
@@ -127,6 +130,7 @@
 				<div class="inline max-h-8 rounded-full border-2 border-modern-500">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
+					<!--This defines how to search box is formatted-->
 					<InputChip
 						bind:value={keywordSearchInput}
 						id="keyword"
@@ -194,7 +198,7 @@
 		{/each}
 	{/await}
 </div>
-
+<!--This contains the stlying options for the page-->
 <style>
 	#assetMaker {
 		width: 2vw;
