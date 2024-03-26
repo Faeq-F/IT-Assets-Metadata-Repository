@@ -1,0 +1,12 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"name": "Team 03 Group Project",
+	"entryPoints": ["src/"],
+	"entryPointStrategy": "expand",
+	"out": "docs",
+	"plugin": ["typedoc-material-theme"],
+	"themeColor": "#A998FE",
+	"customCss": "./typedocs.css",
+	"hideGenerator": true,
+	"searchInComments": true
+}

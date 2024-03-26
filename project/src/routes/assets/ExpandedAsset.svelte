@@ -19,6 +19,7 @@
 
 	const modalStore = getModalStore();
 
+	// this function is used to display each entry in the audit log for the asset
 	async function displayTrailComponent(
 		type: string,
 		key: string,
@@ -39,6 +40,7 @@
 				else if (doc.username) oldValue = doc.username;
 			});
 		}
+		// this is the code for displaying the update component of the audit trail of the asset
 		if (type == 'UPDATE') {
 			new Update({
 				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
@@ -48,6 +50,7 @@
 					oldValue: oldValue
 				}
 			});
+			// this is the code for displaying the add component of the audit trail of the asset
 		} else if (type == 'ADD') {
 			new Add({
 				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
@@ -56,6 +59,7 @@
 					newValue: value
 				}
 			});
+			// this is the code for displaying the remove component of the audit trail of the asset
 		} else {
 			new Remove({
 				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,

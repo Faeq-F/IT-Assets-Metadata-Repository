@@ -6,25 +6,34 @@
 		type ModalSettings,
 		RadioGroup,
 		RadioItem,
-		getModalStore
+		getModalStore,
+		popup,
+		type PopupSettings
 	} from '@skeletonlabs/skeleton';
-	import MakeType from './MakeType.svelte';
-	import Type from './Type.svelte';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
+	import MakeDiscussionBoard from './MakeDiscussionBoard.svelte';
+	import DiscussionBoard from './DiscussionBoard.svelte';
 
 	let role = Cookies.get('savedLogin-role');
-	let AssetTypesDocuments: any[];
+
+	let DiscussionBoards: any[];
 
 	onMount(async () => {
-		fetchDocuments('AssetType').then((Docs) => {
-			AssetTypesDocuments = Docs;
+		fetchDocuments('DisscussionBoards').then((Docs) => {
+			DiscussionBoards = Docs;
 		});
 	});
 
+	const about: PopupSettings = {
+		event: 'hover',
+		target: 'about',
+		placement: 'top'
+	};
+
 	const modalStore = getModalStore();
-	const modalComponent: ModalComponent = { ref: MakeType };
+	const modalComponent: ModalComponent = { ref: MakeDiscussionBoard };
 	const makeModal: ModalSettings = {
 		type: 'component',
 		component: modalComponent
@@ -34,16 +43,22 @@
 </script>
 
 <svelte:head>
-	<title>Asset types</title>
+	<title>Discussions</title>
 </svelte:head>
 
-<h1 class="h1">Asset types management</h1>
+<div class="card z-[9999] p-4" data-popup="about">
+	Discussion boards can be about anything. Certain projects that have been undertaken, or general
+	questions. You can organize information being talked about in containers.
+	<div class="card arrow" />
+</div>
+
+<h1 class="h1" use:popup={about}>Discussions</h1>
 <br />
 <div>
 	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
-				{#if AssetTypesDocuments != undefined && AssetTypesDocuments.length > 0}
+				{#if DiscussionBoards != undefined && DiscussionBoards.length > 0}
 					<RadioGroup
 						background="transparent"
 						class="text-token max-h-8  text-sm"
@@ -64,16 +79,16 @@
 							></i></RadioItem
 						>
 					</RadioGroup>
-					<p id="nothingHere" class="ml-2">Your types:</p>
+					<p id="nothingHere" class="ml-2" use:popup={about}>Your discussion boards:</p>
 				{:else}
 					<p id="nothingHere" class="ml-2">
-						It doesn't look like you have any types yet, click the <i class="fa-solid fa-plus"></i> to
-						get started
+						It doesn't look like you have any boards yet, click the <i class="fa-solid fa-plus"></i>
+						to get started
 					</p>
 				{/if}
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				{#if role == 'admin'}
+				{#if role != 'viewer'}
 					<button
 						id="assetMaker"
 						class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
@@ -85,8 +100,8 @@
 	</div>
 </div>
 
-<div class="typesContainer">
-	{#await fetchDocuments('AssetType')}
+<div class="boardsContainer">
+	{#await fetchDocuments('DisscussionBoards')}
 		<Placeholder />
 		<Placeholder />
 		<Placeholder />
@@ -94,14 +109,9 @@
 		<Placeholder />
 		<Placeholder />
 		<Placeholder />
-	{:then AssetTypesDocuments}
-		{#each AssetTypesDocuments as type}
-			<Type
-				id={type._id}
-				typeName={type.typeName}
-				metadataFields={type.metadataFields}
-				{viewType}
-			/>
+	{:then Boards}
+		{#each Boards as board}
+			<DiscussionBoard {board} {viewType} />
 		{/each}
 	{/await}
 </div>
@@ -131,7 +141,7 @@
 		display: table;
 	}
 
-	.typesContainer {
+	.boardsContainer {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-around;
