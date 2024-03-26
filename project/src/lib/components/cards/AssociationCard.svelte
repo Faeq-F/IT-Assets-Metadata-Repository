@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
-	import ExpandedAsset from '../../../routes/assets/ExpandedAsset.svelte';
-	import ExpandedUser from '../../../routes/profile/ExpandedUser.svelte';
-	import { highlight } from '../../scripts/keywordSearch';
+	import { highlight } from '$lib/scripts/keywordSearch';
+	import { produceExpandModalComponent } from './AssociationCard';
 
 	export let topLevel = true;
 	let modalStore: any;
-
 	if (topLevel) {
 		modalStore = getModalStore();
 	}
@@ -19,27 +17,10 @@
 
 	if (document.assetName != undefined) {
 		associationType = 'Asset';
-		expandModalComponent = {
-			ref: ExpandedAsset,
-			props: {
-				id: document._id,
-				assetName: document.assetName,
-				assetLink: document.assetLink,
-				assetType: document.assetType,
-				metadataFields: document.metadataFields
-			}
-		};
+		expandModalComponent = produceExpandModalComponent(document, associationType);
 	} else {
 		associationType = 'User';
-		expandModalComponent = {
-			ref: ExpandedUser,
-			props: {
-				id: document._id,
-				username: document.username,
-				email: document.email,
-				role: document.role
-			}
-		};
+		expandModalComponent = produceExpandModalComponent(document, associationType);
 	}
 
 	const expandModal: ModalSettings = {

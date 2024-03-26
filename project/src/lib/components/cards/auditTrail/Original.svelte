@@ -8,11 +8,12 @@
 <div class="card variant-ghost-surface m-2 p-4">
 	<div class="font-bold">Original:</div>
 	<!--Asset details-->
-	<div class=" ml-14">
+	<div class="ml-14">
 		<div class="h4" style="margin:10px; font-weight: bold;">
 			{original.assetName}
 		</div>
 		<div class="m-0 mb-1 p-0">
+			<!--clickable link to asset-->
 			<a
 				style="font-weight: 500"
 				class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
@@ -26,9 +27,7 @@
 		<div class="h6" style="margin:10px; font-weight: bold;">
 			{original.assetType}
 		</div>
-
 		<hr style="height:1px;border:none;color:#333;background-color:#333;" />
-
 		<div class="ml-2 mt-1 text-lg">
 			<!-- metadata -->
 			{#each Object.entries(original.metadataFields) as [field, value]}
