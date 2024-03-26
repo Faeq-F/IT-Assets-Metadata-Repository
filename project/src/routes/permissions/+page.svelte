@@ -60,7 +60,7 @@
 					if (i.username == newUserObject.username) {
 						const data = new FormData();
 						data.append('newData', JSON.stringify(newUserObject));
-						updateDocument('User', i._id, data, data)
+						updateDocument('User', i._id, data)
 							.then((response) => {
 								console.log(response);
 								toastStore.trigger({

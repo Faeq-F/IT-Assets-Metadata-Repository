@@ -1,19 +1,21 @@
 //remember to wrap these in onMount checks
 import Cookies from 'js-cookie';
 
-const userObject = {
-	username: Cookies.get('savedLogin-username'),
-	passwordHash: Cookies.get('savedLogin-password'),
-	role: Cookies.get('savedLogin-role')
-};
+function getCurrentUser() {
+	return {
+		username: Cookies.get('savedLogin-username'),
+		passwordHash: Cookies.get('savedLogin-password'),
+		role: Cookies.get('savedLogin-role')
+	};
+}
+
 /**
  * Gets documents from a collection in the database & returns them in json form
  * @param collectionName The collection to fetch documents from
  * @returns The documents in the collection
  */
 export const fetchDocuments = (collectionName: string) => {
-	return fetch('http://localhost:5038/api/get/collection/' + collectionName)
-	.then((response) => {
+	return fetch('http://localhost:5038/api/get/collection/' + collectionName).then((response) => {
 		return response.json();
 	});
 };
@@ -24,8 +26,7 @@ export const fetchDocuments = (collectionName: string) => {
  * @returns The fetched document, {} if it doesn't exist
  */
 export const fetchDocumentByID = (id: string) => {
-	return fetch('http://localhost:5038/api/get/document/' + id
-	).then((response) => {
+	return fetch('http://localhost:5038/api/get/document/' + id).then((response) => {
 		return response.json();
 	});
 };
@@ -37,7 +38,7 @@ export const fetchDocumentByID = (id: string) => {
  * @returns Acknowledgment from the database
  */
 export const insertDocument = (collectionName: string, formData: any) => {
-	formData.set('userData', JSON.stringify(userObject))
+	formData.set('userData', JSON.stringify(getCurrentUser()));
 	return fetch('http://localhost:5038/api/insert/collection/' + collectionName, {
 		method: 'POST',
 		body: formData
@@ -59,7 +60,7 @@ export const insertDocument = (collectionName: string, formData: any) => {
  */
 export const updateDocument = (collectionName: string, id: string, formData: any) => {
 	// adds user details into formData
-	formData.set('userData', JSON.stringify(userObject))
+	formData.set('userData', JSON.stringify(getCurrentUser()));
 	return fetch(
 		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
 		{
@@ -71,7 +72,6 @@ export const updateDocument = (collectionName: string, id: string, formData: any
 	});
 };
 
-
 /**
  * Deletes a document from a collection in the database
  * @param collectionName The collection to delete a document from
@@ -80,9 +80,9 @@ export const updateDocument = (collectionName: string, id: string, formData: any
  */
 export const deleteDocument = (collectionName: string, documentID: string) => {
 	// create FormData object
-	const formData = new FormData;
+	const formData = new FormData();
 	// have the FormData object include user credentials
-	formData.set('userData', JSON.stringify(userObject))
+	formData.set('userData', JSON.stringify(getCurrentUser()));
 	return fetch(
 		'http://localhost:5038/api/delete/collection/' + collectionName + '/document/' + documentID,
 		{

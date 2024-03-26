@@ -25,12 +25,6 @@
 	export let keywordSearchInput: string[] = [];
 	export let viewType: number;
 
-	var userObject = {
-			username: Cookies.get('savedLogin-username'),
-			passwordHash: Cookies.get('savedLogin-password'),
-			role: Cookies.get('savedLogin-role')
-	}
-
 	let expandTypeModalComponent: ModalComponent;
 	let expandType: ModalSettings;
 
@@ -99,7 +93,8 @@
 						background: 'variant-ghost-success',
 						timeout: 3000
 					});
-				}).catch((err) => {
+				})
+				.catch((err) => {
 					return err;
 				});
 		});

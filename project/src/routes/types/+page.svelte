@@ -8,7 +8,6 @@
 		RadioItem,
 		getModalStore
 	} from '@skeletonlabs/skeleton';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import MakeType from './MakeType.svelte';
 	import Type from './Type.svelte';
 	import { fetchDocuments } from '$lib/apiRequests';

@@ -121,87 +121,80 @@
 
 		const data = new FormData();
 		data.append('newData', JSON.stringify(assetObject));
-		let username = Cookies.get('savedLogin-username');
-		let password = parseInt(Cookies.get('savedLogin-password'));
-		let role = Cookies.get('savedLogin-role');
 
-		var user = {
-			username: username,
-			password: password,
-			role: role
-		};
+		updateDocument('Asset', id, data)
+			.then(async (response: any) => {
+				console.log(response);
+				// formatting date
+				let current = new Date();
+				let day = current.getDate();
+				let month = current.getMonth() + 1;
+				let year = current.getFullYear();
+				let current_date = `${day}/${month}/${year}`;
+				let current_time = current.toLocaleTimeString();
 
-		updateDocument('Asset', id, data, user).then(async (response: any) => {
-			console.log(response);
-			// formatting date
-			let current = new Date();
-			let day = current.getDate();
-			let month = current.getMonth() + 1;
-			let year = current.getFullYear();
-			let current_date = `${day}/${month}/${year}`;
-			let current_time = current.toLocaleTimeString();
+				var originalAsset = {
+					assetName: assetName,
+					assetLink: assetLink,
+					assetType: assetType,
+					metadataFields: metadataFields
+				};
 
-			var originalAsset = {
-				assetName: assetName,
-				assetLink: assetLink,
-				assetType: assetType,
-				metadataFields: metadataFields
-			};
+				// call import for diffs
+				let diffslib = diff(originalAsset, assetObject);
 
-			// call import for diffs
-			let diffslib = diff(originalAsset, assetObject);
+				// formatting diffs
+				var diffs = {
+					author: Cookies.get('savedLogin-username'),
+					date: current_date,
+					time: current_time,
+					changes: diffslib
+				};
 
-			// formatting diffs
-			var diffs = {
-				author: Cookies.get('savedLogin-username'),
-				date: current_date,
-				time: current_time,
-				changes: diffslib
-			};
+				var dbdiffs: any[] = [];
+				var auditid: any;
 
-			var dbdiffs: any[] = [];
-			var auditid: any;
-
-			// getting original diff
-			await fetchDocuments('diff').then((fetchdiffs: any) => {
-				for (let i of fetchdiffs) {
-					if (i.reference == id) {
-						dbdiffs = i.diffs;
-						auditid = i._id;
+				// getting original diff
+				await fetchDocuments('diff').then((fetchdiffs: any) => {
+					for (let i of fetchdiffs) {
+						if (i.reference == id) {
+							dbdiffs = i.diffs;
+							auditid = i._id;
+						}
 					}
+				});
+
+				// append new diffs onto existing diff document
+				dbdiffs.push(diffs);
+
+				// remaking audit with new diff array
+				var auditData = {
+					reference: id,
+					original: originalAsset,
+					diffs: dbdiffs
+				};
+
+				// update the audit with new data
+				const audit = new FormData();
+				audit.append('newData', JSON.stringify(auditData));
+				await updateDocument('diff', auditid, audit).then((response: any) => {
+					console.log(response);
+				});
+			})
+			.catch((error) => {
+				if (error.message == 'Invalid user credentials') {
+					alert(error.message);
+				} else {
+					alert('Updated asset');
+					location.reload();
+					toastStore.trigger({
+						message: 'Asset updated',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+					modalStore.close();
 				}
 			});
-
-			// append new diffs onto existing diff document
-			dbdiffs.push(diffs);
-
-			// remaking audit with new diff array
-			var auditData = {
-				reference: id,
-				original: originalAsset,
-				diffs: dbdiffs
-			};
-
-			// update the audit with new data
-			const audit = new FormData();
-			audit.append('newData', JSON.stringify(auditData));
-			await updateDocument('diff', auditid, audit, user).then((response: any) => {
-				console.log(response);
-			});
-		}).catch((error) => {
-			if (error.message == 'Invalid user credentials') {
-				alert(error.message);
-			} else {
-				alert("Updated asset");
-				location.reload();
-				toastStore.trigger({
-					message: 'Asset updated',
-					background: 'variant-ghost-success',
-					timeout: 3000
-				});
-				modalStore.close();
-			}
-		});
 	}
 
 	function generatePreSavedAssociations(value: any, associationType: string) {
