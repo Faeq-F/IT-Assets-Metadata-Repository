@@ -168,7 +168,7 @@
 										<option>Asset</option>
 									</select>
 									<input class="checkbox" type="checkbox" checked={field.list} /> Multi-Value
-									<button class="variant-ghost btn btn-sm ml-4" on:click={removeField}
+									<button id="delete" class="variant-ghost btn btn-sm ml-4" on:click={removeField}
 										><i class="fa-solid fa-trash text-sm"></i></button
 									>
 								</span>
