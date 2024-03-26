@@ -1,47 +1,13 @@
 <script lang="ts">
-	import { fetchDocuments } from '$lib/apiRequests';
 	import { Autocomplete, type AutocompleteOption } from '@skeletonlabs/skeleton';
+	import { addAutocompleteOptions } from './InputAssociation';
 	export let list: boolean;
 	export let fieldName: string;
 	export let associationType: string;
 	export let presavedAssociation: any;
-	let addOptions = addAutocompleteOptions();
+	let addOptions = addAutocompleteOptions(associationType);
 
-	async function addAutocompleteOptions() {
-		if (associationType == 'Asset') {
-			return await fetchDocuments('Asset').then((documents) => {
-				let temp: AutocompleteOption<string>[] = [];
-				for (let i of documents) {
-					temp.push({
-						label: i.assetName + ' (' + i.assetType + ')',
-						value: i._id,
-						meta: {
-							name: i.assetName,
-							extraDetail: i.assetType
-						}
-					});
-				}
-				return temp;
-			});
-		} else {
-			return await fetchDocuments('User').then((documents) => {
-				let temp: AutocompleteOption<string>[] = [];
-				for (let i of documents) {
-					temp.push({
-						label: i.username + ' (' + i.email + ')',
-						value: i._id,
-						meta: {
-							name: i.username,
-							extraDetail: i.email
-						}
-					});
-				}
-				return temp;
-			});
-		}
-	}
-
-	function onDocumentSelection(event: CustomEvent<AutocompleteOption<string>>): void {
+	function saveAssociation(event: CustomEvent<AutocompleteOption<string>>): void {
 		if (list) {
 			savedAssociation = [...savedAssociation, event.detail];
 		} else {
@@ -49,7 +15,7 @@
 		}
 	}
 
-	function removeFromList(association: any) {
+	function removeAssociation(association: any) {
 		savedAssociation = savedAssociation.filter(
 			(associationSaved: any) => associationSaved.value != association.value
 		);
@@ -87,7 +53,7 @@
 							<button
 								class="btn"
 								on:click|preventDefault={() => {
-									removeFromList(associationSaved);
+									removeAssociation(associationSaved);
 								}}><i class="fa-trash fa-solid"></i></button
 							>
 						</li>
@@ -133,7 +99,7 @@
 		<Autocomplete
 			bind:input={searchInput}
 			options={documentOptions}
-			on:selection={onDocumentSelection}
+			on:selection={saveAssociation}
 		/>
 	</div>
 {/await}

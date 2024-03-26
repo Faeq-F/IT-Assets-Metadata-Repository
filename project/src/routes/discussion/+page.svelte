@@ -19,7 +19,7 @@
 	});
 
 	import { CartaEditor, CartaViewer } from 'carta-md';
-	import { carta, cartaViewer } from '$lib/components/carta';
+	import { carta, cartaViewer } from '$lib/components/customInputs/carta';
 	import 'carta-md/default.css'; /* Default theme */
 	import 'carta-md/light.css'; /* Markdown input theme */
 	import '@cartamd/plugin-emoji/default.css';
