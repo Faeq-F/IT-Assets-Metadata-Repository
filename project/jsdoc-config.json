@@ -1,6 +1,18 @@
 {
+	"recurseDepth": 10,
 	"source": {
-		"include": ["./src/"],
-		"exclude": ["node_modules/"]
+		"includePattern": ".(cjs|js)$",
+		"excludePattern": "(^|\\/|\\\\)_",
+		"include": ["src"],
+		"exclude": ["node_modules"]
+	},
+	"sourceType": "module",
+	"tags": {
+		"allowUnknownTags": true,
+		"dictionaries": ["jsdoc", "closure"]
+	},
+	"templates": {
+		"cleverLinks": false,
+		"monospaceLinks": false
 	}
 }

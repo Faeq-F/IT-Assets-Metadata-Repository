@@ -22,6 +22,7 @@
 				<a class="bg-transparent btn btn-sm" href="/home" rel="noreferrer"> Home </a>
 				<a class="bg-transparent btn btn-sm" href="/assets" rel="noreferrer"> Assets </a>
 				<a class="bg-transparent btn btn-sm" href="/types" rel="noreferrer"> Types </a>
+				<a class="bg-transparent btn btn-sm" href="/discussions" rel="noreferrer"> Discussions </a>
 
 				<a href="/profile" rel="noreferrer"><i class="fa-solid fa-circle-user text-3xl"></i></a>
 			</svelte:fragment>

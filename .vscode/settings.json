@@ -2,7 +2,6 @@
   "files.exclude": {
     "project/.svelte-kit": true,
     "project/coverage": true,
-    "project/out": true,
     "project/test-results": true,
     "project/.eslintignore": true,
     "project/.eslintrc.cjs": true,
@@ -11,7 +10,6 @@
     "project/.prettierrc": true,
     "project/jsconfig.json": true,
     "project/jsdoc-config.json": true,
-    "project/package-lock.json": true,
     "project/playwright.config.js": true,
     "project/svelte.config.js": true,
     "project/vite.config.js": true,
@@ -19,7 +17,23 @@
     "project/postcss.config.cjs": true,
     "project/tailwind.config.js": true,
     "project/tsconfig.json": true,
-    "project/rollup.config.js": true
+    "project/rollup.config.js": true,
+    "project/typedoc.config.json": true,
+    "project/typedocs.css": true
   },
-  "cSpell.words": ["Mongoclient", "pcss", "skeletonlabs", "Teamproject"]
+  "cSpell.words": [
+    "associatedobject",
+    "auditid",
+    "carta",
+    "cartamd",
+    "Disscussion",
+    "focusindex",
+    "katex",
+    "Mongoclient",
+    "pcss",
+    "presaved",
+    "skeletonlabs",
+    "Teamproject",
+    "textbox"
+  ]
 }

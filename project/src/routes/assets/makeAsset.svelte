@@ -3,13 +3,14 @@
 	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
 	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
 	import InputList from '../../lib/components/customInputs/InputList.svelte';
-	import Cookies from 'js-cookie';
-
+	import { onMount } from 'svelte';
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
-	fetchDocuments('AssetType').then((assetTypeDocuments: any[]) => {
-		activeTypes = assetTypeDocuments;
+	onMount(async () => {
+		fetchDocuments('AssetType').then((assetTypeDocuments: any[]) => {
+			activeTypes = assetTypeDocuments;
+		});
 	});
 
 	async function makeAsset() {
@@ -157,7 +158,7 @@
 </div>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
-	<div class="card h-full bg-modern-50 p-5">
+	<div class="card bg-modern-50 h-full p-5">
 		<header class="h2 card-header text-center">Make an Asset</header>
 		<br /><br />
 		<form id="rootCreateAssetForm" class="text-center">
@@ -193,7 +194,6 @@
 				<p class="p-4 text-center">
 					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Asset Type:
 				</p>
-
 				<select id="assetType" class="select w-96" bind:value={currentType}>
 					<option>Select type</option>
 					{#each activeTypes as type}
