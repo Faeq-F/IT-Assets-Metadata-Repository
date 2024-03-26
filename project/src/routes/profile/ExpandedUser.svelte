@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton';
-    /*
+	/*
 		these lines export the following variables so that
 		they can be imported and used elsewhere in the code
 	*/
-	export let id: string; 
+	export let id: string;
 	export let username: string;
 	export let email: string;
 	export let role: string;
 
-    // gets the modalStore
+	// gets the modalStore
 	const modalStore = getModalStore();
 </script>
 

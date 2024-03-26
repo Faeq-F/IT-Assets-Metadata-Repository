@@ -3,7 +3,6 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
@@ -27,7 +26,6 @@
 	*/
 	onMount(() => {
 		if (browser) {
-			redirectWhenNotLoggedIn();
 			if (Cookies.get('savedLogin-role') != 'admin') {
 				window.location.href = '/profile';
 			}
@@ -128,7 +126,7 @@
 			<!--set the value of the select elemt to the user's role and store username, email, id, and passwordhash in data attribute-->
 			<select
 				class="select"
-				value={user.role}	
+				value={user.role}
 				data-username={user.username}
 				data-email={user.email}
 				data-id={user._id}
@@ -146,6 +144,7 @@
 <button id="updatePermissions" class="variant-filled-primary btn" on:click={updateUserPermissions}
 	>Update user permissions</button
 >
+
 <!--this is where the styling is stored-->
 <style>
 	#updatePermissions {

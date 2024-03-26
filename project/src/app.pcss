@@ -28,3 +28,37 @@ h1 {
 .bg-transparent {
 	background-color: transparent;
 }
+
+.carta-theme__default .carta-renderer,
+div[role='textbox'] {
+	height: 10vh !important;
+	min-height: 10vh !important;
+}
+
+.markdown-body ins {
+	text-decoration: none;
+	background-color: #d4fcbc;
+	color: #555;
+}
+
+.markdown-body del {
+	text-decoration: line-through;
+	background-color: #fbb;
+	color: #555;
+}
+
+blockquote {
+	font:
+		14px/22px normal helvetica,
+		sans-serif;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 50px;
+	padding-left: 15px;
+	border-left: 3px solid #ccc;
+}
+
+button.carta-icon[title='Subscript'],
+button.carta-icon[title='Supscript'] {
+	display: none;
+}

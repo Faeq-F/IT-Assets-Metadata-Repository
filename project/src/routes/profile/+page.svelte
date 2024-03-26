@@ -1,7 +1,5 @@
 <script lang="ts">
 	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
-	//@ts-ignore
 	import { page } from '$app/stores'; //Does work
 	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { onMount } from 'svelte';
@@ -20,16 +18,6 @@
 	let userDoc: any;
 	let expandedUser: ModalComponent;
 	let expandUser: ModalSettings;
-
-	/*
-	  this will redirect the user to the login page if
-	  the user tries to access this page before logging in
-	*/
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
 
 	onMount(async () => {
 		await fetchDocuments('User').then((Users) => {
@@ -68,7 +56,7 @@
 			fetchDocuments('User').then((Users) => {
 				// this for loop iterates through all the users
 				for (let i of Users) {
-					/* 
+					/*
 					  this if statement compares the username of user i with
 					  the username saved in the cookies
 					*/
@@ -92,7 +80,7 @@
 		}
 	}
 	/*
-	  this function removes all the cookies saved and then redirects 
+	  this function removes all the cookies saved and then redirects
 	  the user to the login page
 	*/
 	function logOut() {
@@ -152,7 +140,7 @@
 	>
 	<br />
 	<br />
-	
+
 	<!--this code creates the 2 buttons which are used to logout and delete account respectively-->
 	<div id="accountButtonGroup">
 		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>

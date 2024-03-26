@@ -119,9 +119,9 @@
 							on:keyup={checkValidUsername}
 							use:validators={[required, minLength(4)]}
 						/>
-					    <!--this checks if the username is already taken-->
+						<!--this checks if the username is already taken-->
 						{#if usernameTaken}
-						 	<!--if the username is taken a relevant message is displayed-->
+							<!--if the username is taken a relevant message is displayed-->
 							<a href="/profile" title="Username already in use or invalid">
 								<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
 							</a>

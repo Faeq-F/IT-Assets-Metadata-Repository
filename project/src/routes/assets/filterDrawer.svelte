@@ -30,7 +30,7 @@
 	<ListBox multiple id="ListBox">
 		<!--this iterates through typeFilters and pulls out each item-->
 		{#each typeFilters as item (item)}
-		    <!--this turns each item into an item in a list box-->
+			<!--this turns each item into an item in a list box-->
 			<ListBoxItem bind:group={$activeFilters} name="medium" value={item}>{item}</ListBoxItem>
 		{/each}
 	</ListBox>
@@ -46,6 +46,7 @@
 >
 	Close</button
 >
+
 <!-- this is where the styling for the drawer is stated-->
 <style>
 	#filters {

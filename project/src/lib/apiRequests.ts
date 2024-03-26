@@ -1,4 +1,13 @@
 //remember to wrap these in onMount checks
+import Cookies from 'js-cookie';
+
+function getCurrentUser() {
+	return {
+		username: Cookies.get('savedLogin-username'),
+		passwordHash: Cookies.get('savedLogin-password'),
+		role: Cookies.get('savedLogin-role')
+	};
+}
 
 /**
  * Gets documents from a collection in the database & returns them in json form
@@ -29,6 +38,7 @@ export const fetchDocumentByID = (id: string) => {
  * @returns Acknowledgment from the database
  */
 export const insertDocument = (collectionName: string, formData: any) => {
+	formData.set('userData', JSON.stringify(getCurrentUser()));
 	return fetch('http://localhost:5038/api/insert/collection/' + collectionName, {
 		method: 'POST',
 		body: formData
@@ -45,10 +55,12 @@ export const insertDocument = (collectionName: string, formData: any) => {
  * Updates a document in a collection from the database
  * @param collectionName The collection that holds the document to update
  * @param id The id of the document to update
- * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed
+ * @param formData The FormData object that holds the document to update in the 'newData' key. The document must have it's _id passed.
  * @returns Acknowledgment from the database
  */
 export const updateDocument = (collectionName: string, id: string, formData: any) => {
+	// adds user details into formData
+	formData.set('userData', JSON.stringify(getCurrentUser()));
 	return fetch(
 		'http://localhost:5038/api/update/collection/' + collectionName + '/document/' + id,
 		{
@@ -67,10 +79,15 @@ export const updateDocument = (collectionName: string, id: string, formData: any
  * @returns Acknowledgment from the database, including json representing the original document that has now been removed
  */
 export const deleteDocument = (collectionName: string, documentID: string) => {
+	// create FormData object
+	const formData = new FormData();
+	// have the FormData object include user credentials
+	formData.set('userData', JSON.stringify(getCurrentUser()));
 	return fetch(
 		'http://localhost:5038/api/delete/collection/' + collectionName + '/document/' + documentID,
 		{
-			method: 'DELETE'
+			method: 'DELETE',
+			body: formData
 		}
 	)
 		.then((response) => {

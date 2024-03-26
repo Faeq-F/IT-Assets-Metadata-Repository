@@ -1,22 +1,8 @@
 <script lang="ts">
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import TypesChart from './TypesChart.svelte';
 	import AssociationsChart from './AssociationsChart.svelte';
-
-	/*
-	will redirect the user to the login in page if they try to access this
-	page before logging in
-	*/
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
-
 	let assetCount = 0;
 	let typeCount = 0;
 

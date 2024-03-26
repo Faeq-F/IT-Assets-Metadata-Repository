@@ -12,10 +12,7 @@
 		popup
 	} from '@skeletonlabs/skeleton';
 
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import Asset from './Asset.svelte';
 	//@ts-ignore
@@ -24,13 +21,6 @@
 	import Cookies from 'js-cookie';
 	import { activeFilters } from '$lib/stores';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
-
-	// This will redirect the user to the login page if they aren#t logged in
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
 
 	const drawerStore = getDrawerStore();
 	// This function opens the filter drawer
@@ -92,7 +82,7 @@
 			<svelte:fragment slot="lead">
 				<!-- This checks if the user has any assets created-->
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
-				<!--This determines which way the assets will be displayed either
+					<!--This determines which way the assets will be displayed either
 					as a grid with more detail or as a list with minium detail-->
 					<RadioGroup
 						background="transparent"
@@ -180,7 +170,7 @@
 			{#await keywordFilter(asset, keywordSearchInput)}
 				<Placeholder />
 			{:then shouldShow}
-				<!--This code defines how assets should be displayed in grid form and 
+				<!--This code defines how assets should be displayed in grid form and
 				defines which assets should be displayed based off the filters selected and if
 				shouldShow is true-->
 				{#if shouldShow && (filters.includes(asset.assetType) || filters.length == 0)}
@@ -198,6 +188,7 @@
 		{/each}
 	{/await}
 </div>
+
 <!--This contains the stlying options for the page-->
 <style>
 	#assetMaker {

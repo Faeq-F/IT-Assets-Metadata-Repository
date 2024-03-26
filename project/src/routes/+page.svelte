@@ -5,8 +5,6 @@
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
-	import { redirectWhenLoginSaved } from '$lib/scripts/loginSaved';
-	redirectWhenLoginSaved();
 
 	/**
 	 *

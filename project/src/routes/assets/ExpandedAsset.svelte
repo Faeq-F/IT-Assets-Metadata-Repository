@@ -25,7 +25,7 @@
 		key: string,
 		value: string,
 		oldValue: string | undefined
-	) {		
+	) {
 		if (('' + value).startsWith('DOCUMENT-ID: ')) {
 			await fetchDocumentByID(value.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
 				value = '*Deleted item*';
@@ -50,7 +50,7 @@
 					oldValue: oldValue
 				}
 			});
-		// this is the code for displaying the add component of the audit trail of the asset
+			// this is the code for displaying the add component of the audit trail of the asset
 		} else if (type == 'ADD') {
 			new Add({
 				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
@@ -59,7 +59,7 @@
 					newValue: value
 				}
 			});
-		// this is the code for displaying the remove component of the audit trail of the asset
+			// this is the code for displaying the remove component of the audit trail of the asset
 		} else {
 			new Remove({
 				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,

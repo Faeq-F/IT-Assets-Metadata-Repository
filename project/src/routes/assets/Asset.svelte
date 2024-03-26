@@ -31,7 +31,6 @@
 	let expandTypeModalComponent: ModalComponent;
 	let expandType: ModalSettings;
 
-
 	onMount(async () => {
 		await fetchDocuments('AssetType').then((docs) => {
 			for (let i of docs) {
@@ -77,8 +76,8 @@
 		backdropClasses: '!p-0'
 	};
 	/*
-	  This function is used to delete assets
-	*/
+	 *This function is used to delete assets
+	 */
 	async function deleteAsset() {
 		var auditid: string;
 		await deleteDocument('Asset', id).then(async () => {
@@ -94,13 +93,15 @@
 				})
 				.then(async (auditid) => {
 					await deleteDocument('diff', auditid);
+					toastStore.trigger({
+						message: 'Asset deleted',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+				})
+				.catch((err) => {
+					return err;
 				});
-		});
-		// this adds a relevant message to the assets audit trail
-		toastStore.trigger({
-			message: 'Asset deleted',
-			background: 'variant-ghost-success',
-			timeout: 3000
 		});
 		// Refresh the page
 		location.reload();
@@ -144,7 +145,7 @@
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
-			<!--This checks to see if the current users role is not viewer-->			
+			<!--This checks to see if the current users role is not viewer-->
 			{#if role != 'viewer'}
 				<!--This creates the edit button which opens open the modal which is used to edit the asset-->
 				<button
@@ -189,7 +190,7 @@
 		on:click={() => modalStore.trigger(expandType)}
 		style="margin: 10px; font-weight: 500; margin-top:0;">{@html type}</button
 	>
-	
+
 	{#if viewType == 0}
 		<hr />
 		<div class="ml-2 mt-1">
