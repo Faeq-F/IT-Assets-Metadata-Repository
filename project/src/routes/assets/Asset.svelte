@@ -88,12 +88,15 @@
 				})
 				.then(async (auditid) => {
 					await deleteDocument('diff', auditid);
+					toastStore.trigger({
+						message: 'Asset deleted',
+						background: 'variant-ghost-success',
+						timeout: 3000
+					});
+				})
+				.catch((err) => {
+					return err;
 				});
-		});
-		toastStore.trigger({
-			message: 'Asset deleted',
-			background: 'variant-ghost-success',
-			timeout: 3000
 		});
 		// Refresh the page
 		location.reload();

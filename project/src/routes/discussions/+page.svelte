@@ -1,6 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import {
 		AppBar,
@@ -12,7 +10,6 @@
 		popup,
 		type PopupSettings
 	} from '@skeletonlabs/skeleton';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
@@ -20,12 +17,6 @@
 	import DiscussionBoard from './DiscussionBoard.svelte';
 
 	let role = Cookies.get('savedLogin-role');
-
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
 
 	let DiscussionBoards: any[];
 

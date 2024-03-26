@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { AppBar, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
 	import Containers from './Containers.svelte';
@@ -12,13 +9,10 @@
 	let board: string;
 
 	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
 		const urlParams = new URLSearchParams(window.location.search);
 		let temp = urlParams.get('board');
 		if (temp == null) {
-			redirectWhenNotLoggedIn();
+			window.location.href = '/home';
 		} else {
 			board = temp;
 		}

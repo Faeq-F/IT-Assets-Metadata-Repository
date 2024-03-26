@@ -1,6 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
 	import {
 		AppBar,
@@ -10,7 +8,6 @@
 		RadioItem,
 		getModalStore
 	} from '@skeletonlabs/skeleton';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import MakeType from './MakeType.svelte';
 	import Type from './Type.svelte';
 	import { fetchDocuments } from '$lib/apiRequests';
@@ -18,13 +15,6 @@
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
 
 	let role = Cookies.get('savedLogin-role');
-
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
-
 	let AssetTypesDocuments: any[];
 
 	onMount(async () => {

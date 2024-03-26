@@ -12,10 +12,7 @@
 		popup
 	} from '@skeletonlabs/skeleton';
 
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import Asset from './Asset.svelte';
 	//@ts-ignore
@@ -24,12 +21,6 @@
 	import Cookies from 'js-cookie';
 	import { activeFilters } from '$lib/stores';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
-
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
 
 	const drawerStore = getDrawerStore();
 	function drawerOpen(): void {

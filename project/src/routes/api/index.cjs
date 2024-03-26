@@ -25,7 +25,7 @@ var database;
 app.listen(5038, () => {
 	MongoClient.connect(
 		envs.DB_API_URL,
-		(/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
+		async (/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
 			database = client.db(envs.DB_NAME);
 			if (error) console.error(error);
 			console.log(`server-side is running at port 5038\nConnected`);
@@ -81,12 +81,20 @@ app.post(
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection) => {
 			const formData = request.body;
-			const rec = await database.collection(collection).insertOne(JSON.parse(formData.newData));
-			return rec.insertedId;
+			let call = await validUser(formData.userData);
+			if (call) {
+				const rec = await database.collection(collection).insertOne(JSON.parse(formData.newData));
+				return rec.insertedId;
+			}
 		};
-		result(request.params.name.toString()).then((result) => {
-			response.send(result);
-		});
+		result(request.params.name.toString())
+			.then((result) => {
+				response.send(result);
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			});
 	}
 );
 //▰▰▰▰▰▰▰▰▰
@@ -98,20 +106,26 @@ app.put(
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
 			const formData = request.body;
-			database
-				.collection(collection)
-				.replaceOne(
-					{ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },
-					JSON.parse(formData.newData)
-				)
-				.catch((/** @type {any} */ err) => {
-					return err;
-				});
+			let call = await validUser(formData.userData);
+			if (call) {
+				database
+					.collection(collection)
+					.replaceOne(
+						{ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } },
+						JSON.parse(formData.newData)
+					)
+					.catch((/** @type {any} */ err) => {
+						return err;
+					});
+			}
 		};
 
-		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
-			response.send(result)
-		);
+		result(request.params.name.toString(), request.params.id.toString())
+			.then((result) => response.send(result))
+			.catch((/** @type {any} */ error) => {
+				console.log(error);
+				return error;
+			});
 	}
 );
 
@@ -120,17 +134,55 @@ app.put(
 // delete a document in a collection
 app.delete(
 	'/api/delete/collection/:name/document/:id',
+	multer().none(),
 	(/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
 		let result = async (/** @type {string} */ collection, /** @type {string} */ documentID) => {
-			// @ts-ignore
-			database
-				.collection(collection)
-				.remove({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } });
+			const formData = request.body;
+
+			let call = await validUser(formData.userData);
+			if (call) {
+				database
+					.collection(collection)
+					.remove({ $expr: { $eq: ['$_id', { $toObjectId: documentID }] } });
+			}
 		};
-		result(request.params.name.toString(), request.params.id.toString()).then((result) =>
-			response.send(result)
-		);
+
+		result(request.params.name.toString(), request.params.id.toString())
+			.then((result) => response.send(result))
+			.catch((/** @type {any} */ error) => {
+				console.log(error);
+				return error;
+			});
 	}
 );
 
 //▰▰▰▰▰▰▰▰▰
+
+/**
+ * Checks whether if the cookie sent has valid user credentials in the database
+ *
+ * @param {*} user JSON object of user details stored in cookie
+ * @return {Promise<Boolean>} true if valid user false if not
+ */
+async function validUser(user) {
+	try {
+		const userString = JSON.parse(user);
+
+		// Extract values from the user object
+		var username = userString.username;
+		var password = parseInt(userString.passwordHash);
+		var role = userString.role;
+
+		// Query the database for the user
+		var count = await database.collection('User').countDocuments({
+			username: username,
+			passwordHash: password,
+			role: role
+		});
+
+		return count == 1;
+	} catch (error) {
+		console.error('Error checking user:', error);
+		return false;
+	}
+}
