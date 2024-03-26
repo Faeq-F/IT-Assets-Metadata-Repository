@@ -1,21 +1,14 @@
 <script lang="ts">
-	//@ts-ignore
-	import { browser } from '$app/environment'; //Does work
 	import { onMount } from 'svelte';
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import TypesChart from './TypesChart.svelte';
 	import AssociationsChart from './AssociationsChart.svelte';
-
-	onMount(() => {
-		if (browser) {
-			redirectWhenNotLoggedIn();
-		}
-	});
-
 	let assetCount = 0;
 	let typeCount = 0;
 
+	/*
+	retrieves data from the Asset and AssetType collections in the database
+	*/
 	onMount(async () => {
 		fetchDocuments('Asset').then((Docs) => (assetCount = Docs.length));
 		fetchDocuments('AssetType').then((Docs) => (typeCount = Docs.length));
@@ -28,15 +21,19 @@
 
 <h1 class="h1">Home</h1>
 <br />
+<!--container for the main description-->
 <div class="card w-9/12 bg-modern-50 object-center shadow-md" id="HomeCard">
+	<!--description of the website-->
 	<p>
 		A holistic Web-based system that supports the metadata-based organization of different
 		source-code related assets
 	</p>
 </div>
+<!--container for information on assets-->
 <div class="flex w-9/12" style="margin: 0 auto;">
 	<div class="card m-4 w-3/6 bg-modern-50 p-5 shadow-md">
 		<div class="h3 font-medium">Your assets:</div>
+		<!--will display the amount of assets you have saved-->
 		{#if assetCount == 0}
 			⦿ You have no assets
 		{:else if assetCount == 1}
@@ -44,13 +41,16 @@
 		{:else}
 			⦿ You have a total of {assetCount} assets
 		{/if}
+		<!--displays you top 20 associated assets-->
 		<div style="margin: 0 auto;">
 			<p class=" text-sm">Your top 20 associated assets:</p>
 			<AssociationsChart />
 		</div>
 	</div>
+	<!--container for information on asset types-->
 	<div class="card m-4 w-3/6 bg-modern-50 p-5 shadow-md">
 		<div class="h3 font-medium">Your asset types:</div>
+		<!--will display the amount of asset types you have saved-->
 		{#if typeCount == 0}
 			⦿ You have no active asset types
 		{:else if typeCount == 1}
@@ -64,6 +64,7 @@
 	</div>
 </div>
 
+<!--this is where the styling is stored-->
 <style>
 	#HomeCard {
 		padding: 20px;
