@@ -1,6 +1,6 @@
 import { assert, test } from 'vitest';
 import { deleteDocument, insertDocument, fetchDocuments } from '$lib/apiRequests';
-import { hashCode } from '$lib/scripts/validate';
+import { hashCode } from '$lib/scripts/validateUserDetails';
 
 const password = 'password123';
 const passwordHash = hashCode(password);

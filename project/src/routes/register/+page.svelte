@@ -15,7 +15,7 @@
 		hashCode,
 		duplicateUsername,
 		duplicateEmail
-	} from '../../lib/scripts/validate';
+	} from '../../lib/scripts/validateUserDetails';
 	import { insertDocument } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';

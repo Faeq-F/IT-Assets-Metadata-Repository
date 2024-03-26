@@ -1,7 +1,7 @@
 <script lang="ts">
 	//@ts-ignore
 	import { page } from '$app/stores'; //Does work
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/loginSaved';
+	import { redirectWhenNotLoggedIn } from '$lib/scripts/pageAccess';
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
 	import { deleteDocument, fetchDocuments } from '$lib/apiRequests';

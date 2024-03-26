@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import { fetchDocuments } from '$lib/apiRequests';
-	import { hashCode } from '../lib/scripts/validate';
+	import { hashCode } from '../lib/scripts/validateUserDetails';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();

@@ -11,7 +11,7 @@
 	import { fade } from 'svelte/transition';
 	import NavBar from './NavBar.svelte';
 	import { onMount } from 'svelte';
-	import { redirectWhenNotLoggedIn, redirectWhenLoginSaved } from '$lib/scripts/loginSaved';
+	import { redirectWhenNotLoggedIn, redirectWhenLoginSaved } from '$lib/scripts/pageAccess';
 	//@ts-ignore
 	import { browser } from '$app/environment';
 
