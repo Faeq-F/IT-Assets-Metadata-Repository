@@ -8,9 +8,9 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import ExpandedType from './ExpandedType.svelte';
-	import { deleteDocument } from '$lib/apiRequests';
 	import UpdateType from './UpdateType.svelte';
 	import Cookies from 'js-cookie';
+	import { deleteAssetType } from './Type';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
@@ -41,17 +41,6 @@
 		backdropClasses: '!p-0'
 	};
 
-	async function deleteAssetType() {
-		await deleteDocument('AssetType', id);
-		toastStore.trigger({
-			message: 'Asset Type deleted',
-			background: 'variant-ghost-success',
-			timeout: 3000
-		});
-		// Refresh the page
-		location.reload();
-	}
-
 	let showMenu = 'none';
 </script>
 
@@ -68,7 +57,7 @@
 		<div class="">
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
-				on:click={() => {
+				on:click|preventDefault={() => {
 					navigator.clipboard.writeText($page.url.origin + '/shared?type=' + id);
 					toastStore.trigger({
 						message: 'Copied link',
@@ -82,7 +71,7 @@
 			</button>
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
-				on:click={() => modalStore.trigger(expandModal)}
+				on:click|preventDefault={() => modalStore.trigger(expandModal)}
 			>
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
@@ -90,12 +79,12 @@
 			{#if role == 'admin'}
 				<button
 					class="variant-filled-surface btn btn-sm card-hover m-1"
-					on:click={() => modalStore.trigger(updateModal)}
+					on:click|preventDefault={() => modalStore.trigger(updateModal)}
 				>
 					<span><i class="fa-solid fa-pen"></i></span>
 					<span>Edit</span>
 				</button>
-				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAssetType}>
+				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click|preventDefault = {() => deleteAssetType(toastStore, id)}>
 					<span><i class="fa-solid fa-trash text-sm"></i></span>
 					<span>Delete</span>
 				</button>
@@ -106,7 +95,7 @@
 		<button
 			type="button"
 			class="btn btn-sm"
-			on:click={() => (showMenu == 'none' ? (showMenu = 'initial') : (showMenu = 'none'))}
+			on:click|preventDefault = {() => (showMenu == 'none' ? (showMenu = 'initial') : (showMenu = 'none'))}
 			><i class="fa-solid fa-ellipsis-vertical"></i></button
 		>
 	</div>

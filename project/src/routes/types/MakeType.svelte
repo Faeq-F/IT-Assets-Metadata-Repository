@@ -1,70 +1,10 @@
 <script lang="ts">
 	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { insertDocument } from '$lib/apiRequests';
+	
+	import { makeType, removeBottom, addMetadataField } from './MakeType'
 	const toastStore = getToastStore();
-
-	async function makeType() {
-		var name = (document.getElementById('typeName') as HTMLInputElement).value;
-		if (name == '') {
-			toastStore.trigger({
-				message: 'Please give the type a name',
-				background: 'variant-ghost-error',
-				timeout: 3000
-			});
-		} else {
-			var typeObject = { typeName: name, metadataFields: fieldsSaved };
-			const data = new FormData();
-			data.append('newData', JSON.stringify(typeObject));
-			await insertDocument('AssetType', data)
-				.then((response) => {
-					console.log(response);
-					toastStore.trigger({
-						message: 'Asset Type created',
-						background: 'variant-ghost-success',
-						timeout: 3000
-					});
-				})
-				.catch((err) => {
-					console.log(err);
-					toastStore.trigger({
-						message: 'Unable to create type - does one of the same name already exist?',
-						background: 'variant-ghost-error',
-						timeout: 3000
-					});
-				});
-			// Refresh the page
-			location.reload();
-		}
-	}
-
 	let fieldsSaved: any[] = [];
 	let fieldListable: boolean = false;
-
-	function removeBottom(): void {
-		fieldsSaved.pop();
-		fieldsSaved = fieldsSaved; //required for reactivity
-	}
-
-	function addMetadataField() {
-		let name = (document.getElementById('addMetadataFieldName') as HTMLInputElement).value;
-		let typeList = document.getElementById('addMetadataFieldDataType') as HTMLSelectElement;
-		let type = typeList.options[typeList.selectedIndex].text;
-		if (name == '') {
-			toastStore.trigger({
-				message: 'Please give the field a name',
-				background: 'variant-ghost-error',
-				timeout: 3000
-			});
-		} else if (type == 'Select data type') {
-			toastStore.trigger({
-				message: 'Please choose a data type for the field',
-				background: 'variant-ghost-error',
-				timeout: 3000
-			});
-		} else {
-			fieldsSaved = [...fieldsSaved, { field: name, dataType: type, list: fieldListable }];
-		}
-	}
 
 	const requiredField: PopupSettings = {
 		event: 'hover',
@@ -101,7 +41,7 @@
 				<p class="inline p-1">Metadata Fields:</p>
 				<button
 					class="absolute right-4 inline cursor-pointer text-sm"
-					on:click|preventDefault={removeBottom}
+					on:click|preventDefault={() => {fieldsSaved = removeBottom(fieldsSaved)}}
 				>
 					remove bottom field
 				</button>
@@ -128,7 +68,7 @@
 				<button
 					id="metadataFieldAdder"
 					class=" card card-hover h-3 w-3 border-2 border-modern-600 shadow-md"
-					on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
+					on:click|preventDefault={() => {fieldsSaved = addMetadataField(toastStore, fieldsSaved, fieldListable)}}><i class="fa-solid fa-plus"></i></button
 				>
 				<input
 					type="text"
@@ -161,7 +101,7 @@
 				class="variant-filled-primary btn w-52"
 				style="margin: 0 auto; display:block;"
 				id="assetMaker"
-				on:click|preventDefault={makeType}>Make Type</button
+				on:click|preventDefault={() => makeType(toastStore, fieldsSaved)}>Make Type</button
 			>
 		</form>
 	</div>

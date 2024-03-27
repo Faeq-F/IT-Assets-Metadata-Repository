@@ -7,7 +7,9 @@
 	const toastStore = getToastStore();
 
 	/**
-	 *
+	 * Gets user data from front end, checks if it's valid and if valid send user to homepage
+	 * @author Christian-Frederick Cubos
+	 * @email zlac145@live.rhul.ac.uk
 	 */
 	function loginUser() {
 		fetchDocuments('User').then((userDocuments) => {
