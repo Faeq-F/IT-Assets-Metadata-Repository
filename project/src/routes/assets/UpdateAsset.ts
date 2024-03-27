@@ -2,6 +2,13 @@ import { fetchDocuments, updateDocument } from "$lib/apiRequests";
 import { diff } from 'json-diff-ts';
 import Cookies from 'js-cookie';
 
+/**
+	 * Gets edited asset values and inserts new asset into required databases
+	 * @author ...
+	 * @email
+	 * @author Christian-Frederick Cubos
+	 * @email zlac145@live.rhul.ac.uk
+	 */
 export async function updateAsset(NewAssetName:string, NewAssetLink:string, toastStore:any, assetType:string, id:string, assetName:string, assetLink:string, metadataFields:any, modalStore:any) {
 		if (NewAssetName == '' || NewAssetLink == '') {
 			emptyFieldAlert(toastStore);

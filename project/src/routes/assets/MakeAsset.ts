@@ -1,5 +1,12 @@
 import { insertDocument } from "$lib/apiRequests";
 
+/**
+	 * Gets Asset values and insert the asset object into required databases
+	 * @author ...
+	 * @email
+	 * @author Christian-Frederick Cubos
+	 * @email zlac145@live.rhul.ac.uk
+	 */
 export async function makeAsset(currentType:string, toastStore:any) {
 		//start by checking if the required fields are filled in
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;

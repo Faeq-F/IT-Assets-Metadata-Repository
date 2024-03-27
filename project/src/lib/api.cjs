@@ -163,9 +163,10 @@ app.delete(
 
 /**
  * Checks whether if the cookie sent has valid user credentials in the database
- *
  * @param {*} user JSON object of user details stored in cookie
- * @return {Promise<Boolean>} true if valid user false if not
+ * @returns {Promise<Boolean>} true if valid user false if not
+ * @author Christian-Frederick Cubos
+ * @email zlac145@live.rhul.ac.uk
  */
 async function validUser(user) {
 	try {
@@ -176,7 +177,7 @@ async function validUser(user) {
 		var password = parseInt(userString.passwordHash);
 		var role = userString.role;
 
-		// Query the database for the user
+		// Query the database checking if there are credentials for user obj
 		var count = await database.collection('User').countDocuments({
 			username: username,
 			passwordHash: password,

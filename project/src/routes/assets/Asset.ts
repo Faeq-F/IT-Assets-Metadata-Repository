@@ -1,12 +1,14 @@
 import { deleteDocument, fetchDocuments } from "$lib/apiRequests";
 
 /**
- * Sends a request to the database API to delete the asset
+ * Sends a request to the database API to delete the asset and its corresponding audit trail
  * @param id the _id of the document to delete
  * @param toastStore the toastStore for the app. used to show success / error toasts
  * @author Faeq Faisal
  * @email faeqfaisal@hotmail.co.uk
  * @email zlac318@live.rhul.ac.uk
+ * @author Christian-Frederick Cubos
+ * @email zlac145@live.rhul.ac.uk
  */
 	export async function deleteAsset(id:string, toastStore: any) {
 		var auditid: string;

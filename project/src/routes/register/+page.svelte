@@ -36,6 +36,13 @@
 		duplicateUsername(username).then((taken) => (usernameTaken = taken));
 	}
 
+	/**
+	 * Gets user information, verifies the data and sends it to User database if valid.
+	 * @author ...
+	 * @email ...
+	 * @author Christian-Frederick Cubos
+	 * @email zlac145@live.rhul.ac.uk
+	 */
 	function registerUser() {
 		let username = (document.getElementById('username') as HTMLInputElement).value;
 		let password = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
