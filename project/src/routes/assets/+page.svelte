@@ -22,8 +22,23 @@
 	import { activeFilters } from '$lib/stores';
 	import Placeholder from '$lib/components/cards/placeholder.svelte';
 
+	let role = Cookies.get('savedLogin-role');
+	const modalStore = getModalStore();
 	const drawerStore = getDrawerStore();
-	// This function opens the filter drawer
+
+	// $ makes filters a reactive var
+	$: filters = $activeFilters;
+	let keywordSearchInput: string[] = [];
+	let AssetDocuments: any[];
+	let viewType: number = 0;
+
+	// This gets the asset documents
+	onMount(async () => {
+		fetchDocuments('Asset').then((Docs) => {
+			AssetDocuments = Docs;
+		});
+	});
+
 	function drawerOpen(): void {
 		drawerStore.open({
 			id: 'filterAssetsDrawer',
@@ -32,58 +47,40 @@
 		});
 	}
 
-	$: filters = $activeFilters;
-	let keywordSearchInput: string[] = [];
-	let AssetDocuments: any[];
-
-	// This gets the documents related to the assets
-	onMount(async () => {
-		fetchDocuments('Asset').then((Docs) => {
-			AssetDocuments = Docs;
-		});
-	});
-
-	let role = Cookies.get('savedLogin-role');
-
-	//This code sets up the code which will be used for loading modals
-	const modalStore = getModalStore();
-	const modalComponent: ModalComponent = { ref: MakeAsset };
-	// This defines the settings of any modals used
-	const modal: ModalSettings = {
+	const makeAssetModalComponent: ModalComponent = { ref: MakeAsset };
+	const makeAssetModal: ModalSettings = {
 		type: 'component',
-		component: modalComponent
+		component: makeAssetModalComponent
 	};
-	// This deines the setting for popups
-	const association: PopupSettings = {
+
+	const associationPopup: PopupSettings = {
 		event: 'hover',
 		target: 'association',
 		placement: 'top'
 	};
-
-	let viewType: number = 0;
 </script>
 
 <svelte:head>
 	<title>Assets</title>
 </svelte:head>
 
-<!-- This tells the user what a certain symbol means-->
+<!-- This tells the user what certain symbols mean-->
 <div class="card z-[9999] p-4" data-popup="association">
 	An item annotated with <i class="fa-solid fa-stroopwafel"></i> refers to Users & Assets on the
 	system
 	<div class="card arrow" />
 </div>
 
-<h1 class="h1" use:popup={association}>Assets</h1>
+<h1 class="h1" use:popup={associationPopup}>Assets</h1>
 <br />
 <div>
-	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
+	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				<!-- This checks if the user has any assets created-->
 				{#if AssetDocuments != undefined && AssetDocuments.length > 0}
 					<!--This determines which way the assets will be displayed either
-					as a grid with more detail or as a list with minium detail-->
+					as a grid with more detail or as a list with minimal detail-->
 					<RadioGroup
 						background="transparent"
 						class="text-token max-h-8  text-sm"
@@ -106,7 +103,7 @@
 							></i></RadioItem
 						>
 					</RadioGroup>
-					<p id="nothingHere" class="ml-2" use:popup={association}>Your assets:</p>
+					<p id="yourAssets" class="ml-2" use:popup={associationPopup}>Your assets:</p>
 				{:else}
 					<!-- This is the message displayed if the current user has no assets to be displayed-->
 					<p id="nothingHere" class="ml-2">
@@ -117,10 +114,10 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<!--Search by keyword bar-->
-				<div class="inline max-h-8 rounded-full border-2 border-modern-500">
+				<div class="border-modern-500 inline max-h-8 rounded-full border-2">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
-					<!--This defines how to search box is formatted-->
+					<!--This component allows the search bar to be tokenized-->
 					<InputChip
 						bind:value={keywordSearchInput}
 						id="keyword"
@@ -129,14 +126,14 @@
 						chips="variant-filled rounded-md"
 						rounded=" rounded-none"
 						padding="p-0"
-						class="float-right mr-2 inline w-9/12 border-0 bg-modern-50"
+						class="bg-modern-50 float-right mr-2 inline w-9/12 border-0"
 						style="background-color: transparent !important"
 					/>
 				</div>
-				<!--Open Filter Drawer-->
+				<!--Drawer for filters, etc.-->
 				<button
 					id="openDrawer"
-					class="card rounded-full border-2 border-modern-500 bg-modern-50 px-2 py-0.5 text-sm"
+					class="card border-modern-500 bg-modern-50 rounded-full border-2 px-2 py-0.5 text-sm"
 					style="margin-right: 10px;"
 					on:click={drawerOpen}><i class="fa-solid fa-filter"></i></button
 				>
@@ -145,8 +142,9 @@
 					{#if role != 'viewer'}
 						<button
 							id="assetMaker"
-							class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
-							on:click={() => modalStore.trigger(modal)}><i class="fa-solid fa-plus"></i></button
+							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
+							on:click={() => modalStore.trigger(makeAssetModal)}
+							><i class="fa-solid fa-plus"></i></button
 						>
 					{/if}
 				</div>
@@ -170,8 +168,7 @@
 			{#await keywordFilter(asset, keywordSearchInput)}
 				<Placeholder />
 			{:then shouldShow}
-				<!--This code defines how assets should be displayed in grid form and
-				defines which assets should be displayed based off the filters selected and if
+				<!--This code defines which assets should be displayed based off the filters selected and if
 				shouldShow is true-->
 				{#if shouldShow && (filters.includes(asset.assetType) || filters.length == 0)}
 					<Asset
@@ -189,7 +186,6 @@
 	{/await}
 </div>
 
-<!--This contains the stlying options for the page-->
 <style>
 	#assetMaker {
 		width: 2vw;
@@ -198,6 +194,7 @@
 		float: right;
 	}
 
+	#yourAssets,
 	#nothingHere {
 		display: inline;
 		float: left;

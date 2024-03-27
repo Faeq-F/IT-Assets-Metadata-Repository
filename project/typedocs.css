@@ -7,12 +7,19 @@ body {
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-color: rgb(232, 232, 253);
+	--color-active-menu-item: #cabeff !important;
 }
 
 header {
 	background-color: transparent !important;
 }
 
-:root {
-	--color-active-menu-item: #cabeff !important;
+html[data-theme="dark"] body {
+	background-image: initial;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color: initial;
+	--color-active-menu-item: #160075 !important;
 }

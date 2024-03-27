@@ -7,7 +7,7 @@
 	} from '@skeletonlabs/skeleton';
 	//@ts-ignore
 	import { page } from '$app/stores'; //Does work
-	import { deleteDocument, fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
+	import { fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import ExpandedAsset from './ExpandedAsset.svelte';
 	import { highlight } from '../../lib/scripts/keywordSearch';
 	import UpdateAsset from './UpdateAsset.svelte';
@@ -15,11 +15,9 @@
 	import AssociationCard from '../../lib/components/cards/AssociationCard.svelte';
 	import ExpandedType from '../types/ExpandedType.svelte';
 	import { onMount } from 'svelte';
+	import { deleteAsset } from './Asset';
 	const toastStore = getToastStore();
 
-	/*
-		this exports the following variables so they can be used elsewhere in the code
-	*/
 	export let name: string;
 	export let id: string;
 	export let link: string;
@@ -75,37 +73,6 @@
 		component: updateModalComponent,
 		backdropClasses: '!p-0'
 	};
-	/*
-	 *This function is used to delete assets
-	 */
-	async function deleteAsset() {
-		var auditid: string;
-		await deleteDocument('Asset', id).then(async () => {
-			await fetchDocuments('diff')
-				.then((fetchedAudits) => {
-					for (let i of fetchedAudits) {
-						if (i.reference == id) {
-							auditid = i._id;
-						}
-					}
-					console.log(auditid);
-					return auditid;
-				})
-				.then(async (auditid) => {
-					await deleteDocument('diff', auditid);
-					toastStore.trigger({
-						message: 'Asset deleted',
-						background: 'variant-ghost-success',
-						timeout: 3000
-					});
-				})
-				.catch((err) => {
-					return err;
-				});
-		});
-		// Refresh the page
-		location.reload();
-	}
 
 	let showMenu = 'none';
 </script>
@@ -122,7 +89,7 @@
 		style="display: {showMenu}; position: absolute; right:10px; top: 10px; border-radius: 10px;"
 	>
 		<div class="">
-			<!--This creates a button which is used to share an asset-->
+			<!--This creates a button which is used to share an asset - it copies the url to the users clipboard-->
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
 				on:click={() => {
@@ -137,7 +104,7 @@
 				<span><i class="fa-solid fa-share-nodes"></i></span>
 				<span>Share</span>
 			</button>
-			<!--This crates a button which will open the expanded view of that asset-->
+			<!--Expand button-->
 			<button
 				class="variant-filled-surface btn btn-sm card-hover m-1"
 				on:click={() => modalStore.trigger(expandModal)}
@@ -145,9 +112,8 @@
 				<span><i class="fa-solid fa-maximize"></i></span>
 				<span>Expand</span>
 			</button>
-			<!--This checks to see if the current users role is not viewer-->
 			{#if role != 'viewer'}
-				<!--This creates the edit button which opens open the modal which is used to edit the asset-->
+				<!--Edit button-->
 				<button
 					class="variant-filled-surface btn btn-sm card-hover m-1"
 					on:click={() => modalStore.trigger(updateModal)}
@@ -155,8 +121,11 @@
 					<span><i class="fa-solid fa-pen"></i></span>
 					<span>Edit</span>
 				</button>
-				<!--This creates the delete button which is used to delte the asset-->
-				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteAsset}>
+				<!--Delete button-->
+				<button
+					class="variant-filled-surface btn btn-sm card-hover m-1"
+					on:click={() => deleteAsset(id, toastStore)}
+				>
 					<span><i class="fa-solid fa-trash text-sm"></i></span>
 					<span>Delete</span>
 				</button>
@@ -174,14 +143,14 @@
 		>
 	</div>
 	<!--asset details-->
-	<!-- eslint-disable svelte/no-at-html-tags-->
 	<div id="assetName" class="h3" style="margin:10px; font-weight: bold; margin-bottom: 3px;">
+		<!-- eslint-disable svelte/no-at-html-tags-->
 		{@html name}
 	</div>
 	<div class="m-0 mb-1 p-0">
 		<a
 			style="font-weight: 500"
-			class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
+			class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
 			href={link.startsWith('http') ? link : 'http://' + link}
 		>
 			<span><i class="fa-solid fa-paperclip"></i></span><span>{@html link}</span></a

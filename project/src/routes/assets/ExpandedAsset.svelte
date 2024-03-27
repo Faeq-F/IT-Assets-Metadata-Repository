@@ -4,12 +4,15 @@
 	import * as joint from 'jointjs';
 	import { fetchDocumentByID, fetchDocuments } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
-	import getRandomColor from '$lib/scripts/randomThemeColor';
-	import Update from '$lib/components/cards/auditTrail/Update.svelte';
-	import Add from '$lib/components/cards/auditTrail/Add.svelte';
-	import Remove from '$lib/components/cards/auditTrail/Remove.svelte';
+
 	import User from '$lib/components/cards/auditTrail/User.svelte';
 	import Original from '$lib/components/cards/auditTrail/Original.svelte';
+	import {
+		addToGraph,
+		displayTrailComponent,
+		parseDiff,
+		registerExpandingGraphHandler
+	} from './ExpandedAsset';
 
 	export let id: string;
 	export let assetName: string;
@@ -18,78 +21,6 @@
 	export let metadataFields: any;
 
 	const modalStore = getModalStore();
-
-	// this function is used to display each entry in the audit log for the asset
-	async function displayTrailComponent(
-		type: string,
-		key: string,
-		value: string,
-		oldValue: string | undefined
-	) {
-		if (('' + value).startsWith('DOCUMENT-ID: ')) {
-			await fetchDocumentByID(value.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
-				value = '*Deleted item*';
-				if (doc.assetName) value = doc.assetName;
-				else if (doc.username) value = doc.username;
-			});
-		}
-		if (oldValue != undefined && (oldValue + '').startsWith('DOCUMENT-ID: ')) {
-			await fetchDocumentByID(oldValue.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
-				value = '*Deleted item*';
-				if (doc.assetName) oldValue = doc.assetName;
-				else if (doc.username) oldValue = doc.username;
-			});
-		}
-		// this is the code for displaying the update component of the audit trail of the asset
-		if (type == 'UPDATE') {
-			new Update({
-				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
-				props: {
-					key: key,
-					newValue: value,
-					oldValue: oldValue
-				}
-			});
-			// this is the code for displaying the add component of the audit trail of the asset
-		} else if (type == 'ADD') {
-			new Add({
-				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
-				props: {
-					key: key,
-					newValue: value
-				}
-			});
-			// this is the code for displaying the remove component of the audit trail of the asset
-		} else {
-			new Remove({
-				target: document.querySelector('#auditTrailDiv') as HTMLDivElement,
-				props: {
-					key: key,
-					value: value
-				}
-			});
-		}
-	}
-
-	async function parseDiff(diff: any) {
-		for (const item of diff) {
-			if (item.changes && Array.isArray(item.changes)) {
-				await parseChanges(item.changes);
-			} else {
-				await displayTrailComponent(item.type, item.key, item.value, item.oldValue);
-			}
-		}
-	}
-
-	async function parseChanges(changes: any) {
-		for (const change of changes) {
-			if (change.changes && Array.isArray(change.changes)) {
-				await parseChanges(change.changes);
-			} else {
-				await displayTrailComponent(change.type, change.key, change.value, change.oldValue);
-			}
-		}
-	}
 
 	onMount(async () => {
 		await fetchDocuments('diff').then(async (diffs) => {
@@ -117,7 +48,6 @@
 	});
 
 	onMount(async () => {
-		let nodesList: any[] = [];
 		//graph setup
 		const graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
 		const paper = new joint.dia.Paper({
@@ -129,81 +59,12 @@
 			cellViewNamespace: joint.shapes
 		});
 
-		paper.on('cell:pointerclick', async function (cellView: any) {
-			let nodeWanted: any;
-			for (let i of nodesList) {
-				if (i.attributes.attrs.label.extra == cellView.model.attributes.attrs.label.extra) {
-					nodeWanted = i;
-				}
-			}
-			if (nodeWanted) {
-				await fetchDocumentByID(
-					nodeWanted.attributes.attrs.label.extra.replace('DOCUMENT-ID: ', '')
-				).then(async (doc) => {
-					originalY = originalY + 100;
-					if (doc.metadataFields) await addToGraph(nodeWanted, doc.metadataFields, originalY);
-				});
-			}
-			paper.scaleContentToFit({ padding: 10 });
-		});
-
-		//function to create a node
-		async function node(
-			xPos: number,
-			yPos: number,
-			text: string
-		): Promise<joint.shapes.standard.Rectangle> {
-			const node = root.clone();
-			await fetchDocumentByID(text.replace('DOCUMENT-ID: ', '')).then(async (doc) => {
-				let txt = 'Deleted item';
-				if (doc.assetName != undefined) txt = doc.assetName;
-				else if (doc.username != undefined) txt = doc.username;
-				node.position(xPos, yPos);
-				node.resize(txt.length * 12, 60);
-				node.attr({
-					body: {
-						fill: getRandomColor(),
-						rx: 20,
-						ry: 20
-					},
-					label: {
-						text: txt,
-						extra: text,
-						fill: '#000000',
-						fontSize: 18,
-						fontWeight: 'bold',
-						textShadow: '1px 1px 1px black'
-					}
-				});
-				node.addTo(graph);
-			});
-
-			return node;
-		}
-
-		//function to create a link
-		function link(
-			node1: joint.shapes.standard.Rectangle,
-			node2: joint.shapes.standard.Rectangle,
-			label: string
-		) {
-			const link = new joint.shapes.standard.Link();
-			link.appendLabel({
-				attrs: {
-					text: {
-						text: label
-					}
-				}
-			});
-			link.source(node1);
-			link.target(node2);
-			link.addTo(graph);
-		}
-
 		//setup for creation
 		let originalX =
 			(document.getElementById('GraphContainer') as HTMLDivElement)?.offsetWidth / 2 - 50;
 		let originalY = 30;
+
+		registerExpandingGraphHandler(paper, originalY, originalX, graph);
 
 		//creating root node
 		const root = new joint.shapes.standard.Rectangle();
@@ -227,39 +88,7 @@
 
 		//create the rest of the graph
 		originalX = originalX + 200;
-		async function addToGraph(
-			root: joint.shapes.standard.Rectangle,
-			metadataFields: any,
-			yPos: number
-		) {
-			let counter = 1;
-			for (let [field, value] of Object.entries(metadataFields)) {
-				if (typeof value === 'string' && value.startsWith('DOCUMENT-ID: ')) {
-					if (counter % 2 == 0) originalX = originalX - counter * 200;
-					else originalX = originalX + counter * 200;
-					let newNode = await node(originalX, yPos + 170, value);
-					nodesList.push(newNode);
-					link(root, newNode, field);
-					counter++;
-				} else if (
-					Array.isArray(value) &&
-					value.length > 0 &&
-					typeof value[0] === 'string' &&
-					value[0].startsWith('DOCUMENT-ID: ')
-				) {
-					for (let doc of value) {
-						if (counter % 2 == 0) originalX = originalX - counter * 200;
-						else originalX = originalX + counter * 200;
-						let newNode = await node(originalX, yPos + 170, doc);
-						nodesList.push(newNode);
-						link(root, newNode, field);
-						counter++;
-					}
-				}
-			}
-		}
-
-		await addToGraph(root, metadataFields, originalY);
+		await addToGraph(root, metadataFields, originalY, originalX, graph);
 
 		paper.scaleContentToFit({ padding: 10 });
 	});
@@ -281,7 +110,7 @@
 					<div class="m-0 mb-1 p-0">
 						<a
 							style="font-weight: 500"
-							class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
+							class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
 							href={assetLink.startsWith('http') ? assetLink : 'http://' + assetLink}
 						>
 							<span><i class="fa-solid fa-paperclip"></i></span><span>{assetLink}</span></a

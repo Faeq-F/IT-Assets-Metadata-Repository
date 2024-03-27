@@ -21,7 +21,7 @@ function getCurrentUser(): {
 //remember to wrap these in onMount checks
 
 /**
- * Gets documents from a collection in the database & returns them in JSON form
+ * Gets documents from a collection in the database & returns them in JSON form.
  * @param collectionName The collection to fetch documents from
  * @returns The documents in the collection
  * @author Faeq Faisal

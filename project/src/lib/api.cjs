@@ -6,6 +6,9 @@ const result = dotenv.config();
 if (result.error) {
 	throw result.error;
 }
+/**
+ * The environment variables from the .env file.
+ */
 const { parsed: envs } = result;
 
 //▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
