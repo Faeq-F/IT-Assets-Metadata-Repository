@@ -27,80 +27,7 @@
 	import '@cartamd/plugin-code/default.css';
 	import '@cartamd/plugin-slash/default.css';
 	import '@cartamd/plugin-anchor/default.css';
-
-	async function sendMessage(boardDoc: any) {
-		// formatting date
-		let current = new Date();
-		let day = current.getDate();
-		let month = current.getMonth() + 1;
-		let year = current.getFullYear();
-		let current_date = `${day}/${month}/${year}`;
-		let current_time = current.toLocaleTimeString();
-
-		//add it to the list of messages
-		boardDoc.Messages.push({
-			Date: current_date,
-			Time: current_time,
-			Author: Cookies.get('savedLogin-username'),
-			Message: value
-		});
-
-		//construct the final obj
-		const data = new FormData();
-		data.append(
-			'newData',
-			JSON.stringify({
-				BoardCreator: boardDoc.BoardCreator,
-				BoardName: boardDoc.BoardName,
-				Containers: boardDoc.Containers,
-				Description: boardDoc.Description,
-				Messages: boardDoc.Messages
-			})
-		);
-		updateDocument('DisscussionBoards', boardDoc._id, data).then((response) => {
-			console.log(response);
-			toastStore.trigger({
-				message: 'Container created',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			// Refresh the page
-			location.reload();
-		});
-	}
-
-	function reply(Author: string, Message: string) {
-		let valueToAssign: string = '> Replying to ' + Author + ':<br>\n';
-		for (let i of Message.split('\n')) {
-			valueToAssign += '>' + i + '\n';
-		}
-		valueToAssign += '\n\n' + value;
-		value = valueToAssign;
-	}
-
-	function deleteMessage(boardDoc: any, message: any) {
-		const data = new FormData();
-		data.append(
-			'newData',
-			JSON.stringify({
-				BoardCreator: boardDoc.BoardCreator,
-				BoardName: boardDoc.BoardName,
-				Containers: boardDoc.Containers,
-				Description: boardDoc.Description,
-				Messages: boardDoc.Messages.filter((messageCurr: any) => messageCurr != message)
-			})
-		);
-		updateDocument('DisscussionBoards', boardDoc._id, data).then((response) => {
-			console.log(response);
-			toastStore.trigger({
-				message: 'Message deleted',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			// Refresh the page
-			location.reload();
-		});
-	}
+	import { deleteMessage, reply, sendMessage } from './Message';
 
 	let value = '';
 	let collapsed = false;
@@ -116,7 +43,7 @@
 			<div class={collapsed ? 'mb-24' : 'mb-72'}>
 				<h1 class="h1">{boardDoc.BoardName}</h1>
 				<br />
-				<div class="card w-11/12 bg-modern-50 p-4 drop-shadow-md" style="margin: 0 auto">
+				<div class="card bg-modern-50 w-11/12 p-4 drop-shadow-md" style="margin: 0 auto">
 					<button on:click={() => (collapsedContainers = !collapsedContainers)}>
 						{#if collapsedContainers}
 							<i class="fa-solid fa-angle-up"></i>
@@ -135,7 +62,7 @@
 				<div id="messagesContainer">
 					{#each boardDoc.Messages as message}
 						<div
-							class="message card w-full bg-modern-50 p-4 drop-shadow-md"
+							class="message card bg-modern-50 w-full p-4 drop-shadow-md"
 							style="margin: 5px auto"
 						>
 							<AppBar background="transparent">
@@ -143,11 +70,11 @@
 									<b>{message.Author}</b>&nbsp;on {message.Date} @ {message.Time}
 								</svelte:fragment>
 								<svelte:fragment slot="trail">
-									<button on:click={() => reply(message.Author, message.Message)}
+									<button on:click={() => (value = reply(message.Author, message.Message, value))}
 										><i class="fa-solid fa-reply"></i></button
 									>
 									{#if Cookies.get('savedLogin-username') == message.Author}
-										<button on:click={() => deleteMessage(boardDoc, message)}
+										<button on:click={() => deleteMessage(boardDoc, message, toastStore)}
 											><i class="fa-solid fa-trash"></i></button
 										>
 									{/if}
@@ -163,7 +90,7 @@
 				</div>
 			</div>
 			<div
-				class="card absolute bottom-10 block w-11/12 bg-modern-50 drop-shadow-md"
+				class="card bg-modern-50 absolute bottom-10 block w-11/12 drop-shadow-md"
 				id="boardHeader"
 			>
 				<AppBar background="transparent">
@@ -186,7 +113,7 @@
 							class="variant-filled-primary btn p-1"
 							style="margin: 0 auto; display:block;"
 							id="assetMaker"
-							on:click|preventDefault={() => sendMessage(boardDoc)}
+							on:click|preventDefault={() => sendMessage(boardDoc, value, toastStore)}
 							><svg
 								width="25px"
 								height="25px"

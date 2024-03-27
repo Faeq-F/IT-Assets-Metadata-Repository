@@ -105,7 +105,8 @@
 				</div>
 				<div class=" ml-14">
 					<div class="h1" style="margin:10px; font-weight: bold;">
-						{assetName}
+						<!-- eslint-disable svelte/no-at-html-tags-->
+						{@html assetName}
 					</div>
 					<div class="m-0 mb-1 p-0">
 						<a
@@ -113,11 +114,12 @@
 							class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
 							href={assetLink.startsWith('http') ? assetLink : 'http://' + assetLink}
 						>
-							<span><i class="fa-solid fa-paperclip"></i></span><span>{assetLink}</span></a
+							<!-- eslint-disable svelte/no-at-html-tags-->
+							<span><i class="fa-solid fa-paperclip"></i></span><span>{@html assetLink}</span></a
 						>
 					</div>
 					<div class="h3" style="margin:10px; font-weight: bold;">
-						{assetType}
+						{@html assetType}
 					</div>
 					<br />
 					<hr />
@@ -161,7 +163,7 @@
 								{/await}
 							{:else}
 								<!-- eslint-disable svelte/no-at-html-tags-->
-								⦿ {field}: {value}
+								⦿ {@html field}: {@html value}
 							{/if}
 							<br />
 						{/each}

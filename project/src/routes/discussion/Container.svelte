@@ -9,33 +9,10 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import UpdateContainer from './UpdateContainer.svelte';
+	import { deleteContainer } from './Container';
 	const toastStore = getToastStore();
 	export let container: any;
 	export let boardDoc: any;
-
-	function deleteContainer(board: any, container: any) {
-		const data = new FormData();
-		data.append(
-			'newData',
-			JSON.stringify({
-				BoardCreator: board.BoardCreator,
-				BoardName: board.BoardName,
-				Containers: board.Containers.filter((containerCurr: any) => containerCurr != container),
-				Description: board.Description,
-				Messages: board.Messages
-			})
-		);
-		updateDocument('DisscussionBoards', board._id, data).then((response) => {
-			console.log(response);
-			toastStore.trigger({
-				message: 'Container deleted',
-				background: 'variant-ghost-success',
-				timeout: 3000
-			});
-			// Refresh the page
-			location.reload();
-		});
-	}
 
 	const modalStore = getModalStore();
 	const modalComponent: ModalComponent = { ref: UpdateContainer };
@@ -46,7 +23,7 @@
 	};
 </script>
 
-<div id="container" class="card card-hover border-2 bg-modern-50">
+<div id="container" class="card card-hover bg-modern-50 border-2">
 	<AppBar background="transparent">
 		<svelte:fragment slot="lead">
 			<h4 class="h5">{container.ContainerName}</h4>
@@ -55,7 +32,7 @@
 			<button on:click={() => modalStore.trigger(updateModal)}
 				><i class="fa-solid fa-pen"></i></button
 			>
-			<button on:click={() => deleteContainer(boardDoc, container)}
+			<button on:click={() => deleteContainer(boardDoc, container, toastStore)}
 				><i class="fa-solid fa-trash"></i></button
 			>
 		</svelte:fragment>

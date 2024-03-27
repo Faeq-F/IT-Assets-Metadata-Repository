@@ -2,68 +2,9 @@
 	import { updateDocument } from '$lib/apiRequests';
 	import InputAssociation from '$lib/components/customInputs/InputAssociation.svelte';
 	import { getModalStore, getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { makeContainer } from './Container';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
-
-	async function makeType() {
-		if (name && description && type) {
-			//get the values
-			let values: any[] = [];
-			let input = document.getElementById('values')?.getElementsByTagName('input');
-			if (input && input[0]) {
-				let key = input[0].id.replace('-association', '').replace('-InputList', '');
-				let item = document
-					.getElementById(key + '-associationCollector')
-					?.getElementsByTagName('LI');
-				if (item) {
-					let newArr = [];
-					for (let j of item) {
-						let object = (j as HTMLElement).dataset.associatedobject;
-						if (object) newArr.push('DOCUMENT-ID: ' + JSON.parse(object).value);
-					}
-					values = newArr;
-				}
-			}
-			//add it to the list of containers
-			$modalStore[0].meta.boardDoc.Containers.push({
-				ContainerName: name,
-				ContainerDescription: description,
-				ContainerType: type,
-				ContainerValues: values
-			});
-			//construct the final obj
-			const data = new FormData();
-			data.append(
-				'newData',
-				JSON.stringify({
-					BoardCreator: $modalStore[0].meta.boardDoc.BoardCreator,
-					BoardName: $modalStore[0].meta.boardDoc.BoardName,
-					Containers: $modalStore[0].meta.boardDoc.Containers,
-					Description: $modalStore[0].meta.boardDoc.Description,
-					Messages: $modalStore[0].meta.boardDoc.Messages
-				})
-			);
-			updateDocument('DisscussionBoards', $modalStore[0].meta.boardDoc._id, data).then(
-				(response) => {
-					console.log(response);
-					toastStore.trigger({
-						message: 'Container created',
-						background: 'variant-ghost-success',
-						timeout: 3000
-					});
-					// Refresh the page
-					location.reload();
-					modalStore.close();
-				}
-			);
-		} else {
-			toastStore.trigger({
-				message: 'Please fill in all of the fields',
-				background: 'variant-ghost-error',
-				timeout: 3000
-			});
-		}
-	}
 
 	let name: string;
 	let description: string;
@@ -81,7 +22,7 @@
 </div>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
-	<div class="card h-full bg-modern-50 p-5">
+	<div class="card bg-modern-50 h-full p-5">
 		<header class="h2 card-header text-center">Make a Container</header>
 		<br /><br />
 		<form id="rootCreateTypeForm">
@@ -154,7 +95,9 @@
 				class="variant-filled-primary btn w-52"
 				style="margin: 0 auto; display:block;"
 				id="assetMaker"
-				on:click|preventDefault={makeType}>Make Container</button
+				on:click|preventDefault={() =>
+					makeContainer(modalStore, toastStore, name, description, type, $modalStore)}
+				>Make Container</button
 			>
 		</form>
 	</div>
