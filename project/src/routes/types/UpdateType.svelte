@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import { updateDocument } from '$lib/apiRequests';
+	import { updateType, addMetadataField, removeField } from './UpdateType';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
@@ -10,123 +10,8 @@
 
 	let NewTypeName: string = typeName;
 	let NewTypeFields: any[] = metadataFields;
-
-	/**
-	 * Creates an error toast with the message "Please fill in all of the fields"
-	 * @author Faeq Faisal
-	 * @email faeqfaisal@hotmail.co.uk
-	 * @email zlac318@live.rhul.ac.uk
-	 */
-	function emptyFieldAlert(): void {
-		toastStore.trigger({
-			message: 'Please fill in all of the fields',
-			background: 'variant-ghost-error',
-			timeout: 3000
-		});
-	}
-
-	/**
-	 * Constructs the type object, sends it to the database, and reloads the page for viewing
-	 * @author Faeq Faisal
-	 * @email faeqfaisal@hotmail.co.uk
-	 * @email zlac318@live.rhul.ac.uk
-	 */
-	function updateType(): void {
-		if (NewTypeName == '') {
-			emptyFieldAlert();
-			return;
-		}
-		let tempNewTypeFields = [];
-		let ul = document.getElementById('createdMetadataFieldsList')?.getElementsByTagName('li');
-		if (ul) {
-			for (let i of ul) {
-				let inputs = i.getElementsByTagName('input');
-				let select = i.getElementsByTagName('select');
-				let checkbox = false;
-				let name = '';
-				if (select[0].value == 'Select data type') {
-					emptyFieldAlert();
-					return;
-				}
-				for (let i of inputs) {
-					if (i.classList.contains('checkbox')) {
-						//the input is a checkbox for if the field is multi-value or not
-						checkbox = i.checked;
-					} else {
-						//the input is a standard text field
-						if (i.value == '') {
-							emptyFieldAlert();
-							return;
-						}
-						name = i.value;
-					}
-				}
-				tempNewTypeFields.push({ field: name, dataType: select[0].value, list: checkbox });
-			}
-		}
-		let NewTypeObject = { typeName: NewTypeName, metadataFields: tempNewTypeFields };
-		//send to db
-		const data = new FormData();
-		data.append('newData', JSON.stringify(NewTypeObject));
-		updateDocument('AssetType', id, data).then((response) => {
-			console.log(response);
-			location.reload();
-			modalStore.close();
-		});
-	}
-
-	/**
-	 * Adds a metadata field to the array of metadata fields for the new Type object
-	 * @author Faeq Faisal
-	 * @email faeqfaisal@hotmail.co.uk
-	 * @email zlac318@live.rhul.ac.uk
-	 */
-	function addMetadataField(): void {
-		let name = (document.getElementById('addMetadataFieldName') as HTMLInputElement).value;
-		let typeList = document.getElementById('addMetadataFieldDataType') as HTMLSelectElement;
-		let type = typeList.options[typeList.selectedIndex].text;
-		if (name == '') {
-			toastStore.trigger({
-				message: 'Please give the field a name',
-				background: 'variant-ghost-error',
-				timeout: 3000
-			});
-		} else if (type == 'Select data type') {
-			toastStore.trigger({
-				message: 'Please choose a data type for the field',
-				background: 'variant-ghost-error',
-				timeout: 3000
-			});
-		} else {
-			NewTypeFields = [...NewTypeFields, { field: name, dataType: type, list: fieldListable }];
-		}
-	}
-
-	/**
-	 * Removes a metadata field to the array of metadata fields for the new Type object
-	 * @author Faeq Faisal
-	 * @param event The event from the button (currentTarget) of the field that needs to be removed
-	 * @email faeqfaisal@hotmail.co.uk
-	 * @email zlac318@live.rhul.ac.uk
-	 */
-	function removeField(
-		event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }
-	): void {
-		const fieldSpan = event.currentTarget.parentElement;
-		let inputs = fieldSpan?.getElementsByTagName('input');
-		let select = fieldSpan?.getElementsByTagName('select');
-		let name = '';
-		if (inputs && select) {
-			for (let i of inputs) {
-				if (!i.classList.contains('checkbox')) {
-					name = i.placeholder;
-				}
-			}
-			NewTypeFields = NewTypeFields.filter((field) => field.field != name);
-		}
-	}
-
 	let fieldListable: boolean;
+
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">
@@ -168,7 +53,7 @@
 										<option>Asset</option>
 									</select>
 									<input class="checkbox" type="checkbox" checked={field.list} /> Multi-Value
-									<button class="variant-ghost btn btn-sm ml-4" on:click={removeField}
+									<button class="variant-ghost btn btn-sm ml-4" on:click|preventDefault={(event) => {NewTypeFields = removeField(event, NewTypeFields)}}
 										><i class="fa-solid fa-trash text-sm"></i></button
 									>
 								</span>
@@ -185,7 +70,7 @@
 				<button
 					id="metadataFieldAdder"
 					class=" card card-hover h-10 w-10 border-2 border-modern-600 shadow-md"
-					on:click|preventDefault={addMetadataField}><i class="fa-solid fa-plus"></i></button
+					on:click|preventDefault={() => {NewTypeFields = addMetadataField(toastStore, NewTypeFields, fieldListable)}}><i class="fa-solid fa-plus"></i></button
 				>
 				<input
 					type="text"
@@ -218,10 +103,10 @@
 	<button
 		class="variant-filled-primary btn m-2"
 		on:click|preventDefault={() => {
-			updateType();
+			updateType(toastStore, NewTypeName, id, modalStore);
 		}}>Update</button
 	>
-	<button class="variant-filled-primary btn absolute m-2" on:click={() => modalStore.close()}
+	<button class="variant-filled-primary btn absolute m-2" on:click|preventDefault={() => modalStore.close()}
 		>Close</button
 	>
 </div>
