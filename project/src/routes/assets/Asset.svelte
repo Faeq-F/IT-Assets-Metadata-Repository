@@ -75,12 +75,18 @@
 		component: updateModalComponent,
 		backdropClasses: '!p-0'
 	};
-	/*
-	 *This function is used to delete assets
+
+	/**
+	 *This function is used to delete assets then its corresponding audit trail
+	 * @author ...
+	 * @email ...
+	 * @author Christian-Frederick Cubos
+	 * @email zlac145@live.rhul.ac.uk
 	 */
 	async function deleteAsset() {
 		var auditid: string;
 		await deleteDocument('Asset', id).then(async () => {
+			// gets id of the audit trail from its corresponding asset
 			await fetchDocuments('diff')
 				.then((fetchedAudits) => {
 					for (let i of fetchedAudits) {
@@ -92,6 +98,7 @@
 					return auditid;
 				})
 				.then(async (auditid) => {
+					// deletes audit trail
 					await deleteDocument('diff', auditid);
 					toastStore.trigger({
 						message: 'Asset deleted',

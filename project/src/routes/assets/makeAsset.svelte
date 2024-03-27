@@ -13,6 +13,13 @@
 		});
 	});
 
+	/**
+	 * Gets Asset values and insert the asset object into required databases
+	 * @author ...
+	 * @email
+	 * @author Christian-Frederick Cubos
+	 * @email zlac145@live.rhul.ac.uk
+	 */
 	async function makeAsset() {
 		//start by checking if the required fields are filled in
 		var name = (document.getElementById('assetName') as HTMLInputElement).value;

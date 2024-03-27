@@ -31,7 +31,13 @@
 			timeout: 3000
 		});
 	}
-
+	/**
+	 * Gets edited asset values and inserts new asset into required databases
+	 * @author ...
+	 * @email
+	 * @author Christian-Frederick Cubos
+	 * @email zlac145@live.rhul.ac.uk
+	 */
 	async function updateAsset() {
 		if (NewAssetName == '' || NewAssetLink == '') {
 			emptyFieldAlert();
@@ -164,7 +170,7 @@
 					}
 				});
 
-				// append new diffs onto existing diff document
+				// append new diffs onto existing diff array from fetched audit trail
 				dbdiffs.push(diffs);
 
 				// remaking audit with new diff array
