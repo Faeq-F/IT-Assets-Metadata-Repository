@@ -1,12 +1,11 @@
 import { updateDocument } from '$lib/apiRequests';
+import type { ToastStore } from '@skeletonlabs/skeleton';
 
 /**
  * Creates an error toast with the message "Please fill in all of the fields"
  * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
-export function emptyFieldAlert(toastStore: {
-	trigger: (arg0: { message: string; background: string; timeout: number }) => void;
-}): void {
+export function emptyFieldAlert(toastStore: ToastStore): void {
 	console.log('Clicked');
 	toastStore.trigger({
 		message: 'Please fill in all of the fields',
@@ -20,7 +19,7 @@ export function emptyFieldAlert(toastStore: {
  * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export function updateType(
-	toastStore: { trigger: (arg0: { message: string; background: string; timeout: number }) => void },
+	toastStore: ToastStore,
 	NewTypeName: string,
 	id: string,
 	modalStore: { close: () => void }
@@ -74,11 +73,10 @@ export function updateType(
  * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export function addMetadataField(
-	toastStore: { trigger: (arg0: { message: string; background: string; timeout: number }) => void },
+	toastStore: ToastStore,
 	NewTypeFields: any[],
 	fieldListable: boolean
 ): any {
-	console.log('Clicked');
 	let name = (document.getElementById('addMetadataFieldName') as HTMLInputElement).value;
 	let typeList = document.getElementById('addMetadataFieldDataType') as HTMLSelectElement;
 	let type = typeList.options[typeList.selectedIndex].text;
@@ -103,8 +101,7 @@ export function addMetadataField(
 }
 
 /**
- * Removes a metadata field to the array of metadata fields for the new Type object
- * @author Faeq Faisal
+ * Removes a metadata field from the array of metadata fields for the new Type object
  * @param event The event from the button (currentTarget) of the field that needs to be removed
  * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
@@ -112,7 +109,6 @@ export function removeField(
 	event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
 	NewTypeFields: any[]
 ): any {
-	console.log('Clicked');
 	const fieldSpan = event.currentTarget.parentElement;
 	let inputs = fieldSpan?.getElementsByTagName('input');
 	let select = fieldSpan?.getElementsByTagName('select');

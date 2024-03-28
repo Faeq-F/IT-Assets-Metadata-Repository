@@ -1,7 +1,8 @@
 import { insertDocument } from '$lib/apiRequests';
+import type { ToastStore } from '@skeletonlabs/skeleton';
 
 export async function makeType(
-	toastStore: { trigger: (arg0: { message: string; background: string; timeout: number }) => void },
+	toastStore: ToastStore,
 	fieldsSaved: any[]
 ) {
 	var name = (document.getElementById('typeName') as HTMLInputElement).value;
@@ -44,7 +45,7 @@ export function removeBottom(fieldsSaved: any[]): any[] {
 }
 
 export function addMetadataField(
-	toastStore: { trigger: (arg0: { message: string; background: string; timeout: number }) => void },
+	toastStore: ToastStore,
 	fieldsSaved: any[],
 	fieldListable: boolean
 ): any[] {

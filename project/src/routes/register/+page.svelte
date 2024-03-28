@@ -12,67 +12,22 @@
 	import {
 		checkPasswordsMatch,
 		containNumbers,
-		hashCode,
 		duplicateUsername,
 		duplicateEmail
-	} from '../../lib/scripts/validateUserDetails';
-	import { insertDocument } from '$lib/apiRequests';
-	import Cookies from 'js-cookie';
+	} from '$lib/scripts/validateUserDetails';
+
 	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { registerUser } from './register';
 	const toastStore = getToastStore();
 
 	const form = useForm();
 	const requiredMsg = 'This field is required';
 
 	let emailTaken = false;
-	function checkValidEmail() {
-		let email = (document.getElementById('email') as HTMLInputElement).value;
-		duplicateEmail(email).then((taken) => (emailTaken = taken));
-	}
 
 	let usernameTaken = false;
-	function checkValidUsername() {
-		let username = (document.getElementById('username') as HTMLInputElement).value;
-		duplicateUsername(username).then((taken) => (usernameTaken = taken));
-	}
-
-	/**
-	 * Gets user information, verifies the data and sends it to User database if valid.
-	 * @author .....
-	 * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
-	 */
-	function registerUser() {
-		let username = (document.getElementById('username') as HTMLInputElement).value;
-		let password = (document.getElementById('passwordConfirmation') as HTMLInputElement).value;
-		let email = (document.getElementById('email') as HTMLInputElement).value;
-		let role = 'viewer';
-
-		if (username && password && email) {
-			var passwordHash = hashCode(password);
-			var userObj = { username: username, passwordHash: passwordHash, email: email, role: role };
-
-			const data = new FormData();
-			data.append('newData', JSON.stringify(userObj));
-
-			insertDocument('User', data)
-				.then((response) => {
-					console.log(response);
-					toastStore.trigger({
-						message: 'Account created',
-						background: 'variant-ghost-success',
-						timeout: 3000
-					});
-					Cookies.set('savedLogin-username', username, { expires: 70 });
-					Cookies.set('savedLogin-email', email, { expires: 70 });
-					Cookies.set('savedLogin-password', '' + passwordHash, { expires: 70 });
-					Cookies.set('savedLogin-role', '' + role, { expires: 70 });
-					window.location.href = '../home';
-				})
-				.catch((error) => {
-					console.error('Registering user error: ', error);
-				});
-		}
-	}
+	let userEmail: string;
+	let username: string;
 </script>
 
 <svelte:head>
@@ -90,12 +45,13 @@
 				placeholder="Enter email..."
 				data-focusindex="0"
 				class="input w-96"
-				on:keyup={checkValidEmail}
+				on:keyup={() => duplicateEmail(userEmail).then((taken) => (emailTaken = taken))}
+				bind:value={userEmail}
 				use:validators={[required, email]}
 			/>
 			{#if emailTaken}
 				<a href="/register" title="Email already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
+					<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse"></i>
 				</a>
 			{:else}
 				<a href="/register" title="Valid email">
@@ -121,12 +77,13 @@
 				placeholder="Enter Username..."
 				data-focusindex="1"
 				class="input w-96"
-				on:keyup={checkValidUsername}
+				bind:value={username}
+				on:keyup={() => duplicateUsername(username).then((taken) => (usernameTaken = taken))}
 				use:validators={[required, minLength(4)]}
 			/>
 			{#if usernameTaken}
 				<a href="/register" title="Username already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
+					<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse"></i>
 				</a>
 			{:else}
 				<a href="/register" title="Valid username">
@@ -194,7 +151,7 @@
 	<button
 		class="variant-filled-primary btn w-52"
 		disabled={!$form.valid || emailTaken || usernameTaken}
-		on:click|preventDefault={registerUser}
+		on:click|preventDefault={() => registerUser(toastStore)}
 	>
 		Create account</button
 	>
