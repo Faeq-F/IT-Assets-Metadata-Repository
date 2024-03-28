@@ -13,7 +13,7 @@
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	import Cookies from 'js-cookie';
-	import { deleteDocument } from '$lib/apiRequests';
+	import { deleteBoard } from './DiscussionBoard';
 	let role = Cookies.get('savedLogin-role');
 
 	const updateModalComponent: ModalComponent = {
@@ -25,17 +25,6 @@
 		component: updateModalComponent,
 		backdropClasses: '!p-0'
 	};
-
-	async function deleteBoard() {
-		await deleteDocument('DisscussionBoards', board._id);
-		toastStore.trigger({
-			message: 'Discussion deleted',
-			background: 'variant-ghost-success',
-			timeout: 3000
-		});
-		// Refresh the page
-		location.reload();
-	}
 
 	let showMenu = 'none';
 </script>
@@ -74,7 +63,10 @@
 					<span><i class="fa-solid fa-pen"></i></span>
 					<span>Edit</span>
 				</button>
-				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click={deleteBoard}>
+				<button
+					class="variant-filled-surface btn btn-sm card-hover m-1"
+					on:click={() => deleteBoard(board, toastStore)}
+				>
 					<span><i class="fa-solid fa-trash text-sm"></i></span>
 					<span>Delete</span>
 				</button>

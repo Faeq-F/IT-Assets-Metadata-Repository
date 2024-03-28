@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import { fetchDocumentByID, updateDocument, fetchDocuments } from '$lib/apiRequests';
+	import { fetchDocumentByID } from '$lib/apiRequests';
 	import InputAssociation from '$lib/components/customInputs/InputAssociation.svelte';
 	import InputList from '$lib/components/customInputs/InputList.svelte';
-	import { updateAsset } from './UpdateAsset';
+
 	import { generatePreSavedAssociations } from '$lib/components/customInputs/InputAssociation';
+	import { updateAsset } from './Asset';
+	import { refreshAssociationListsAlert } from '$lib/alerts';
 
 	const toastStore = getToastStore();
-	toastStore.trigger({
-		message: 'You may have to refresh association lists',
-		background: 'variant-ghost-warning',
-		timeout: 3000
-	});
+	refreshAssociationListsAlert(toastStore);
 
 	export let id: string;
 	export let assetName: string;
@@ -150,14 +148,10 @@
 		class="variant-filled-primary btn m-2"
 		on:click|preventDefault={() => {
 			updateAsset(
+				{ id, assetName, assetLink, assetType, metadataFields },
 				NewAssetName,
 				NewAssetLink,
 				toastStore,
-				assetType,
-				id,
-				assetName,
-				assetLink,
-				metadataFields,
 				modalStore
 			);
 		}}>Update</button

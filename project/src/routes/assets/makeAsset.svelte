@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { fetchDocuments, insertDocument } from '$lib/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
 	import InputList from '../../lib/components/customInputs/InputList.svelte';
 	import { onMount } from 'svelte';
-	import { makeAsset } from './MakeAsset';
+	import { makeAsset } from './Asset';
+	import RequiredField from '$lib/components/cards/RequiredField.svelte';
+
 	const toastStore = getToastStore();
 
 	let activeTypes: any[] = [];
@@ -23,10 +25,7 @@
 	let currentType: string;
 </script>
 
-<div class="bg-initial card p-4" data-popup="requiredField">
-	<p>Required Field</p>
-	<div class="bg-initial arrow" />
-</div>
+<RequiredField />
 
 <div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
 	<div class="card h-full bg-modern-50 p-5">

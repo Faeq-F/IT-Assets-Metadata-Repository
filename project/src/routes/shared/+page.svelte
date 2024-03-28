@@ -28,6 +28,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Shared link</title>
+</svelte:head>
+
 <!--The style prop applies to the close button on the component.
 	The Expanded-view component is normally used as a modal,
 	but in this case, we want it as page content -->

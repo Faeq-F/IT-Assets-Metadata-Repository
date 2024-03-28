@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
+	import { fetchDocumentByID } from '$lib/apiRequests';
 	import AssociationCard from '$lib/components/cards/AssociationCard.svelte';
 	import {
 		AppBar,

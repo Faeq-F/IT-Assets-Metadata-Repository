@@ -1,6 +1,13 @@
 import { updateDocument } from '$lib/apiRequests';
-import type { ModalStore, ToastStore } from '@skeletonlabs/skeleton';
+import type { ModalSettings, ModalStore, ToastStore } from '@skeletonlabs/skeleton';
 
+/**
+ * Deletes a container from the discussion board in the database
+ * @param board The board the container belongs to
+ * @param container The container to delete
+ * @param toastStore The apps ToastStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export function deleteContainer(board: any, container: any, toastStore: any) {
 	const data = new FormData();
 	data.append(
@@ -25,13 +32,23 @@ export function deleteContainer(board: any, container: any, toastStore: any) {
 	});
 }
 
+/**
+ * Constructs a container object and saves it to the discussion board in the database
+ * @param name The name of the container
+ * @param description The description of the container
+ * @param type The type of associations the container holds
+ * @param modalStore The apps ModalStore
+ * @param $modalStore The apps ModalStore
+ * @param toastStore The apps ToastStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export async function makeContainer(
-	modalStore: ModalStore,
-	toastStore: ToastStore,
 	name: string,
 	description: string,
 	type: string,
-	$modalStore: any
+	modalStore: ModalStore,
+	$modalStore: ModalSettings[],
+	toastStore: ToastStore
 ) {
 	if (name && description && type) {
 		//get the values
@@ -87,12 +104,21 @@ export async function makeContainer(
 		});
 	}
 }
+
+/**
+ * Reconstructs the container object and saves it to the discussion board in the database
+ * @param name The name of the container
+ * @param description The description of the container
+ * @param toastStore The apps ToastStore
+ * @param modalStore The apps ModalStore
+ * @param $modalStore The apps ModalStore
+ */
 export async function updateContainer(
-	$modalStore: any,
 	name: string,
 	description: string,
 	toastStore: ToastStore,
-	modalStore: ModalStore
+	modalStore: ModalStore,
+	$modalStore: ModalSettings[]
 ) {
 	let containers = $modalStore[0].meta.boardDoc.Containers.filter(
 		(containerCurr: any) => containerCurr != $modalStore[0].meta.container

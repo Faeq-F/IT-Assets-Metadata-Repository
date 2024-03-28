@@ -2,6 +2,7 @@ import { deleteDocument, fetchDocuments, insertDocument, updateDocument } from '
 import { diff } from 'json-diff-ts';
 import Cookies from 'js-cookie';
 import { emptyFieldAlert } from '$lib/alerts';
+import type { ModalStore, ToastStore } from '@skeletonlabs/skeleton';
 
 /**
  * Sends a request to the database API to delete the asset and its corresponding audit trail
@@ -40,15 +41,17 @@ export async function deleteAsset(id: string, toastStore: any) {
 }
 
 /**
- * Gets Asset values and insert the asset object into required databases
- * @author ...
+ * Gets the assets values, creates the asset object and inserts it into the Asset database collection.
+ * Also adds an entry for the asset in the diffs collection.
+ * @param type the type of the asset
+ * @param toastStore the toastStore for the app. used to show success / error toasts
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
  */
-export async function makeAsset(currentType: string, toastStore: any) {
+export async function makeAsset(type: string, toastStore: any) {
 	//start by checking if the required fields are filled in
 	var name = (document.getElementById('assetName') as HTMLInputElement).value;
 	var link = (document.getElementById('assetLink') as HTMLInputElement).value;
-	var type = currentType;
 	if (name == '') {
 		toastStore.trigger({
 			message: 'Please give the asset a name',
@@ -172,26 +175,37 @@ export async function makeAsset(currentType: string, toastStore: any) {
 	});
 }
 
-
-
-
 /**
- * Gets edited asset values and inserts new asset into required databases
- * @author ...
+ * Reconstructs the asset object and inserts it in place of the old one in the Asset database collection
+ * Adds a diff to the assets entry in the diff collection
+ * @param oldAssetDetails the assets old details
+ * @param newAssetName the new name for the asset
+ * @param newAssetLink the new link to the asset
+ * @param toastStore the apps ToastStore
+ * @param modalStore the apps ModalStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
  */
 export async function updateAsset(
-	NewAssetName: string,
-	NewAssetLink: string,
-	toastStore: any,
-	assetType: string,
-	id: string,
-	assetName: string,
-	assetLink: string,
-	metadataFields: any,
-	modalStore: any
+	oldAssetDetails: {
+		id: string;
+		assetName: string;
+		assetLink: string;
+		assetType: string;
+		metadataFields: any;
+	},
+	newAssetName: string,
+	newAssetLink: string,
+	toastStore: ToastStore,
+	modalStore: ModalStore
 ) {
-	if (NewAssetName == '' || NewAssetLink == '') {
+	let id = oldAssetDetails.id;
+	let assetName = oldAssetDetails.assetName;
+	let assetLink = oldAssetDetails.assetLink;
+	let assetType = oldAssetDetails.assetType;
+	let metadataFields = oldAssetDetails.metadataFields;
+
+	if (newAssetName == '' || newAssetLink == '') {
 		emptyFieldAlert(toastStore);
 		return;
 	}
@@ -271,8 +285,8 @@ export async function updateAsset(
 	}
 
 	var assetObject = {
-		assetName: NewAssetName,
-		assetLink: NewAssetLink,
+		assetName: newAssetName,
+		assetLink: newAssetLink,
 		assetType: assetType,
 		metadataFields: metadataObject
 	};
@@ -299,37 +313,37 @@ export async function updateAsset(
 			};
 
 			// call import for diffs
-			let diffslib = diff(originalAsset, assetObject);
+			let generatedLib = diff(originalAsset, assetObject);
 
 			// formatting diffs
 			var diffs = {
 				author: Cookies.get('savedLogin-username'),
 				date: current_date,
 				time: current_time,
-				changes: diffslib
+				changes: generatedLib
 			};
 
-			var dbdiffs: any[] = [];
+			var presavedDiffs: any[] = [];
 			var auditid: any;
 
 			// getting original diff
-			await fetchDocuments('diff').then((fetchdiffs: any) => {
-				for (let i of fetchdiffs) {
+			await fetchDocuments('diff').then((fetchedDiffs: any) => {
+				for (let i of fetchedDiffs) {
 					if (i.reference == id) {
-						dbdiffs = i.diffs;
+						presavedDiffs = i.diffs;
 						auditid = i._id;
 					}
 				}
 			});
 
 			// append new diffs onto existing diff document
-			dbdiffs.push(diffs);
+			presavedDiffs.push(diffs);
 
 			// remaking audit with new diff array
 			var auditData = {
 				reference: id,
 				original: originalAsset,
-				diffs: dbdiffs
+				diffs: presavedDiffs
 			};
 
 			// update the audit with new data

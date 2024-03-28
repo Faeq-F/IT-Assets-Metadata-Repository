@@ -1,39 +1,31 @@
 <script lang="ts">
-	import { updateDocument } from '$lib/apiRequests';
 	import InputAssociation from '$lib/components/customInputs/InputAssociation.svelte';
-	import { getModalStore, getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore, popup } from '@skeletonlabs/skeleton';
 	import { makeContainer } from './Container';
+	import RequiredField from '$lib/components/cards/RequiredField.svelte';
+	import { requiredField } from '$lib/components/cards/RequiredField';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
 	let name: string;
 	let description: string;
-	const requiredField: PopupSettings = {
-		event: 'hover',
-		target: 'requiredField',
-		placement: 'top'
-	};
 	let type: string;
 </script>
 
-<div class="bg-initial card p-4" data-popup="requiredField">
-	<p>Required Field</p>
-	<div class="bg-initial arrow" />
-</div>
-
-<div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
+<RequiredField />
+<div class="makeContainer card p-5 shadow-xl" id="makeContainer">
 	<div class="card h-full bg-modern-50 p-5">
 		<header class="h2 card-header text-center">Make a Container</header>
 		<br /><br />
-		<form id="rootCreateTypeForm">
-			<label for="typeName" class="formlabel text-center">
+		<form id="rootCreateForm">
+			<label for="containerName" class="formlabel text-center">
 				<p class="p-1">
 					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Container Name:
 				</p>
 				<input
 					type="text"
-					id="typeName"
-					name="typeName"
+					id="containerName"
+					name="containerName"
 					placeholder="Enter name"
 					data-focusindex="0"
 					class="input w-96"
@@ -57,18 +49,18 @@
 				/>
 			</label>
 			<br />
-			<label for="assetType" class="formlabel text-center">
+			<label for="type" class="formlabel text-center">
 				<p class="p-4 text-center">
 					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> What the container is
 					holding:
 				</p>
-				<select id="assetType" class="select w-96" bind:value={type}>
+				<select id="type" class="select w-96" bind:value={type}>
 					<option>Assets</option>
 					<option>Users</option>
 				</select>
 			</label>
 			<br />
-			<label id="values" for="assetType" class="formlabel text-center">
+			<label id="values" for="values" class="formlabel text-center">
 				<p class="p-4 text-center">Values:</p>
 				{#if type == 'Assets'}
 					<InputAssociation
@@ -94,9 +86,9 @@
 			<button
 				class="variant-filled-primary btn w-52"
 				style="margin: 0 auto; display:block;"
-				id="assetMaker"
+				id="containerMaker"
 				on:click|preventDefault={() =>
-					makeContainer(modalStore, toastStore, name, description, type, $modalStore)}
+					makeContainer(name, description, type, modalStore, $modalStore, toastStore)}
 				>Make Container</button
 			>
 		</form>
@@ -104,7 +96,7 @@
 </div>
 
 <style>
-	.makeAssets {
+	.makeContainer {
 		height: 70vh;
 		width: 70vw;
 	}
@@ -114,7 +106,7 @@
 		top: initial;
 	}
 
-	#rootCreateTypeForm {
+	#rootCreateForm {
 		height: 75%;
 		overflow-y: scroll;
 	}

@@ -1,22 +1,15 @@
 <script lang="ts">
-	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-
+	import { getToastStore, popup } from '@skeletonlabs/skeleton';
 	import { makeType, removeBottom, addMetadataField } from './MakeType';
+	import RequiredField from '$lib/components/cards/RequiredField.svelte';
+	import { requiredField } from '$lib/components/cards/RequiredField';
+
 	const toastStore = getToastStore();
 	let fieldsSaved: any[] = [];
 	let fieldListable: boolean = false;
-
-	const requiredField: PopupSettings = {
-		event: 'hover',
-		target: 'requiredField',
-		placement: 'top'
-	};
 </script>
 
-<div class="bg-initial card p-4" data-popup="requiredField">
-	<p>Required Field</p>
-	<div class="bg-initial arrow" />
-</div>
+<RequiredField />
 
 <div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
 	<div class="card h-full bg-modern-50 p-5">
