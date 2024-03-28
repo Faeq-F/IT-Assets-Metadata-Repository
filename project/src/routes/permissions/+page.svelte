@@ -2,7 +2,7 @@
 	//@ts-ignore
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { type User } from '$lib/documents';
@@ -48,7 +48,7 @@
 	<!--iterate over each user-->
 	{#each users as user}
 		<!--display user information within a card-->
-		<div class="card card-hover bg-modern-50 m-4 p-3.5 drop-shadow-md">
+		<div class="card card-hover m-4 bg-modern-50 p-3.5 drop-shadow-md">
 			<!--display username-->
 			<div class="h3 font-bold">{user.username}</div>
 			<!--display email-->

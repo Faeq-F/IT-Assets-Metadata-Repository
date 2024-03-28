@@ -6,10 +6,7 @@ import type { ToastStore } from '@skeletonlabs/skeleton';
  * @param toastStore The apps toastStore
  * @param id The _id of the Type to be deleted
  */
-export async function deleteAssetType(
-	toastStore: ToastStore,
-	id: string
-) {
+export async function deleteAssetType(toastStore: ToastStore, id: string) {
 	await deleteDocument('AssetType', id);
 	toastStore.trigger({
 		message: 'Asset Type deleted',
