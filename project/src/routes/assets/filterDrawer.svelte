@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { fetchDocuments } from '$lib/apiRequests';
 	import { activeFilters } from '$lib/stores';
-	/* 
+	/*
 		this is contains a list of the different filters which are to be displayed
 	*/
 	let typeFilters: string[] = [];
@@ -38,7 +38,7 @@
 <!--this makes the close drawer button which when clicked shuts the drawer -->
 <button
 	type="button"
-	id="applyButton"
+	id="closeButton"
 	class="variant-ghost btn"
 	on:click={() => {
 		drawerStore.close();
@@ -58,7 +58,7 @@
 		margin-top: 15%;
 		margin-bottom: 5%;
 	}
-	#applyButton {
+	#closeButton {
 		text-align: center;
 		margin-top: 5%;
 		margin-left: 45%;

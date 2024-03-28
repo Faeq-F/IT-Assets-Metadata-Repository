@@ -5,25 +5,14 @@
 	import { fetchDocuments, updateDocument } from '$lib/apiRequests';
 	import Cookies from 'js-cookie';
 	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { type User } from '$lib/documents';
 	const toastStore = getToastStore();
-
-	// Define an interface for user data structure
-	interface User {
-		username: string; // Add relevant user data fields
-		email: string;
-		role: string;
-		_id: string;
-		passwordHash: number;
-	}
 
 	let users: User[] = [];
 
 	/*
-	  this will redirect the user to the login page if
-	  the user tries to access this page before logging in
-	  if the user is saved as an admin then they are
-	  redirected to the profile page
-	*/
+	 * this will prevent access if the user is not an admin
+	 */
 	onMount(() => {
 		if (browser) {
 			if (Cookies.get('savedLogin-role') != 'admin') {
@@ -75,7 +64,7 @@
 				}
 				// loop through each user in the document
 				for (let i of userDocument) {
-					/* 
+					/*
 					  if the username in the document matches the username of the new user object
 					  update user document with the new role
 					*/
@@ -108,6 +97,7 @@
 <svelte:head>
 	<title>Permissions</title>
 </svelte:head>
+
 <a class="variant-filled-surface btn ml-4" href="/profile" rel="nonreffere"
 	><i class="fa-solid fa-circle-arrow-left"></i>&nbsp;&nbsp;Back
 </a>

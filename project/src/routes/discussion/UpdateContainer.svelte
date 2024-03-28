@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import InputAssociation from '$lib/components/customInputs/InputAssociation.svelte';
-	import { getModalStore, getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore, popup } from '@skeletonlabs/skeleton';
 	import { updateContainer } from './Container';
 	import { generatePreSavedAssociations } from '$lib/components/customInputs/InputAssociation';
+	import RequiredField from '$lib/components/cards/RequiredField.svelte';
+	import { requiredField } from '$lib/components/cards/RequiredField';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
@@ -15,17 +16,9 @@
 
 	let name: string = $modalStore[0].meta.container.ContainerName;
 	let description: string = $modalStore[0].meta.container.ContainerDescription;
-	const requiredField: PopupSettings = {
-		event: 'hover',
-		target: 'requiredField',
-		placement: 'top'
-	};
 </script>
 
-<div class="bg-initial card p-4" data-popup="requiredField">
-	<p>Required Field</p>
-	<div class="bg-initial arrow" />
-</div>
+<RequiredField />
 
 <div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
 	<div class="card h-full bg-modern-50 p-5">
@@ -97,7 +90,7 @@
 				style="margin: 0 auto; display:block;"
 				id="assetMaker"
 				on:click|preventDefault={() =>
-					updateContainer($modalStore, name, description, toastStore, modalStore)}
+					updateContainer(name, description, toastStore, modalStore, $modalStore)}
 				>Update Container</button
 			>
 		</form>

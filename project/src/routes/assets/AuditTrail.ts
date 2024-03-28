@@ -4,8 +4,8 @@ import Remove from '$lib/components/cards/auditTrail/Remove.svelte';
 import { fetchDocumentByID } from '$lib/apiRequests';
 
 /**
- *
- * @param diff
+ * Parses a diff for an asset and calls displayTrailComponent to show the different updates in the diff
+ * @param diff The diff to parse
  * @author Shurjeel Mahmood - zltm723@live.rhul.ac.uk
  */
 export async function parseDiff(diff: any) {
@@ -19,8 +19,8 @@ export async function parseDiff(diff: any) {
 }
 
 /**
- *
- * @param changes
+ * Parses the changes array included in a diff - recursive
+ * @param changes The changes array to parse
  * @author Shurjeel Mahmood - zltm723@live.rhul.ac.uk
  */
 async function parseChanges(changes: any) {
@@ -33,14 +33,12 @@ async function parseChanges(changes: any) {
 	}
 }
 
-
-// this function is used to display each entry in the audit log for the asset
 /**
- *
- * @param type
- * @param key
- * @param value
- * @param oldValue
+ * Displays an entry in an audit trail
+ * @param type The type of update
+ * @param key The key that was updated
+ * @param value The value the key now holds
+ * @param oldValue The old value the key had
  * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export async function displayTrailComponent(

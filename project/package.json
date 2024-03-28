@@ -15,8 +15,7 @@
 		"test:unit": "vitest",
 		"test:ci": "vitest --exclude '**/dbDependant/**'",
 		"coverage": "vitest run --coverage",
-		"doc": "typedoc --options ./typedoc.config.json",
-		"start": "sirv public --no-clear"
+		"doc": "typedoc --options ./typedoc.config.json"
 	},
 	"type": "module",
 	"devDependencies": {
@@ -81,7 +80,6 @@
 		"tslib": "^2.4.1",
 		"typedoc": "^0.25.12",
 		"typedoc-material-theme": "^1.0.2",
-		"typedoc-plugin-clarity": "^1.6.0",
 		"typescript": "^5.0.0",
 		"vite": "^5.0.3",
 		"vite-plugin-tailwind-purgecss": "0.2.0",

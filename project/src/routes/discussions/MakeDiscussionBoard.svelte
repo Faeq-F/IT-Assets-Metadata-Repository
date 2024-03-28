@@ -1,62 +1,22 @@
 <script lang="ts">
-	import { insertDocument } from '$lib/apiRequests';
-	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import Cookies from 'js-cookie';
+	import { getToastStore, popup } from '@skeletonlabs/skeleton';
+	import RequiredField from '$lib/components/cards/RequiredField.svelte';
+	import { requiredField } from '$lib/components/cards/RequiredField';
+	import { makeBoard } from './DiscussionBoard';
 
 	let boardName: string;
 	let description: string;
 	const toastStore = getToastStore();
-
-	async function makeBoard() {
-		if (boardName && description) {
-			const data = new FormData();
-			data.append(
-				'newData',
-				JSON.stringify({
-					BoardName: boardName,
-					BoardCreator: Cookies.get('savedLogin-username'),
-					Description: description,
-					Messages: [],
-					Containers: []
-				})
-			);
-			await insertDocument('DisscussionBoards', data).then(async (response: any) => {
-				toastStore.trigger({
-					message: 'Discussion Board made',
-					background: 'variant-ghost-success',
-					timeout: 3000
-				});
-				console.log(response);
-				//Refresh the page
-				location.reload();
-			});
-		} else {
-			toastStore.trigger({
-				message: 'Please fill in all fields',
-				background: 'variant-ghost-error',
-				timeout: 3000
-			});
-		}
-	}
-
-	const requiredField: PopupSettings = {
-		event: 'hover',
-		target: 'requiredField',
-		placement: 'top'
-	};
 </script>
 
-<div class="bg-initial card p-4" data-popup="requiredField">
-	<p>Required Field</p>
-	<div class="bg-initial arrow" />
-</div>
+<RequiredField />
 
-<div class="makeAssets card p-5 shadow-xl" id="makeAssetPopup">
+<div class="makeBoard card p-5 shadow-xl">
 	<div class="card h-full bg-modern-50 p-5">
 		<header class="h2 card-header text-center">Make a Discussion Board</header>
 		<br /><br />
-		<form id="rootCreateAssetForm" class="text-center">
-			<label for="assetName" class="formlabel">
+		<form id="rootForm" class="text-center">
+			<label for="boardName" class="formlabel">
 				<p class="p-4 text-center">
 					<i class="fa-solid fa-asterisk fa-sm" use:popup={requiredField}></i> Board Name:
 				</p>
@@ -93,19 +53,20 @@
 				class="variant-filled-primary btn w-52"
 				style="margin: 0 auto; display:block;"
 				id="assetMaker"
-				on:click|preventDefault={makeBoard}>Make discussion board</button
+				on:click|preventDefault={() => makeBoard(boardName, description, toastStore)}
+				>Make discussion board</button
 			>
 		</form>
 	</div>
 </div>
 
 <style>
-	.makeAssets {
+	.makeBoard {
 		height: 70vh;
 		width: 70vw;
 	}
 
-	#rootCreateAssetForm {
+	#rootForm {
 		height: 75%;
 		overflow-y: scroll;
 	}

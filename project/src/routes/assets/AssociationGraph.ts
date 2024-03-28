@@ -1,8 +1,6 @@
 import { fetchDocumentByID } from '$lib/apiRequests';
-
 import * as joint from 'jointjs';
 import getRandomColor from '$lib/scripts/randomThemeColor';
-
 
 /**
  * A list of all nodes that have been created

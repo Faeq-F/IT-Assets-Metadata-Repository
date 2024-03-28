@@ -21,15 +21,14 @@
 
 <h1 class="h1">Home</h1>
 <br />
-<!--container for the main description-->
+<!--description of the website-->
 <div class="card w-9/12 bg-modern-50 object-center shadow-md" id="HomeCard">
-	<!--description of the website-->
 	<p>
 		A holistic Web-based system that supports the metadata-based organization of different
 		source-code related assets
 	</p>
 </div>
-<!--container for information on assets-->
+<!--container for information on app-->
 <div class="flex w-9/12" style="margin: 0 auto;">
 	<div class="card m-4 w-3/6 bg-modern-50 p-5 shadow-md">
 		<div class="h3 font-medium">Your assets:</div>
@@ -41,7 +40,7 @@
 		{:else}
 			⦿ You have a total of {assetCount} assets
 		{/if}
-		<!--displays you top 20 associated assets-->
+		<!--container for chart that displays your top 20 associated assets-->
 		<div style="margin: 0 auto;">
 			<p class=" text-sm">Your top 20 associated assets:</p>
 			<AssociationsChart />
@@ -64,7 +63,6 @@
 	</div>
 </div>
 
-<!--this is where the styling is stored-->
 <style>
 	#HomeCard {
 		padding: 20px;
