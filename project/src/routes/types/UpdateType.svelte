@@ -11,7 +11,6 @@
 	let NewTypeName: string = typeName;
 	let NewTypeFields: any[] = metadataFields;
 	let fieldListable: boolean;
-
 </script>
 
 <div class=" bg-surface-100-800-token h-screen w-screen p-24">
@@ -53,8 +52,11 @@
 										<option>Asset</option>
 									</select>
 									<input class="checkbox" type="checkbox" checked={field.list} /> Multi-Value
-									<button class="variant-ghost btn btn-sm ml-4" on:click|preventDefault={(event) => {NewTypeFields = removeField(event, NewTypeFields)}}
-										><i class="fa-solid fa-trash text-sm"></i></button
+									<button
+										class="variant-ghost btn btn-sm ml-4"
+										on:click|preventDefault={(event) => {
+											NewTypeFields = removeField(event, NewTypeFields);
+										}}><i class="fa-solid fa-trash text-sm"></i></button
 									>
 								</span>
 							</li>
@@ -70,7 +72,9 @@
 				<button
 					id="metadataFieldAdder"
 					class=" card card-hover h-10 w-10 border-2 border-modern-600 shadow-md"
-					on:click|preventDefault={() => {NewTypeFields = addMetadataField(toastStore, NewTypeFields, fieldListable)}}><i class="fa-solid fa-plus"></i></button
+					on:click|preventDefault={() => {
+						NewTypeFields = addMetadataField(toastStore, NewTypeFields, fieldListable);
+					}}><i class="fa-solid fa-plus"></i></button
 				>
 				<input
 					type="text"
@@ -106,7 +110,8 @@
 			updateType(toastStore, NewTypeName, id, modalStore);
 		}}>Update</button
 	>
-	<button class="variant-filled-primary btn absolute m-2" on:click|preventDefault={() => modalStore.close()}
-		>Close</button
+	<button
+		class="variant-filled-primary btn absolute m-2"
+		on:click|preventDefault={() => modalStore.close()}>Close</button
 	>
 </div>

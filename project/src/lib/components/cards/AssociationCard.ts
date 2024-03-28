@@ -7,9 +7,7 @@ import ExpandedUser from '../../../routes/profile/ExpandedUser.svelte';
  * @param document the document to produce a ModalComponent for
  * @param type the type of the document; "Asset" or "User"
  * @returns the ModalComponent used for the ModalSettings of a Modal showing the document's details
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export function produceExpandModalComponent(document: any, type: string): ModalComponent {
 	if (type == 'Asset') {

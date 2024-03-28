@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	
-	import { makeType, removeBottom, addMetadataField } from './MakeType'
+
+	import { makeType, removeBottom, addMetadataField } from './MakeType';
 	const toastStore = getToastStore();
 	let fieldsSaved: any[] = [];
 	let fieldListable: boolean = false;
@@ -41,7 +41,9 @@
 				<p class="inline p-1">Metadata Fields:</p>
 				<button
 					class="absolute right-4 inline cursor-pointer text-sm"
-					on:click|preventDefault={() => {fieldsSaved = removeBottom(fieldsSaved)}}
+					on:click|preventDefault={() => {
+						fieldsSaved = removeBottom(fieldsSaved);
+					}}
 				>
 					remove bottom field
 				</button>
@@ -68,7 +70,9 @@
 				<button
 					id="metadataFieldAdder"
 					class=" card card-hover h-3 w-3 border-2 border-modern-600 shadow-md"
-					on:click|preventDefault={() => {fieldsSaved = addMetadataField(toastStore, fieldsSaved, fieldListable)}}><i class="fa-solid fa-plus"></i></button
+					on:click|preventDefault={() => {
+						fieldsSaved = addMetadataField(toastStore, fieldsSaved, fieldListable);
+					}}><i class="fa-solid fa-plus"></i></button
 				>
 				<input
 					type="text"

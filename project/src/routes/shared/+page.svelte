@@ -13,9 +13,7 @@
 
 	/**
 	 * Gets the relevant shared document id from the url
-	 * @author Faeq Faisal
-	 * @email faeqfaisal@hotmail.co.uk
-	 * @email zlac318@live.rhul.ac.uk
+	 * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
 	 */
 	onMount(() => {
 		const urlParams = new URLSearchParams(window.location.search);

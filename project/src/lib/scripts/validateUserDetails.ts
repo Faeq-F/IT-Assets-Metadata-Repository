@@ -6,10 +6,8 @@ import { Form } from 'svelte-use-form';
  * Produces the hash of a string. Used for user passwords.
  * @param string the string to hash
  * @returns the hash; a negative integer
- * @author Alex Aleksandar
- * @email zlac205@live.rhul.ac.uk
- * @author Christian-Frederick Cubos
- * @email zlac145@live.rhul.ac.uk
+ * @author Alex Aleksandar - zlac205@live.rhul.ac.uk
+ * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
  */
 export function hashCode(string: string): number {
 	var hashVal = 0;
@@ -27,8 +25,7 @@ export function hashCode(string: string): number {
  * @param value The original password
  * @param form the form the user is typing the password in
  * @returns an object with an attribute representing whether the passwords match or not
- * @author Alex Aleksandar
- * @email zlac205@live.rhul.ac.uk
+ * @author Alex Aleksandar - zlac205@live.rhul.ac.uk
  */
 function checkPasswordsMatch(
 	value: string,
@@ -43,8 +40,7 @@ function checkPasswordsMatch(
  * Checks if a password contains numbers
  * @param numbers the number of numbers required
  * @returns a function that does the described functionality & returns an object with an attribute representing the number of numbers required
- * @author Alex Aleksandar
- * @email zlac205@live.rhul.ac.uk
+ * @author Alex Aleksandar - zlac205@live.rhul.ac.uk
  */
 function containNumbers(numbers: number) {
 	return function (value: string): { containNumbers: number } | undefined {
@@ -58,8 +54,7 @@ function containNumbers(numbers: number) {
  * Checks whether a username already exists
  * @param username the username to check for
  * @returns whether or not a user with that username already exists on the app
- * @author Shurjeel Mahmood
- * @email zltm723@live.rhul.ac.uk
+ * @author Shurjeel Mahmood - zltm723@live.rhul.ac.uk
  */
 function duplicateUsername(username: string): Promise<boolean> {
 	return fetchDocuments('User').then((documentsReturned) => {
@@ -76,8 +71,7 @@ function duplicateUsername(username: string): Promise<boolean> {
  * Checks whether an email already exists
  * @param email the email to check for
  * @returns whether or not the email is already registered on the app
- * @author Shurjeel Mahmood
- * @email zltm723@live.rhul.ac.uk
+ * @author Shurjeel Mahmood - zltm723@live.rhul.ac.uk
  */
 export function duplicateEmail(email: string): Promise<boolean> {
 	return fetchDocuments('User').then((documentsReturned) => {

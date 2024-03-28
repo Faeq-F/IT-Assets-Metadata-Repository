@@ -111,7 +111,7 @@
 					<div class="m-0 mb-1 p-0">
 						<a
 							style="font-weight: 500"
-							class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
+							class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
 							href={assetLink.startsWith('http') ? assetLink : 'http://' + assetLink}
 						>
 							<!-- eslint-disable svelte/no-at-html-tags-->

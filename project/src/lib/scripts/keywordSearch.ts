@@ -5,9 +5,7 @@ import { fetchDocumentByID } from '$lib/apiRequests';
  * @param text The text to look through, & highlight, for certain keywords
  * @param keywordSearchInput The array of strings inputted in the search bar
  * @returns The text with the relevant keywords highlighted
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export function highlight(text: any, keywordSearchInput: string[]): string {
 	text = text + '';
@@ -26,9 +24,7 @@ export function highlight(text: any, keywordSearchInput: string[]): string {
  * @param object The asset to check
  * @param keywordSearchInput The array of strings inputted in the search bar
  * @returns Whether or not the asset should be shown
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export async function keywordFilter(object: any, keywordSearchInput: string[]): Promise<boolean> {
 	if (keywordSearchInput.length > 0) {
@@ -58,9 +54,7 @@ export async function keywordFilter(object: any, keywordSearchInput: string[]): 
  * @param DocID The association id with "DOCUMENT-ID: " at the beginning
  * @param keyword The keyword to look for in the association
  * @returns Whether or not the displayed value of an association has the keyword
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 async function checkAssociation(DocID: string, keyword: string): Promise<boolean> {
 	return fetchDocumentByID(DocID.replace('DOCUMENT-ID: ', '')).then<boolean>((document) => {

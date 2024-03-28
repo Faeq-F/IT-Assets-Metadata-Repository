@@ -1,9 +1,7 @@
 /**
  * gets a random color from a list of colors from the apps theme
  * @returns a random color from the apps theme
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export default function getRandomColor(): string {
 	let colors = [

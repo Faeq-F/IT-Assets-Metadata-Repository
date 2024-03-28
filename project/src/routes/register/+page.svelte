@@ -38,10 +38,8 @@
 
 	/**
 	 * Gets user information, verifies the data and sends it to User database if valid.
-	 * @author ...
-	 * @email ...
-	 * @author Christian-Frederick Cubos
-	 * @email zlac145@live.rhul.ac.uk
+	 * @author .....
+	 * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
 	 */
 	function registerUser() {
 		let username = (document.getElementById('username') as HTMLInputElement).value;
@@ -97,7 +95,7 @@
 			/>
 			{#if emailTaken}
 				<a href="/register" title="Email already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
+					<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse"></i>
 				</a>
 			{:else}
 				<a href="/register" title="Valid email">
@@ -128,7 +126,7 @@
 			/>
 			{#if usernameTaken}
 				<a href="/register" title="Username already in use or invalid">
-					<i class="fa-solid fa-circle-exclamation animate-pulse text-warning-500"></i>
+					<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse"></i>
 				</a>
 			{:else}
 				<a href="/register" title="Valid username">

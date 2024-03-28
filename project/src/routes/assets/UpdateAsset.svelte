@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { fetchDocumentByID, updateDocument, fetchDocuments } from '$lib/apiRequests';
-	import InputAssociation from '../../lib/components/customInputs/InputAssociation.svelte';
-	import InputList from '../../lib/components/customInputs/InputList.svelte';
+	import InputAssociation from '$lib/components/customInputs/InputAssociation.svelte';
+	import InputList from '$lib/components/customInputs/InputList.svelte';
 	import { updateAsset } from './UpdateAsset';
-	import { generatePreSavedAssociations } from '$lib/scripts/associations';
+	import { generatePreSavedAssociations } from '$lib/components/customInputs/InputAssociation';
 
 	const toastStore = getToastStore();
 	toastStore.trigger({

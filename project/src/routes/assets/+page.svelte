@@ -74,7 +74,7 @@
 <h1 class="h1" use:popup={associationPopup}>Assets</h1>
 <br />
 <div>
-	<div class="card bg-modern-50 block w-11/12 drop-shadow-md" id="assetHeader">
+	<div class="card block w-11/12 bg-modern-50 drop-shadow-md" id="assetHeader">
 		<AppBar background="transparent">
 			<svelte:fragment slot="lead">
 				<!-- This checks if the user has any assets created-->
@@ -114,7 +114,7 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<!--Search by keyword bar-->
-				<div class="border-modern-500 inline max-h-8 rounded-full border-2">
+				<div class="inline max-h-8 rounded-full border-2 border-modern-500">
 					<div class=" inline p-1 pl-3 pr-3"><i class="fa-solid fa-search"></i></div>
 					<span class="divider-vertical inline h-20" />
 					<!--This component allows the search bar to be tokenized-->
@@ -126,14 +126,14 @@
 						chips="variant-filled rounded-md"
 						rounded=" rounded-none"
 						padding="p-0"
-						class="bg-modern-50 float-right mr-2 inline w-9/12 border-0"
+						class="float-right mr-2 inline w-9/12 border-0 bg-modern-50"
 						style="background-color: transparent !important"
 					/>
 				</div>
 				<!--Drawer for filters, etc.-->
 				<button
 					id="openDrawer"
-					class="card border-modern-500 bg-modern-50 rounded-full border-2 px-2 py-0.5 text-sm"
+					class="card rounded-full border-2 border-modern-500 bg-modern-50 px-2 py-0.5 text-sm"
 					style="margin-right: 10px;"
 					on:click={drawerOpen}><i class="fa-solid fa-filter"></i></button
 				>
@@ -142,7 +142,7 @@
 					{#if role != 'viewer'}
 						<button
 							id="assetMaker"
-							class="card card-hover border-modern-500 bg-modern-50 border-2 drop-shadow-md"
+							class="card card-hover border-2 border-modern-500 bg-modern-50 drop-shadow-md"
 							on:click={() => modalStore.trigger(makeAssetModal)}
 							><i class="fa-solid fa-plus"></i></button
 						>

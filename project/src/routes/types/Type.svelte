@@ -84,7 +84,10 @@
 					<span><i class="fa-solid fa-pen"></i></span>
 					<span>Edit</span>
 				</button>
-				<button class="variant-filled-surface btn btn-sm card-hover m-1" on:click|preventDefault = {() => deleteAssetType(toastStore, id)}>
+				<button
+					class="variant-filled-surface btn btn-sm card-hover m-1"
+					on:click|preventDefault={() => deleteAssetType(toastStore, id)}
+				>
 					<span><i class="fa-solid fa-trash text-sm"></i></span>
 					<span>Delete</span>
 				</button>
@@ -95,7 +98,8 @@
 		<button
 			type="button"
 			class="btn btn-sm"
-			on:click|preventDefault = {() => (showMenu == 'none' ? (showMenu = 'initial') : (showMenu = 'none'))}
+			on:click|preventDefault={() =>
+				showMenu == 'none' ? (showMenu = 'initial') : (showMenu = 'none')}
 			><i class="fa-solid fa-ellipsis-vertical"></i></button
 		>
 	</div>

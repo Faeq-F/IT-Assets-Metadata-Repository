@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fetchDocumentByID, updateDocument } from '$lib/apiRequests';
 	import InputAssociation from '$lib/components/customInputs/InputAssociation.svelte';
-	import { generatePreSavedAssociations } from '$lib/scripts/associations';
 	import { getModalStore, getToastStore, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { updateContainer } from './Container';
+	import { generatePreSavedAssociations } from '$lib/components/customInputs/InputAssociation';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
@@ -28,7 +28,7 @@
 </div>
 
 <div class="makeAssets card p-5 shadow-xl" id="makeTypePopup">
-	<div class="card bg-modern-50 h-full p-5">
+	<div class="card h-full bg-modern-50 p-5">
 		<header class="h2 card-header text-center">Update Container</header>
 		<br /><br />
 		<form id="rootCreateTypeForm">

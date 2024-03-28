@@ -11,9 +11,7 @@ import { Carta } from 'carta-md';
 
 /**
  * The Carta object used in the CartaEditor. Uses Isomorphic DOMPurify to sanitize input. Has the following extensions: emoji, slash, code, math, anchor, subscript, insdel and imsize. The slash menu has a snippet with an action for every feature of the editor. Used to write messages.
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export const carta = new Carta({
 	sanitizer: DOMPurify.sanitize,
@@ -165,9 +163,7 @@ export const carta = new Carta({
 
 /**
  * The Carta object used in the CartaViewer. Uses Isomorphic DOMPurify to sanitize input. Has the following extensions: emoji, code, math, anchor, subscript, insdel and imsize. Used to render messages.
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export const cartaViewer = new Carta({
 	sanitizer: DOMPurify.sanitize,

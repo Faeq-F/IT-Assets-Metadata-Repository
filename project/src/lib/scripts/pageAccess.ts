@@ -3,11 +3,8 @@ import { fetchDocuments } from '../apiRequests';
 
 /**
  * Reads the user cookies from the browser, checks them against the database and redirects the user to the home page of the app if they are correct. Used only on the login and register pages.
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
- * @author Christian-Frederick Cubos
- * @email zlac145@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
  */
 export async function redirectWhenLoginSaved(): Promise<void> {
 	if (
@@ -32,11 +29,8 @@ export async function redirectWhenLoginSaved(): Promise<void> {
 
 /**
  * Reads the user cookies from the browser, checks them against the database and redirects the user to the login page of the app if they are incorrect or non-existent. Runs on every page load of the app.
- * @author Faeq Faisal
- * @email faeqfaisal@hotmail.co.uk
- * @email zlac318@live.rhul.ac.uk
- * @author Christian-Frederick Cubos
- * @email zlac145@live.rhul.ac.uk
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
  */
 export async function redirectWhenNotLoggedIn(): Promise<void> {
 	if (
