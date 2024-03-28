@@ -1,10 +1,10 @@
 <script lang="ts">
 	//@ts-ignore
 	import { page } from '$app/stores'; //Does work
-	import { redirectWhenNotLoggedIn } from '$lib/scripts/pageAccess';
+
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
-	import { deleteDocument, fetchDocuments } from '$lib/apiRequests';
+	import { fetchDocuments } from '$lib/apiRequests';
 	import UpdateAccount from './updateAccount.svelte';
 	import {
 		getModalStore,
@@ -13,6 +13,7 @@
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import ExpandedUser from './ExpandedUser.svelte';
+	import { deleteAccount, logOut } from './Account';
 	const toastStore = getToastStore();
 
 	let userDoc: any;
@@ -49,47 +50,6 @@
 		type: 'component',
 		component: updateComponent
 	};
-
-	function deleteAccount() {
-		// this if statement asks the user to confirm if they want to delete their account
-		if (confirm('Are you sure you want to delete your account?')) {
-			fetchDocuments('User').then((Users) => {
-				// this for loop iterates through all the users
-				for (let i of Users) {
-					/*
-					  this if statement compares the username of user i with
-					  the username saved in the cookies
-					*/
-					if (i.username == Cookies.get('savedLogin-username')) {
-						/*
-						this deletes the user and changes the page to display a relevant message
-						then logs the user out so they go back to the login page.
-						*/
-						deleteDocument('User', i._id).then(() => {
-							toastStore.trigger({
-								message: 'Account deleted',
-								background: 'variant-ghost-success',
-								timeout: 3000
-							});
-
-							logOut();
-						});
-					}
-				}
-			});
-		}
-	}
-	/*
-	  this function removes all the cookies saved and then redirects
-	  the user to the login page
-	*/
-	function logOut() {
-		Cookies.remove('savedLogin-username');
-		Cookies.remove('savedLogin-email');
-		Cookies.remove('savedLogin-password');
-		Cookies.remove('savedLogin-role');
-		redirectWhenNotLoggedIn();
-	}
 </script>
 
 <svelte:head>
@@ -98,7 +58,7 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card m-7 h-1/2 w-11/12 bg-modern-50 text-center shadow-md">
+<div id="profile" class="card bg-modern-50 m-7 h-1/2 w-11/12 text-center shadow-md">
 	<!--this button creates a link which will allow the user to share their profile page-->
 	<button
 		class="variant-filled-surface btn btn-sm card-hover absolute right-2 top-2 m-1"
@@ -143,9 +103,11 @@
 
 	<!--this code creates the 2 buttons which are used to logout and delete account respectively-->
 	<div id="accountButtonGroup">
-		<button class="variant-filled-primary btn w-52" on:click={logOut}>Logout</button>
+		<button class="variant-filled-primary btn w-52" on:click={() => logOut()}>Logout</button>
 		<br /><br />
-		<button class="variant-filled-primary btn w-52" on:click={deleteAccount}>Delete Account</button>
+		<button class="variant-filled-primary btn w-52" on:click={() => deleteAccount(toastStore)}
+			>Delete Account</button
+		>
 		<br /><br />
 	</div>
 </div>

@@ -1,7 +1,8 @@
 import { deleteDocument } from '$lib/apiRequests';
+import type { ToastStore } from '@skeletonlabs/skeleton';
 
 export async function deleteAssetType(
-	toastStore: { trigger: (arg0: { message: string; background: string; timeout: number }) => void },
+	toastStore: ToastStore,
 	id: string
 ) {
 	await deleteDocument('AssetType', id);
