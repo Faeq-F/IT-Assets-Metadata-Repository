@@ -53,6 +53,7 @@
 									</select>
 									<input class="checkbox" type="checkbox" checked={field.list} /> Multi-Value
 									<button
+										id="delete"
 										class="variant-ghost btn btn-sm ml-4"
 										on:click|preventDefault={(event) => {
 											NewTypeFields = removeField(event, NewTypeFields);
