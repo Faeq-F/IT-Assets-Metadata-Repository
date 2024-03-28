@@ -15,7 +15,7 @@ You may edit it as you like, but please do not remove the default topics or the 
 
 - ensure your local .env file has the correct credentials
 - run 'npm run build'
-- run 'node ./src/routes/api/index.cjs' to start the database server
+- run 'node ./src/lib/api.cjs' to start the database server
 - run 'npm run preview' to see the deliverable application (run in a different thread / terminal)
 
 ## Development
@@ -24,7 +24,7 @@ You may edit it as you like, but please do not remove the default topics or the 
 
 - run 'npm run check' to type-check components with TypeScript
 
-- run 'node ./src/routes/api/index.cjs' to start the database server
+- run 'node ./src/lib/api.cjs' to start the database server
 
 - run 'npm run dev' to run the project with live-reload and error messaging
 
