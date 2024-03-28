@@ -1,10 +1,7 @@
 import { insertDocument } from '$lib/apiRequests';
 import type { ToastStore } from '@skeletonlabs/skeleton';
 
-export async function makeType(
-	toastStore: ToastStore,
-	fieldsSaved: any[]
-) {
+export async function makeType(toastStore: ToastStore, fieldsSaved: any[]) {
 	var name = (document.getElementById('typeName') as HTMLInputElement).value;
 	if (name == '') {
 		toastStore.trigger({

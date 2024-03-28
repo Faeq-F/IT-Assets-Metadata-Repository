@@ -58,7 +58,7 @@
 
 <h1 class="h1">Your account</h1>
 <br /><br />
-<div id="profile" class="card bg-modern-50 m-7 h-1/2 w-11/12 text-center shadow-md">
+<div id="profile" class="card m-7 h-1/2 w-11/12 bg-modern-50 text-center shadow-md">
 	<!--this button creates a link which will allow the user to share their profile page-->
 	<button
 		class="variant-filled-surface btn btn-sm card-hover absolute right-2 top-2 m-1"
