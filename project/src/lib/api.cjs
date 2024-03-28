@@ -25,25 +25,22 @@ app.set('case sensitive routing', true); //required to pass the correct names of
 /** reusable instance of db @type{any} */
 var database;
 
-app.listen(
-	5038,
-	/**
-	 * Creates a reusable instance of a database connection using the environment variables from the .env file.
-	 * .env file must have credentials placed in the DB_NAME and DB_API_URL keys
-	 * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
-	 * @author Hossam Babari - zlac241@live.rhul.ac.uk
-	 */
-	() => {
-		MongoClient.connect(
-			envs.DB_API_URL,
-			async (/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
-				database = client.db(envs.DB_NAME);
-				if (error) console.error(error);
-				console.log(`server-side is running at port 5038\nConnected`);
-			}
-		);
-	}
-);
+/**
+ * Opens port 5038 for the api & creates a reusable instance of a database connection using the environment variables from the .env file.
+ * .env file must have credentials placed in the DB_NAME and DB_API_URL keys
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ * @author Hossam Babari - zlac241@live.rhul.ac.uk
+ */
+app.listen(5038, () => {
+	MongoClient.connect(
+		envs.DB_API_URL,
+		async (/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
+			database = client.db(envs.DB_NAME);
+			if (error) console.error(error);
+			console.log(`server-side is running at port 5038\nConnected`);
+		}
+	);
+});
 
 //▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 //Define db routes
@@ -172,8 +169,8 @@ app.delete(
 
 /**
  * Checks whether if the cookie sent has valid user credentials in the database
- * @param {*} user JSON object of user details stored in cookie
- * @returns {Promise<Boolean>} true if valid user false if not
+ * @param {any} user JSON object of user details stored in cookie
+ * @returns {Promise<Boolean>} true if valid user, false if not
  * @author Christian-Frederick Cubos - zlac145@live.rhul.ac.uk
  */
 async function validUser(user) {

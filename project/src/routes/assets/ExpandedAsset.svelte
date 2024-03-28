@@ -7,12 +7,8 @@
 
 	import User from '$lib/components/cards/auditTrail/User.svelte';
 	import Original from '$lib/components/cards/auditTrail/Original.svelte';
-	import {
-		addToGraph,
-		displayTrailComponent,
-		parseDiff,
-		registerExpandingGraphHandler
-	} from './ExpandedAsset';
+	import { parseDiff } from './AuditTrail';
+	import { addToGraph, registerExpandingGraphHandler } from './AssociationGraph';
 
 	export let id: string;
 	export let assetName: string;
@@ -111,7 +107,7 @@
 					<div class="m-0 mb-1 p-0">
 						<a
 							style="font-weight: 500"
-							class="variant-soft chip m-0 ml-2 p-2 hover:variant-filled"
+							class="variant-soft chip hover:variant-filled m-0 ml-2 p-2"
 							href={assetLink.startsWith('http') ? assetLink : 'http://' + assetLink}
 						>
 							<!-- eslint-disable svelte/no-at-html-tags-->

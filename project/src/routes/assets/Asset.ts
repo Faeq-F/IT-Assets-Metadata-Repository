@@ -1,6 +1,7 @@
 import { deleteDocument, fetchDocuments, insertDocument, updateDocument } from '$lib/apiRequests';
 import { diff } from 'json-diff-ts';
 import Cookies from 'js-cookie';
+import { emptyFieldAlert } from '$lib/alerts';
 
 /**
  * Sends a request to the database API to delete the asset and its corresponding audit trail
