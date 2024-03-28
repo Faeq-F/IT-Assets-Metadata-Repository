@@ -91,7 +91,7 @@ app.post(
 		let result = async (/** @type {string} */ collection) => {
 			const formData = request.body;
 			let call = await validUser(formData.userData);
-			if (call) {
+			if (call || collection == 'User') {
 				const rec = await database.collection(collection).insertOne(JSON.parse(formData.newData));
 				return rec.insertedId;
 			}

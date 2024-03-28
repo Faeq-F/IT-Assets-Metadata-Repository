@@ -12,7 +12,11 @@ import getRandomColor from "$lib/scripts/randomThemeColor";
 		labels: ['']
 };
 
-
+/**
+ * Generates the data required to display the associations graph. Ensures it only saves the top 20 associated assets
+ * @returns the generated data
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export async function generateAssociationsGraphData() {
   await fetchDocuments('Asset').then(async (AssetDocs) => {
 			const myMap = new Map();

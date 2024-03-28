@@ -1,6 +1,11 @@
 import { insertDocument } from '$lib/apiRequests';
 import type { ToastStore } from '@skeletonlabs/skeleton';
 
+/**
+ * Constructs an Asset Type object and saves it to the database
+ * @param toastStore The apps toastStore
+ * @param fieldsSaved The saved metadataFields for the type to be created
+ */
 export async function makeType(
 	toastStore: ToastStore,
 	fieldsSaved: any[]
@@ -38,12 +43,22 @@ export async function makeType(
 	}
 }
 
+/**
+ * Removes the last field from the list of metadata fields
+ * @param fieldsSaved The saved metadataFields for the type to be created
+ * @returns The updated fields array
+ */
 export function removeBottom(fieldsSaved: any[]): any[] {
-	fieldsSaved.pop();
-	fieldsSaved = fieldsSaved; //required for reactivity
-	return fieldsSaved;
+	return fieldsSaved.pop();
 }
 
+/**
+ * Adds a metadata field to the list of saved metadata fields for the type to be created
+ * @param toastStore The apps toastStore
+ * @param fieldsSaved  The saved metadataFields for the type to be created
+ * @param fieldListable If the field is multi-value
+ * @returns The updated fields array
+ */
 export function addMetadataField(
 	toastStore: ToastStore,
 	fieldsSaved: any[],

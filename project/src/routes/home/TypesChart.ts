@@ -12,6 +12,11 @@ let data = {
 		]
 	};
 
+	/**
+	 * Generates the data required to display the Types graph data
+	 * @returns the generated data
+	 * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+	 */
 export async function generateTypesGraphData() {
   await fetchDocuments('Asset').then(async (AssetDocs) => {
 			await fetchDocuments('AssetType').then(async (TypeDocs) => {

@@ -3,6 +3,10 @@ import { redirectWhenNotLoggedIn } from "$lib/scripts/pageAccess";
 import type { ToastStore } from "@skeletonlabs/skeleton";
 import Cookies from 'js-cookie';
 
+/**
+ * Deletes the currently logged in user from the database and removes the saved user cookies
+ * @param toastStore The apps toastStore
+ */
 	export function deleteAccount(toastStore:ToastStore) {
 		// this if statement asks the user to confirm if they want to delete their account
 		if (confirm('Are you sure you want to delete your account?')) {
@@ -32,10 +36,10 @@ import Cookies from 'js-cookie';
 			});
 		}
 	}
-	/*
-	 * this function removes all the cookies saved and then redirects
-	  *the user to the login page
-	*/
+
+	/**
+	 * Logs the user out of their account by deleting the user cookies
+	 */
 	export function logOut() {
 		Cookies.remove('savedLogin-username');
 		Cookies.remove('savedLogin-email');

@@ -2,6 +2,12 @@ import { deleteDocument, insertDocument, updateDocument } from '$lib/apiRequests
 import type { ModalStore, ToastStore } from '@skeletonlabs/skeleton';
 import Cookies from 'js-cookie';
 
+/**
+ * Deletes a discussion board from the database
+ * @param board The discussion board to delete
+ * @param toastStore The apps toastStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export async function deleteBoard(board: any, toastStore: ToastStore) {
 	await deleteDocument('DisscussionBoards', board._id);
 	toastStore.trigger({
@@ -12,7 +18,13 @@ export async function deleteBoard(board: any, toastStore: ToastStore) {
 	// Refresh the page
 	location.reload();
 }
-
+/**
+ * Constructs a discussion board object and saves it in the database
+ * @param boardName The name of the discussion board
+ * @param description The description of the discussion board
+ * @param toastStore The apps toastStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export async function makeBoard(boardName: string, description: string, toastStore: ToastStore) {
 	if (boardName && description) {
 		const data = new FormData();
@@ -44,6 +56,15 @@ export async function makeBoard(boardName: string, description: string, toastSto
 		});
 	}
 }
+/**
+ * Reconstructs the discussion board object and saves it in the database
+ * @param board The original discussion board object
+ * @param boardName The name of the discussion board
+ * @param description The discussion boards description
+ * @param toastStore The apps toastStore
+ * @param modalStore The apps modalStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export async function updateBoard(
 	board: any,
 	boardName: string,

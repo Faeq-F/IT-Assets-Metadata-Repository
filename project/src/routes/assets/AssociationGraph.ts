@@ -15,6 +15,7 @@ let nodesList: any[] = [];
  * @param cellStyle A node from which styles can be copied from - the node that is created from this function is a .clone() of cellStyle
  * @param graph The graph to add the node to
  * @returns The node that was created and added to the graph
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 async function createNode(
 	id: string,
@@ -60,6 +61,7 @@ async function createNode(
  * @param node2 The node to link node1 to
  * @param label The text for the links label
  * @param graph The graph to add the link to
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 function createLink(
 	node1: joint.shapes.standard.Rectangle,
@@ -87,6 +89,7 @@ function createLink(
  * @param yPos The y position to start adding nodes from
  * @param xPos The x position to start adding nodes from
  * @param graph The graph to add to
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export async function addToGraph(
 	root: joint.shapes.standard.Rectangle,
@@ -135,6 +138,7 @@ export async function addToGraph(
  * @param yPos The y position from which nodes should start being added
  * @param xPos The x position from which nodes should start being added
  * @param graph The graph to expand
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export function registerExpandingGraphHandler(
 	paper: joint.dia.Paper,

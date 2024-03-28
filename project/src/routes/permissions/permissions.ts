@@ -3,6 +3,8 @@ import type { ToastStore } from "@skeletonlabs/skeleton";
 import Cookies from 'js-cookie';
 
 /**
+ * Changes the roles permissions of register users
+ * @param toastStore The apps toastStore
  * @author Thomas Appleby - zlac196@live.rhul.ac.uk
  */
 export function updateUserPermissions(toastStore:ToastStore) {
@@ -49,11 +51,6 @@ export function updateUserPermissions(toastStore:ToastStore) {
 							.then((response) => {
 								// log response and trigger a notification for successful role change
 								console.log(response);
-								toastStore.trigger({
-									message: 'Roles updated',
-									background: 'variant-ghost-success',
-									timeout: 3000
-								});
 							})
 							.catch((error) => {
 								// log error if update fails
@@ -61,6 +58,11 @@ export function updateUserPermissions(toastStore:ToastStore) {
 							});
 					}
 				}
+				toastStore.trigger({
+									message: 'Roles updated',
+									background: 'variant-ghost-success',
+									timeout: 3000
+								});
 			});
 		}
 	}

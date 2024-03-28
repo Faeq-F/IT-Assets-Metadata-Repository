@@ -112,6 +112,7 @@ export async function makeContainer(
  * @param toastStore The apps ToastStore
  * @param modalStore The apps ModalStore
  * @param $modalStore The apps ModalStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
  */
 export async function updateContainer(
 	name: string,

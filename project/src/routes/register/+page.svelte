@@ -24,10 +24,10 @@
 	const requiredMsg = 'This field is required';
 
 	let emailTaken = false;
-
 	let usernameTaken = false;
 	let userEmail: string;
 	let username: string;
+	let password: string;
 </script>
 
 <svelte:head>
@@ -45,7 +45,8 @@
 				placeholder="Enter email..."
 				data-focusindex="0"
 				class="input w-96"
-				on:keyup={() => duplicateEmail(userEmail).then((taken) => (emailTaken = taken))}
+				on:keyup={async () =>
+					(emailTaken = await duplicateEmail(userEmail).then((taken) => (emailTaken = taken)))}
 				bind:value={userEmail}
 				use:validators={[required, email]}
 			/>
@@ -78,7 +79,10 @@
 				data-focusindex="1"
 				class="input w-96"
 				bind:value={username}
-				on:keyup={() => duplicateUsername(username).then((taken) => (usernameTaken = taken))}
+				on:keyup={async () =>
+					(usernameTaken = await duplicateUsername(username).then(
+						(taken) => (usernameTaken = taken)
+					))}
 				use:validators={[required, minLength(4)]}
 			/>
 			{#if usernameTaken}
@@ -134,6 +138,7 @@
 			data-focusindex="3"
 			class="input"
 			placeholder="Enter Password again..."
+			bind:value={password}
 			use:validators={[required, checkPasswordsMatch]}
 		/>
 	</label>
@@ -151,7 +156,7 @@
 	<button
 		class="variant-filled-primary btn w-52"
 		disabled={!$form.valid || emailTaken || usernameTaken}
-		on:click|preventDefault={() => registerUser(toastStore)}
+		on:click|preventDefault={() => registerUser(username, userEmail, password, toastStore)}
 	>
 		Create account</button
 	>

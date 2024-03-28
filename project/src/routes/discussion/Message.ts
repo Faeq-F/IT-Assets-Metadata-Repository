@@ -1,7 +1,15 @@
 import { updateDocument } from '$lib/apiRequests';
+import type { ToastStore } from '@skeletonlabs/skeleton';
 import Cookies from 'js-cookie';
 
-export async function sendMessage(boardDoc: any, value: string, toastStore: any) {
+/**
+ * Constructs the message object and saves it to the discussion board in the database
+ * @param boardDoc The discussion board the message is sent to
+ * @param value The message
+ * @param toastStore The apps ToastStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
+export async function sendMessage(boardDoc: any, value: string, toastStore: ToastStore) {
 	// formatting date
 	let current = new Date();
 	let day = current.getDate();
@@ -42,6 +50,14 @@ export async function sendMessage(boardDoc: any, value: string, toastStore: any)
 	});
 }
 
+/**
+ * Adds text to the 'create message' area that corresponds to a quote of the message being replied to
+ * @param Author The author of the message that is being replied to
+ * @param Message The message being replied to
+ * @param value The currently typed message (response)
+ * @returns The message with the replied message appended to the top as a quote
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export function reply(Author: string, Message: string, value: string): string {
 	let valueToAssign: string = '> Replying to ' + Author + ':<br>\n';
 	for (let i of Message.split('\n')) {
@@ -52,6 +68,13 @@ export function reply(Author: string, Message: string, value: string): string {
 	return value;
 }
 
+/**
+ * Deletes a message from the discussion board in the database
+ * @param boardDoc The discussion board to delete a message from
+ * @param message The message to delete
+ * @param toastStore The apps toastStore
+ * @author Faeq Faisal - faeqfaisal@hotmail.co.uk & zlac318@live.rhul.ac.uk
+ */
 export function deleteMessage(boardDoc: any, message: any, toastStore: any) {
 	const data = new FormData();
 	data.append(

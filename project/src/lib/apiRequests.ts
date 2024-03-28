@@ -61,7 +61,7 @@ export const insertDocument = (collectionName: string, formData: any): Promise<a
 		body: formData
 	})
 		.then(async (response) => {
-			return await response.json();
+			return await response.json()
 		})
 		.catch((err) => {
 			return err;
