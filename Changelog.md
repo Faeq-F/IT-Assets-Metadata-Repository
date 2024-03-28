@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Sprint 5] - 2024-03-28
+
+### Added
+
+- Discussion Boards
+  - You can use markdown to write messages
+  - You can use containers to associate assets and users
+
+### Fixed
+
+- various bugs
+
+### Changed
+
+- nothing
+
+### Security
+
+- User roles checked in db api route resolution.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
 ## [Sprint 4] - 2024-03-14
 
 ### Added
@@ -162,3 +190,4 @@ All notable changes to this project will be documented in this file.
 [Sprint 2]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-2
 [Sprint 3]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-3
 [Sprint 4]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-4
+[Sprint 5]: https://gitlab.cim.rhul.ac.uk/TeamProject03/TeamProject03/-/tags/Sprint-5
