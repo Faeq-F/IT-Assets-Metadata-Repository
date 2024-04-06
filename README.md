@@ -1,8 +1,7 @@
 # Team Project
-
-This repository has been created to store your Team Project.
-
-You may edit it as you like, but please do not remove the default topics or the project members list. These need to stay as currently defined in order for your lecturer to be able to find and mark your work.
+Created during the 2023-2024 CS2815 module 'Team Project' at Royal Holloway, University of London.<br>
+The intellectual property of the project idea belongs to our customer, Giorgios Koutsoukos.<br>
+The specification for the project was provided externally through our customer.<br>
 
 ## Setup project locally
 
